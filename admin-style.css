@@ -1,0 +1,601 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* default */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: 0;
+    list-style: none;
+    appearance: none;
+}
+
+a {
+    color: black;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h3 {
+    font-size: 0.87rem;
+}
+
+h4 {
+    font-size: 0.8rem;
+}
+
+h5 {
+    font-size: 0.77rem;
+}
+
+small {
+    font-size: 0.75rem;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "sidebar navbar"
+        "sidebar main";
+    overflow: hidden;
+}
+
+nav {
+    grid-area: navbar;
+    background-color: #6B0007;
+    padding: 1em;
+    width: 100%;
+    height: 50px;
+}
+
+aside {
+    grid-area: sidebar;
+    width: 14rem;
+    min-height: 100vh;
+}
+
+aside .top {
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 1.4rem;
+}
+
+aside .logo {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+}
+
+aside .sidebar {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    height: 100vh;
+    top: 50px;
+    left: 0;
+    width: 14rem;
+}
+
+aside .h3 {
+    font-weight: 500;
+}
+
+/* sidebar contents */
+aside .sidebar a {
+    display: flex;
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    height: 3.2rem;
+    transition: all .1s ease-in;
+    color: black;
+}
+
+aside .sidebar a span {
+    font-size: 1.6rem;
+    transition: all .1s ease-in;
+}
+
+main {
+    grid-area: main;
+    padding: 20px;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* heading */
+.upperMain {
+    padding: 20px;
+    text-align: left;
+}
+
+.upperMain h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: 40px;
+    margin-top: 30px;
+}
+
+/* content of main */
+.content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    overflow: auto;
+    height: auto;
+    margin: 40px;
+    margin-top: 0px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* academic year and evaluation status */
+.banner {
+    margin: 10px;
+    border-left: #6B0007 solid 20px;
+    padding: 40px;
+}
+
+.banner h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.banner p {
+    margin-top: 0;
+    color: #000;
+}
+
+
+.reminder {
+    background-color: #F3EDD6;
+    text-align: center;
+    padding: 15px;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 40px;
+}
+
+.card {
+    background-color: #F8F8F8;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.3s ease-in-out;
+    height: 120px;
+    /* Adjust this height as needed */
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-info h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #666;
+}
+
+.card-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.card-icon {
+    font-size: 20px;
+    color: #6B0007;
+}
+
+/* admin-courses elements */
+.upperContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-btn {
+    margin: 20px;
+    background-color: #6B0007;
+    color: white;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 15px;
+    border-radius: 7px;
+}
+
+.add-btn:hover {
+    background-color: #8B0009;
+}
+
+/* modal css */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 40%;
+    max-width: 600px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);/
+}
+
+
+.modal-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    /* Align items vertically centered */
+    padding: 10px;
+    /* Optional padding */
+    border-bottom: 1px solid #6B0007;
+}
+
+.modal-body {
+    padding: 10px;
+}
+
+input[type=text],
+select,
+input[type=number] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=text]:focus,
+input[type=number]:focus,
+select:focus {
+    outline: 1px solid #6B0007;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+    font-family: 'Roboto';
+}
+
+.modal-footer {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    /* Align items vertically centered */
+    padding: 10px;
+    border-top: 1px solid #6B0007;
+    justify-content: end;
+}
+
+.modal-title {
+    font-size: 24px;
+}
+
+.close {
+    cursor: pointer;
+    font-size: 28px;
+    color: #aaa;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: rgb(155, 21, 21);
+    color: white;
+}
+
+.save-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: green;
+    color: white;
+}
+
+
+
+.sortDropDown {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    margin: 20px;
+}
+
+/* table course */
+.table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    border-bottom: 1px solid;
+    color: #a1a1a1;
+}
+
+.table th,
+.table td {
+    padding: 20px;
+    text-align: left;
+}
+
+.table th.course-code,
+.table td.course-code {
+    width: 25%;
+
+}
+
+.table th.course-name,
+.table td.course-name {
+    width: 25%;
+}
+
+.table th.course-description,
+.table td.course-description {
+    width: 30%;
+}
+
+.table th.course-department,
+.table td.course-department {
+    width: 10%;
+}
+
+.table th.course-students,
+.table td.course-students {
+    width: 10%;
+}
+
+.edit-btn {
+    background-color: #6B0007;
+    color: white;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.edit-btn:hover {
+    background-color: #8B0009;
+}
+
+/* pagination */
+.pagination {
+    margin-top: auto;
+    /* Pushes pagination to the bottom of .content */
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid #666;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    margin-left: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination button:hover {
+    background-color: #8B0009;
+    color: white;
+}
+
+/* Hide .table-to-cards by default */
+.hidden {
+    display: none;
+    /* Default hidden */
+}
+
+/* Hide button above 1101px */
+@media (min-width: 1101px) {
+    .open-menu {
+        display: none;
+    }
+
+    .close-btn {
+        display: none;
+    }
+}
+
+
+@media(max-width:1100px) {
+    body {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        grid-column: 1 / -1;
+    }
+
+    aside {
+        display: none;
+        position: fixed;
+        width: 14rem;
+        height: 100%;
+        background-color: white;
+        z-index: 10;
+        overflow: auto;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .open-menu {
+        color: white;
+        margin: 1;
+        cursor: pointer;
+    }
+
+    .close-btn {
+        display: block;
+        cursor: pointer;
+    }
+
+    nav {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+
+}
+
+/* dashboard cards */
+@media (max-width: 640px) {
+    .content {
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+
+    .dashboard-cards {
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+    }
+
+    .upperMain h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-left: 0;
+        margin-top: 0;
+    }
+}
+
+/* table to cards for smaller devices */
+@media (max-width: 870px) {
+    table {
+        display: none;
+    }
+
+    /* CSS for cards */
+    .table-to-cards {
+        display: block;
+        border-radius: 8px;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        padding: 20px;
+        margin: 10px;
+        margin-bottom: 20px;
+        background-color: #ffffff; /* Background color */
+        transition: transform 0.2s; /* Smooth hover effect */
+    }
+
+    .ttc-course_code {
+        color: #6B0007;
+        font-weight: bold; /* Make the course code bold */
+        font-size: 1.2em; /* Increase size */
+    }
+
+    .ttc-course_name {
+        margin-top: 10px;
+        font-size: 1.1em; /* Slightly larger font */
+        color: #333; /* Dark gray for text */
+        font-weight: 600; /* Medium weight */
+    }
+
+    .ttc-course_description,
+    .ttc-course_department,
+    .ttc-number_of_students {
+        margin-top: 10px;
+        font-size: 0.9em; /* Smaller size for descriptions */
+        color: #555; /* Lighter gray for secondary info */
+    }
+
+    .ttc_btn-edit_course {
+        margin-top: 15px;
+        width: 100%;
+        text-align: center; /* Center the button */
+    }
+
+    .edit-btn {
+        color: white; /* White text */
+        border: none; /* No border */
+        border-radius: 4px; /* Rounded corners */
+        padding: 10px 15px; /* Padding for button */
+        cursor: pointer; /* Pointer on hover */
+        width: 100%;
+    }
+
+    .edit-btn:hover {
+        background-color: #8B0009; /* Darker blue on hover */
+    }
+
+    .modal-content{
+        width: 90%;
+        height: auto;
+    }
+}
