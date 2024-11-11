@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Report</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, serif;
+        }
+        p, h3, h1, h4, .facultyNo, .facultyName, .date {
+            margin: 0;
+            font-weight: normal;
+        }
+        h6, h5 {
+            text-align: center;
+            font-size: 15px;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        p {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        h3 {
+            margin-bottom: 10px;
+            font-size: 15px;
+            letter-spacing: 3px;
+            font-weight: 50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            max-width: 750px;
+        }
+        table.summary {
+            width: 100%;
+            border-top: 0;
+            margin-left: 50px;
+        }
+        table.summary tr td, table.evalTable tr td {
+            font-size: 10px;
+            text-align: center;
+            padding: 5px;
+        }
+        table.summary tr:nth-child(even), table.evalTable tr:nth-child(even) {
+            background-color: rgb(244, 244, 244);
+        }
+        table.legend tr td {
+            font-size: 10px;
+            text-align: left;
+            width: 100%;
+        }
+        table.legend table {
+            margin: 0;
+        }
+        table.ratinglegend tr td {
+            font-size: 10px;
+            padding-top: 10px;
+            text-align: center;
+            border-left: 2px solid rgb(244, 244, 244);
+            border-right: 2px solid rgb(244, 244, 244);
+            border-top: 2px solid rgb(244, 244, 244);
+        }
+        table.finalRatingLegend tr td {
+            padding: 10px;
+            font-size: 10px;
+            text-align: center;
+        }
+        .facultyNo, .facultyName, .date {
+            width: 100%;
+            font-size: 15px;
+            border: none;
+        }
+        .facultyName {
+            text-align: center;
+        }
+        .date {
+            text-align: right;
+        }
+        .thin-hr {
+            border: 0;
+            border-top: 1px solid #a2252f;
+            height: 1px;
+            width: 100%;
+            margin: 0;
+        }
+        .metadata {
+            background-color: #a2252f;
+            color: white;
+        }
+        .total {
+            background-color: #a2252f;
+            border-radius: 100px;
+            color: white;
+            padding: 2;
+        }
+        footer {
+            position: fixed;
+            font-size: 10px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            color: black;
+            text-align: left;
+            line-height: 35px;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            text-align: center;
+            z-index: 0;
+        }
+        .evalbody {
+            position: absolute;
+            width: 100%;
+            top: 110px;
+        }
+        @page {
+            margin: 15px;
+        }  
+        img.logo {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 80px;
+        }
+        .titlePage {
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+        .titleBody {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+        }
+        .comments tr td {
+            font-size: 10px;
+            padding: 2px;
+        }
+        table.comments tr:nth-child(even) {
+            background-color: rgb(244, 244, 244);
+        }
+    </style>
+</head>
+<body>
+    <footer>
+        System-generated summary report as of {{ date }} Printed by: {{ user }}, prepared for printing and review.
+    </footer>
+    
+    <header>
+        <img class="logo" src="LPU Black.png" width="80">
+        <h1>Governor's Drive, Manggahan, Gen. Trias, Cavite</h1>
+        <p>{{ program }}<br>{{ sem }} Semester A.Y. {{ ay }}</p>
+        <h3>FACULTY PERFORMANCE EVALUATION SUMMARY REPORT</h3>
+        <hr class="thin-hr">
+            <table>
+                <tr>
+                    <td class="facultyNo">Faculty ID: {{ facultyNo }}</td>
+                    <td class="facultyName">Faculty Name: {{ name }}</td>
+                    <td class="date">Date: {{ date }}</td>
+                </tr>
+            </table>
+        <hr class="thin-hr">
+    </header>
+    <span class="titlePage">
+        <div class="titleBody">
+            <center>
+                <img src="LPU Black.png" width="150">
+                <h3 style="margin-top: 100px; font-size: 25px;">FACULTY PERFORMANCE EVALUATION SUMMARY REPORT</h3>
+                <h4 style="margin-top: 100px; font-size: 20px;">Faculty<br>Name: {{ name }}<br>ID: {{ facultyNo }}</h4>
+                <h4 style="margin-top: 20px; font-size: 20px;">{{ program }}<br>{{ sem }} Semester A.Y. {{ ay }}</p>
+                <h3 style="position: absolute; bottom: 40; font-size: 20px">LYCEUM OF THE PHILIPPINES UNIVERSITY - CAVITE</p>
+            </center>
+        </div>
+    </span>
+    <div class="page-break"></div>
+    <span class="evalbody">
+        <h5>**Student Evaluation**</h5>
+        <table class="legend">
+            <tr><td style="margin: 0;">Evaluation Criteria: (Refer to the legend for detailed descriptions.)</td></tr>
+            <tr>{{ legendStudent }}</tr>
+        </table>
+        <table class="evalTable">
+            <tr>
+                <td class="metadata">Subject</td>
+                <td class="metadata">Section</td>
+                {{ questionCode }}
+            </tr>
+            {{ sectionEval }}
+        </table>
+        <table class="ratinglegend">
+            <tr>
+                <td>5: Outstanding<br>Exceeds expectations in all areas.</td>
+                <td>4: Very Good<br>Meets and often exceeds expectations.</td>
+                <td>3: Satisfactory<br>Meets expectations adequately.</td>
+                <td>2: Needs Improvement<br>Falls short of expectations in some areas.</td>
+                <td>1: Unsatisfactory<br>Does not meet expectations.</td>
+            </tr>
+        </table>
+        <table class="summary">
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="metadata">Subject</td>
+                            <td class="metadata">AVG</td>
+                        </tr>
+                        {{ summaryResultStudent }}
+                        <tr>
+                            <td>Total Rating:</td>
+                            <td width="70px" align="center"><div class="total">{{ studentRating }}</div></td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <img src="{{ graphStudent }}.png" height="300">
+                </td>
+            </tr>
+        </table>
+    </span>
+    <div class="page-break"></div>
+
+    <span class="evalbody">
+        <h5>**Peer Evaluation**</h5>
+        <table class="legend">
+            <tr><td>Evaluation Criteria: (Refer to the legend for detailed descriptions.)</td></tr>
+            <tr>{{ legendFaculty }}</tr>
+        </table>
+        <table class="evalTable">
+            <tr>
+                <td class="metadata">Subject</td>
+                <td class="metadata">Section</td>
+                {{ questionCodePeer }}
+            </tr>
+            {{ sectionEvalPeer }}
+        </table>
+        <table class="ratinglegend">
+            <tr>
+                <td>5: Outstanding<br>Exceeds expectations in all areas.</td>
+                <td>4: Very Good<br>Meets and often exceeds expectations.</td>
+                <td>3: Satisfactory<br>Meets expectations adequately.</td>
+                <td>2: Needs Improvement<br>Falls short of expectations in some areas.</td>
+                <td>1: Unsatisfactory<br>Does not meet expectations.</td>
+            </tr>
+        </table>
+        <table class="summary">
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="metadata">Subject</td>
+                            <td class="metadata">AVG</td>
+                        </tr>
+                        {{ summaryResultPeer }}
+                        <tr>
+                            <td>Total Rating:</td>
+                            <td width="70px" align="center"><div class="total">{{ peerRating }}</div></td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <img src="{{ graphFaculty }}.png" height="300">
+                </td>
+            </tr>
+        </table>
+    </span>
+    <div class="page-break"></div>
+
+    <span class="evalbody">
+        <h5>**Self Evaluation**</h5>
+        <table class="legend">
+            <tr><td>Evaluation Criteria: (Refer to the legend for detailed descriptions.)</td></tr>
+            <tr>{{ legendSelf }}</tr>
+        </table>
+        <table class="evalTable">
+            <tr>
+                <td class="metadata">Subject</td>
+                <td class="metadata">Section</td>
+                {{ questionCodeSelf }}
+            </tr>
+            {{ sectionEvalSelf }}
+        </table>
+        <table class="ratinglegend">
+            <tr>
+                <td>5: Outstanding<br>Exceeds expectations in all areas.</td>
+                <td>4: Very Good<br>Meets and often exceeds expectations.</td>
+                <td>3: Satisfactory<br>Meets expectations adequately.</td>
+                <td>2: Needs Improvement<br>Falls short of expectations in some areas.</td>
+                <td>1: Unsatisfactory<br>Does not meet expectations.</td>
+            </tr>
+        </table>
+        <table class="summary">
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="metadata">Subject</td>
+                            <td class="metadata">AVG</td>
+                        </tr>
+                        {{ summaryResultSelf }}
+                        <tr>
+                            <td>Total Rating:</td>
+                            <td width="70px" align="center"><div class="total">{{ selfRating }}</div></td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <img src="{{ graphSelf }}.png" height="300">
+                </td>
+            </tr>
+        </table>
+    </span>
+    <div class="page-break"></div>
+    
+    <span class="evalbody">
+        <h5>**Chair/Dean Evaluation**</h5>
+        <table class="legend">
+            <tr><td>Evaluation Criteria: (Refer to the legend for detailed descriptions.)</td></tr>
+            <tr>{{ legendChair }}</tr>
+        </table>
+        <table class="evalTable">
+            <tr>
+                <td class="metadata">Subject</td>
+                <td class="metadata">Section</td>
+                {{ questionCodeChair }}
+            </tr>
+            {{ sectionEvalChair }}
+        </table>
+        <table class="ratinglegend">
+            <tr>
+                <td>5: Outstanding<br>Exceeds expectations in all areas.</td>
+                <td>4: Very Good<br>Meets and often exceeds expectations.</td>
+                <td>3: Satisfactory<br>Meets expectations adequately.</td>
+                <td>2: Needs Improvement<br>Falls short of expectations in some areas.</td>
+                <td>1: Unsatisfactory<br>Does not meet expectations.</td>
+            </tr>
+        </table>
+        <table class="summary">
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="metadata">Subject</td>
+                            <td class="metadata">AVG</td>
+                        </tr>
+                        {{ summaryResultChair }}
+                        <tr>
+                            <td>Total Rating:</td>
+                            <td width="70px" align="center"><div class="total">{{ chairRating }}</div></td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    
+                    <img src="{{ graphChair }}.png" height="300">
+                </td>
+            </tr>
+        </table>
+    </span>
+
+    <div class="page-break"></div>
+    
+    <span class="evalbody">
+        <h5>**Overall Results**</h5>
+        <table class="summary" style="font-size: 15px;">
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="metadata">Evaluators</td>
+                            <td class="metadata">AVG</td>
+                            <td class="metadata">Percentage</td>
+                            <td class="metadata">Weighted Totals</td>
+                        </tr>
+                        {{ overallFinal }}
+                        <tr>
+                            <td colspan="3">Total Rating:</td>
+                            <td width="70px" align="center"><div class="total">{{ overallTotal }}</div></td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <img src="{{ overall }}.png" height="300">
+                </td>
+            </tr>
+        </table>
+        <h6>Overall Performance Rating:</h6>
+        <h1 style="text-align: center; font-size: 40px; font-style: italic;">{{ overallTotal }}</h6>
+            <table class="finalRatingLegend">
+                <tr>
+                    <td><h5>4.5 - 5: Excellent</h5><br>Performance consistently exceeds expectations, demonstrating a high level of effectiveness and quality.</td>
+                    <td><h5>3.5 - 4.4: Good</h5><br>Performance consistently meets or occasionally exceeds expectations. Reliable and effective.</td>
+                    <td><h5>2.5 - 3.4: Satisfactory</h5><br>Performance meets expectations. There is room for improvement but generally acceptable.</td>
+                    <td><h5>1.5 - 2.4: Fair</h5><br>Performance occasionally meets expectations but lacks consistency. Some improvement is needed.</td>
+                    <td><h5>0 - 1.4: Poor</h5><br>Performance consistently does not meet expectations. Significant improvement is needed.</td>
+                </tr>
+            </table>
+        </span>
+            {{ comments }}
+        </div>
+        
+    </span>
+</body>
+</html>
