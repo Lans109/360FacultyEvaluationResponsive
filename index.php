@@ -10,7 +10,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- CSS -->
-    <link rel='stylesheet' href="index-style.css">
+    <link rel='stylesheet' href="./css/index-style.css">
     <title>Login</title>
     <nav class="topnav">
 
@@ -21,7 +21,7 @@ session_start();
     <div class="container">
         <div class="wrapper">
             <div class="logo">
-                <img src="LPU-LOGO.png" alt="Logo">
+                <img src="./assets/icons/LPU-LOGO.png" alt="Logo">
             </div>
             <div class="login-box">
                 <form action="#" method="POST">
