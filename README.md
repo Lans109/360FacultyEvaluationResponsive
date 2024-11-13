@@ -1,0 +1,2 @@
+Web and Mobile-Based 360° Faculty Evaluation System for Comprehensive Performance Assessment, version 1.0. 
+This system is designed to facilitate a 360-degree evaluation process for faculty members by aggregating input from students, faculty peers, and program chairs, as well as providing self-evaluation functionality. The scope of this document encompasses all aspects of the system, detailing both the web and mobile functionalities, as well as the database and reporting components.

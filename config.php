@@ -1,17 +1,17 @@
 <?php
-// config.php
-session_start();
+define('ROOT_PATH', __DIR__);
 
-// Simulated user data
-$valid_users = [
-    'stephen.lacsa@lpunetwork.edu.ph' => [
-        'password' => 'password123',
-        'name' => 'Prince Pipen',
-        'id' => '1',
-        'profile_pic' => 'default-avatar.png',
-        'courses' => [
-            ['code' => 'CSCN10C', 'duration' => '1st 2425', 'lessons' => 12],
-            ['code' => 'DCSN06C', 'duration' => '1st 2425', 'lessons' => 15]
-        ]
-    ]
-];
+define('DB_HOST', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_DATABASE', 'evalsystem');
+
+define('SITE_NAME', 'Faculty Evaluation System');
+define('SITE_URL', 'http://localhost/faculty-evaluation');
+
+date_default_timezone_set('Asia/Manila');
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+?>
