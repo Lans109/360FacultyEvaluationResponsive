@@ -8,8 +8,8 @@ if (!isset($_SESSION['user_id'])) {
 
 // Simulated faculty data
 $faculty_list = [
-    ['name' => 'MR. CONO, SEAN CHARLSTON', 'id' => '1'],
-    ['name' => 'DR. PEÑEN, JEIRAN', 'id' => '2'],
+    ['name' => 'MR. GONO, SEAN CHARLSTON', 'id' => '1'],
+    ['name' => 'DR. PEREN, JEIRAN', 'id' => '2'],
     ['name' => 'MR. HADLOCON, ARCEL', 'id' => '3'],
     ['name' => 'ENGR. GUEVARRA, GLEN', 'id' => '4']
 ];
