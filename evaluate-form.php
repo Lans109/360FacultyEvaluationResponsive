@@ -162,5 +162,4 @@ $questions = [
         });
     </script>
 </body>
-
 </html>

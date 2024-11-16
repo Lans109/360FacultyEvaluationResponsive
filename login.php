@@ -18,6 +18,10 @@
 
         body {
             font-family: Arial, sans-serif;
+            background-image: url('LPU-C-BG.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
             background-color: #f5f5f5;
         }
 
