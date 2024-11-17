@@ -102,6 +102,7 @@ if (!$facultyResult) {
                                         <td><?php echo htmlspecialchars($row['faculty_name']); ?></td>
                                         <td><?php echo htmlspecialchars($row['department_name']); ?></td>
                                         <td>
+                                            <!--test-->
                                             <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">
                                                 View Results
                                             </a>
