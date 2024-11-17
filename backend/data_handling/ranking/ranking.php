@@ -29,13 +29,14 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
             <h1>Top Faculty</h1>
         </div>
         <div class="content">
-            <div class="container mt-4">
+            <div class="departments-wrapper">
                 <?php
                 // Initialize ranking HTML string
                 $ranking = '';
 
                 // Loop through each department
                 foreach ($faculty_list_by_department as $department_code => $faculty_list):
+                    $ranking .= '<div class="department-box">';
                     $ranking .= '<h3 class="mt-5">' . htmlspecialchars($department_code) . ' Department</h3>';
                     $ranking .= '<div class="table">';
                     $ranking .= '<table>';
@@ -65,6 +66,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                     $ranking .= '</tbody>';
                     $ranking .= '</table>';
                     $ranking .= '</div>';
+                    $ranking .= '</div>';
                 endforeach;
 
                 // The $ranking variable now contains the entire HTML structure for the faculty list tables
@@ -82,7 +84,9 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
             </div>
         </div>
     </main>
-
+    
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
