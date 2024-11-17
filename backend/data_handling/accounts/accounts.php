@@ -24,6 +24,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Accounts</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
@@ -32,7 +33,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
     <?php include '../../../frontend/layout/sidebar.php'; ?>
 
     <main>
-    <div class="upperMain">
+        <div class="upperMain">
             <h1>Edit Accounts</h1>
         </div>
         <div class="content">
@@ -50,215 +51,219 @@ $result_faculty = mysqli_query($con, $query_faculty);
 
             <!-- Program Chairs Table -->
             <h4>Program Chairs</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Username</th> <!-- New Username Column -->
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($chair = mysqli_fetch_assoc($result_chairs)): ?>
+            <div class="table">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo $chair['chair_id']; ?></td>
-                            <td><?php echo $chair['chair_name']; ?></td>
-                            <td><?php echo $chair['chair_username']; ?></td> <!-- Display Username -->
-                            <td><?php echo $chair['chair_email']; ?></td>
-                            <td>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#editChairModal<?php echo $chair['chair_id']; ?>">Edit</button>
-                            </td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Username</th> <!-- New Username Column -->
+                            <th>Email</th>
+                            <th>Action</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($chair = mysqli_fetch_assoc($result_chairs)): ?>
+                            <tr>
+                                <td><?php echo $chair['chair_id']; ?></td>
+                                <td><?php echo $chair['chair_name']; ?></td>
+                                <td><?php echo $chair['chair_username']; ?></td> <!-- Display Username -->
+                                <td><?php echo $chair['chair_email']; ?></td>
+                                <td>
+                                    <button class="edit-btn" data-toggle="modal"
+                                        data-target="#editChairModal<?php echo $chair['chair_id']; ?>"><i
+                                            class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
 
-                        <!-- Edit Program Chair Modal -->
-                        <div class="modal" id="editChairModal<?php echo $chair['chair_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="editChairModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editChairModalLabel">Edit Program Chair</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                            <!-- Edit Program Chair Modal -->
+                            <div class="modal" id="editChairModal<?php echo $chair['chair_id']; ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="editChairModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editChairModalLabel">Edit Program Chair</h5>
+                                            <span class="close" class="close" data-dismiss="modal"
+                                                aria-label="Close">&times;</span>
+                                        </div>
+                                        <form method="POST" action="update_account.php">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="chair_id"
+                                                    value="<?php echo $chair['chair_id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="chair_username">Username</label>
+                                                    <input type="text" name="chair_username" class="form-control"
+                                                        value="<?php echo $chair['chair_username']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="chair_email">Email</label>
+                                                    <input type="email" name="chair_email" class="form-control"
+                                                        value="<?php echo $chair['chair_email']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="chair_password">Password</label>
+                                                    <input type="password" name="chair_password" class="form-control"
+                                                        placeholder="Enter new password (leave blank to keep current)">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="save-btn">Save changes</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <form method="POST" action="update_account.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="chair_id" value="<?php echo $chair['chair_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="chair_username">Username</label>
-                                                <input type="text" name="chair_username" class="form-control"
-                                                    value="<?php echo $chair['chair_username']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="chair_email">Email</label>
-                                                <input type="email" name="chair_email" class="form-control"
-                                                    value="<?php echo $chair['chair_email']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="chair_password">Password</label>
-                                                <input type="password" name="chair_password" class="form-control"
-                                                    placeholder="Enter new password (leave blank to keep current)">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
 
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Students Table -->
             <h4>Students</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Username</th> <!-- New Username Column -->
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($student = mysqli_fetch_assoc($result_students)): ?>
+            <div class="table">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo $student['student_id']; ?></td>
-                            <td><?php echo $student['student_name']; ?></td>
-                            <td><?php echo $student['student_username']; ?></td> <!-- Display Username -->
-                            <td><?php echo $student['student_email']; ?></td>
-                            <td>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#editStudentModal<?php echo $student['student_id']; ?>">Edit</button>
-                            </td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Username</th> <!-- New Username Column -->
+                            <th>Email</th>
+                            <th>Action</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($student = mysqli_fetch_assoc($result_students)): ?>
+                            <tr>
+                                <td><?php echo $student['student_id']; ?></td>
+                                <td><?php echo $student['student_name']; ?></td>
+                                <td><?php echo $student['student_username']; ?></td> <!-- Display Username -->
+                                <td><?php echo $student['student_email']; ?></td>
+                                <td>
+                                    <button class="edit-btn" data-toggle="modal"
+                                        data-target="#editStudentModal<?php echo $student['student_id']; ?>"><i
+                                            class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
 
-                        <!-- Edit Student Modal -->
-                        <div class="modal fade" id="editStudentModal<?php echo $student['student_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                            <!-- Edit Student Modal -->
+                            <div class="modal fade" id="editStudentModal<?php echo $student['student_id']; ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                                            <span class="close" class="close" data-dismiss="modal"
+                                                aria-label="Close">&times;</span>
+                                        </div>
+                                        <form method="POST" action="update_account.php">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="student_id"
+                                                    value="<?php echo $student['student_id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="student_username">Username</label>
+                                                    <input type="text" name="student_username" class="form-control"
+                                                        value="<?php echo $student['student_username']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="student_email">Email</label>
+                                                    <input type="email" name="student_email" class="form-control"
+                                                        value="<?php echo $student['student_email']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="student_password">Password</label>
+                                                    <input type="password" name="student_password" class="form-control"
+                                                        placeholder="Enter new password (leave blank to keep current)">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="save-btn">Save changes</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <form method="POST" action="update_account.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="student_id"
-                                                value="<?php echo $student['student_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="student_username">Username</label>
-                                                <input type="text" name="student_username" class="form-control"
-                                                    value="<?php echo $student['student_username']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="student_email">Email</label>
-                                                <input type="email" name="student_email" class="form-control"
-                                                    value="<?php echo $student['student_email']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="student_password">Password</label>
-                                                <input type="password" name="student_password" class="form-control"
-                                                    placeholder="Enter new password (leave blank to keep current)">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
 
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Faculty Table -->
             <h4>Faculty</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Username</th> <!-- New Username Column -->
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($faculty = mysqli_fetch_assoc($result_faculty)): ?>
+            <div class="table">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo $faculty['faculty_id']; ?></td>
-                            <td><?php echo $faculty['faculty_name']; ?></td>
-                            <td><?php echo $faculty['faculty_username']; ?></td> <!-- Display Username -->
-                            <td><?php echo $faculty['faculty_email']; ?></td>
-                            <td>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#editFacultyModal<?php echo $faculty['faculty_id']; ?>">Edit</button>
-                            </td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Username</th> <!-- New Username Column -->
+                            <th>Email</th>
+                            <th>Action</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($faculty = mysqli_fetch_assoc($result_faculty)): ?>
+                            <tr>
+                                <td><?php echo $faculty['faculty_id']; ?></td>
+                                <td><?php echo $faculty['faculty_name']; ?></td>
+                                <td><?php echo $faculty['faculty_username']; ?></td> <!-- Display Username -->
+                                <td><?php echo $faculty['faculty_email']; ?></td>
+                                <td>
+                                    <button class="edit-btn" data-toggle="modal"
+                                        data-target="#editFacultyModal<?php echo $faculty['faculty_id']; ?>"><i
+                                            class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
 
-                        <!-- Edit Faculty Modal -->
-                        <div class="modal fade" id="editFacultyModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="editFacultyModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editFacultyModalLabel">Edit Faculty</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                            <!-- Edit Faculty Modal -->
+                            <div class="modal" id="editFacultyModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="editFacultyModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editFacultyModalLabel">Edit Faculty</h5>
+                                            <span class="close" class="close" data-dismiss="modal"
+                                                aria-label="Close">&times;</span>
+                                        </div>
+                                        <form method="POST" action="update_account.php">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="faculty_id"
+                                                    value="<?php echo $faculty['faculty_id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="faculty_username">Username</label>
+                                                    <input type="text" name="faculty_username" class="form-control"
+                                                        value="<?php echo $faculty['faculty_username']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="faculty_email">Email</label>
+                                                    <input type="email" name="faculty_email" class="form-control"
+                                                        value="<?php echo $faculty['faculty_email']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="faculty_password">Password</label>
+                                                    <input type="password" name="faculty_password" class="form-control"
+                                                        placeholder="Enter new password (leave blank to keep current)">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="save-btn">Save changes</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <form method="POST" action="update_account.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="faculty_id"
-                                                value="<?php echo $faculty['faculty_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="faculty_username">Username</label>
-                                                <input type="text" name="faculty_username" class="form-control"
-                                                    value="<?php echo $faculty['faculty_username']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="faculty_email">Email</label>
-                                                <input type="email" name="faculty_email" class="form-control"
-                                                    value="<?php echo $faculty['faculty_email']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="faculty_password">Password</label>
-                                                <input type="password" name="faculty_password" class="form-control"
-                                                    placeholder="Enter new password (leave blank to keep current)">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
 
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
 
     </main>
-    
+
     <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
