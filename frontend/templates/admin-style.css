@@ -11,6 +11,11 @@
     appearance: none;
 }
 
+p {
+    font-size: 15px;
+    padding: 2px;
+}
+
 a {
     color: black;
 }
@@ -183,9 +188,16 @@ main {
     border-radius: 4px;
     /* Rounded edges for consistency */
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-
+    
 }
-
+.banner-profile {
+    margin: 10px;
+    border-left: #6B0007 solid 20px;
+    padding: 20px;
+    border-radius: 4px;
+    /* Rounded edges for consistency */
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
 .banner h3 {
     margin: 0;
     font-size: 20px;
@@ -283,7 +295,18 @@ main {
     /* Light background for contrast */
     padding: 20px;
 }
-
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    max-width: 600px;
+}
+.profile-img {
+    border-radius: 100%;
+    width: 150px;
+    height: 150px;
+}
 /* Individual Chart Styling */
 .charts>div {
     flex: 1;
@@ -300,7 +323,69 @@ main {
     justify-content: center;
     align-items: center;
 }
+.rating {
+    font-size: 3em; /* Large font size for the rating */
+    font-weight: bold;
+    color: #333; /* Dark color for the rating */
+    text-align: center; /* Center the rating */
+    margin-bottom: 20px; /* Space below the rating */
+    font-style: italic;
+}
 
+.center h3, h5 {
+    text-align: center; /* Center the evaluation text */
+    color: #333; /* Dark color for the text */
+    margin-top: 10px;
+}
+
+.center h3 {
+    font-size: 2em; /* Size for Excellent/Good text */
+    color: #4CAF50; /* Green for Excellent/Good */
+}
+
+.center h5 {
+    font-size: 1.5em; /* Size for Satisfactory/Fair/Poor text */
+    color: #F44336; /* Red for Satisfactory/Fair/Poor */
+}
+
+.center {
+    text-align: center; /* Ensures everything inside is centered */
+    margin: 20px;
+}
+.generate-pdf-btn {
+    background-color: #6B0007; /* Green background */
+    color: white; /* White text color */
+    padding: 12px 24px; /* Add padding for a nice button size */
+    font-size: 16px; /* Font size */
+    border: none; /* Remove the default border */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Cursor changes to a pointer when hovered */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition on hover */
+}
+
+.generate-pdf-btn:hover {
+    background-color: #6B0007; /* Darker green when hovered */
+    transform: translateY(-2px); /* Lift the button a little on hover */
+}
+
+.generate-pdf-btn:active {
+    background-color: #6B0007; /* Even darker green when clicked */
+    transform: translateY(0); /* Remove lift effect when clicked */
+}
+
+.generate-pdf-btn:focus {
+    outline: none; /* Remove the focus outline */
+}
+#rating {
+    flex: .5;
+    /* Full width for larger charts */
+    max-width: 200;
+}
+#chart_div_overall, #combined_div_overall {
+    flex: 1;
+    /* Full width for larger charts */
+    max-width: 1000px;
+}
 /* Smaller Chart Adjustments */
 #myChart {
     flex: 0.5;
@@ -500,8 +585,10 @@ textarea {
     padding: 20px;
     text-align: left;
 }
+tr:nth-child(even) {
+    background-color: #fbfbfb; /* Light grey for even rows */
+}
 
-tr:hover {
     background-color: rgb(224, 224, 224);
 }
 

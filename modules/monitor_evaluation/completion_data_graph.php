@@ -26,6 +26,7 @@
             ]);
 
             const options = {
+                backgroundColor: 'transparent',
                 title: header,
                 colors: ['#a2252f', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],  
                 fontName: 'Times New Roman',
@@ -81,6 +82,7 @@
 
             // Set Options
             const options = {
+                backgroundColor: 'transparent',
                 title: 'Evaluation Percentage',
                 colors: ['#a2252f', 'grey'],
                 fontName: 'Times New Roman',
