@@ -8,6 +8,7 @@ $courses_query = "SELECT c.course_id, c.course_name, c.course_code, c.course_des
                   FROM courses c
                   LEFT JOIN departments d ON c.department_id = d.department_id";
 $courses_result = mysqli_query($con, $courses_query);
+echo 'test';
 ?>
 
 <!DOCTYPE html>
