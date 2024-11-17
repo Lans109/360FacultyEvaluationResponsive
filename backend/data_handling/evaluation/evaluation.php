@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                             break;
                                     }
                                     ?>
-                                </p>
+                                </p><br>
 
                                 <!-- Update Status Form -->
                                 <div class="mt-4">
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                         <div class="form-group">
                                             <label for="status">Status:</label>
                                             <select class="form-control" id="status" name="status" required
-                                                style="border: none; background-color: #e9f7ef;">
+                                                style="border: none;">
                                                 <option value="completed" <?php echo ($status === 'completed') ? 'selected' : ''; ?>>
                                                     Completed</option>
                                                 <option value="active" <?php echo ($status === 'active') ? 'selected' : ''; ?>>Active
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                                     Upcoming</option>
                                             </select>
                                         </div>
-                                        <button type="submit" name="update_status" class="edit-btn">Update
+                                        <button type="submit" name="update_status" class="save-btn">Update
                                             Status</button>
                                     </form>
                                 </div>

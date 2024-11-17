@@ -74,65 +74,68 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                     <div class="card-header">No Active Evaluation</div>
                 <?php endif; ?>
             </div>
-            <div class="reminder">
-                <?php if ($current_evaluation_data): ?>
-                    <p>Reminder: It's time to complete your faculty evaluation! Please take a few moments to provide
-                    your feedback.</p>
-                <?php else: ?>   
-                    <p class="card-text">There is no active evaluation for today.</p>
-                <?php endif; ?>
-            </div>
-            <div class="dashboard-cards">
-                <div class="card">
-                    <div class="card-info">
-                        <h3><?php echo $total_programs; ?></h3>
-                        <p> Total Programs</p>
+            <div class="dashboard-content">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_programs; ?></h3>
+                            <p> Total Programs</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/programs.jpg">
+                        </div>
                     </div>
-                    <div class="card-icon">
-                        <img src="../../../frontend/assets/programs.jpg">
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_courses; ?></h3>
+                            <p> Total Course</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/courses.jpg">
+                        </div>
                     </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_students; ?></h3>
+                            <p> Total Students</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/students.jpg">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_sections; ?></h3>
+                            <p> Total Sections</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/sections.jpg">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_faculty; ?></h3>
+                            <p> Total Faculty</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/faculty.jpg">
+                        </div>
+                    </div>
+
                 </div>
-                <div class="card">
-                    <div class="card-info">
-                        <h3><?php echo $total_courses; ?></h3>
-                        <p> Total Course</p>
-                    </div>
-                    <div class="card-icon">
-                        <img src="../../../frontend/assets/courses.jpg">
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-info">
-                        <h3><?php echo $total_students; ?></h3>
-                        <p> Total Students</p>
-                    </div>
-                    <div class="card-icon">
-                        <img src="../../../frontend/assets/students.jpg">
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-info">
-                        <h3><?php echo $total_sections; ?></h3>
-                        <p> Total Sections</p>
-                    </div>
-                    <div class="card-icon">
-                        <img src="../../../frontend/assets/sections.jpg">
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-info">
-                        <h3><?php echo $total_faculty; ?></h3>
-                        <p> Total Faculty</p>
-                    </div>
-                    <div class="card-icon">
-                        <img src="../../../frontend/assets/faculty.jpg">
-                    </div>
+                <div class="charts">
+                    <?php include 'monitor.php'; ?>
+                    <div id="myChart" style="height: 400px;"></div>
+                    <div id="completion_chart" style="height: 400px;"></div>
+                    <div id="completion_daily_chart" style="height: 400px;"></div>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- sidebar opener -->
     <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

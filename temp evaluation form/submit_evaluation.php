@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
     $faculty_id = $_POST['faculty_id'];
     $survey_id = $_POST['survey_id'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
     $course_section_id = $_POST['course_section_id'];
 
     // Prepare the SQL for the evaluations table
@@ -48,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert the evaluation entry for the student in the evaluation_students table
     $sqlEvalStudent = "
-        INSERT INTO students_evaluations (evaluation_id, student_id)
-        VALUES (?, ?)
+        INSERT INTO students_evaluations (evaluation_id, student_id, date_evaluated, time_evaluated)
+        VALUES (?, ?, ?, ?)
     ";
     $stmtEvalStudent = $con->prepare($sqlEvalStudent);
-    $stmtEvalStudent->bind_param("ii", $evaluation_id, $student_id);
+    $stmtEvalStudent->bind_param("iiss", $evaluation_id, $student_id, $date, $time);
     $stmtEvalStudent->execute();
 
     echo "Evaluation submitted successfully!";

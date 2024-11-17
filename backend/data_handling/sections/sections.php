@@ -39,6 +39,7 @@ $sections_result = mysqli_query($con, $sections_query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Section Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
@@ -70,7 +71,8 @@ $sections_result = mysqli_query($con, $sections_query);
             </div>
 
             <!-- Table of Course Sections -->
-            <table class="table">
+            <div class="table">
+                <table>
                 <thead>
                     <tr>
                         <th>Section Name</th>
@@ -86,16 +88,20 @@ $sections_result = mysqli_query($con, $sections_query);
                             <td><?php echo htmlspecialchars($section['course_name']); ?></td>
                             <td><?php echo htmlspecialchars($section['student_count']); ?></td>
                             <td>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#editModal<?php echo $section['course_section_id']; ?>"
-                                    data-id="<?php echo $section['course_section_id']; ?>"
-                                    data-section="<?php echo $section['section']; ?>"
-                                    data-course-id="<?php echo $section['course_id']; ?>">Edit</button>
-                                    <button class="delete-btn">
-                                <a href="delete_section.php?course_section_id=<?php echo $section['course_section_id']; ?>"
-                                    class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete this course section?')">Delete</a>
-                                    </button>
+                                <div class="action-btns">
+                                    <button class="edit-btn" data-toggle="modal"
+                                        data-target="#editModal<?php echo $section['course_section_id']; ?>"
+                                        data-id="<?php echo $section['course_section_id']; ?>"
+                                        data-section="<?php echo $section['section']; ?>"
+                                        data-course-id="<?php echo $section['course_id']; ?>"><i
+                                            class="fa fa-edit"></i></button>
+
+                                    <a href="delete_section.php?course_section_id=<?php echo $section['course_section_id']; ?>"
+                                        class="delete-btn"
+                                        onclick="return confirm('Are you sure you want to delete this course section?')"><i
+                                            class="fa fa-trash"></i></a>
+
+                                </div>
                             </td>
                         </tr>
 
@@ -106,9 +112,8 @@ $sections_result = mysqli_query($con, $sections_query);
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editModalLabel">Edit Course Section</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <span class="close" class="close" data-dismiss="modal"
+                                            aria-label="Close">&times;</span>
                                     </div>
                                     <form id="editForm<?php echo $section['course_section_id']; ?>" method="POST"
                                         action="update_section.php">
@@ -133,9 +138,8 @@ $sections_result = mysqli_query($con, $sections_query);
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="save-btn">Save changes</button>
                                         </div>
                                     </form>
                                 </div>
@@ -156,9 +160,7 @@ $sections_result = mysqli_query($con, $sections_query);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addSectionModalLabel">Add New Course Section</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
                 </div>
                 <form action="add_section.php" method="POST">
                     <div class="modal-body">
@@ -179,8 +181,8 @@ $sections_result = mysqli_query($con, $sections_query);
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" name="add_section" class="btn btn-primary">Add Course
+                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                        <button type="submit" name="add_section" class="save-btn">Add Course
                             Section</button>
                     </div>
                 </form>

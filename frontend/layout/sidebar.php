@@ -24,9 +24,10 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dataDropdown" onclick="toggleDropdown()">
+                    <a class="nav-link dropdown-toggle" href="#" id="dataDropdown"
+                        onclick="toggleDropdown('dataCollapse')">
                         <img src="../../../frontend/assets/data.png" width="21px">
-                        <h3>Data Management</h3>
+                        <h3>Data Management ▼</h3>
                     </a>
                     <div class="dropdown-content" id="dataCollapse">
                         <ul class="nav flex-column">
@@ -72,6 +73,12 @@
                                     <h3>Accounts</h3>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../../../backend/data_handling/survey/survey.php">
+                                    <img src="../../../frontend/assets/survey.png" width="21px">
+                                    <h3>Survey</h3>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -81,11 +88,28 @@
                         <h3>Evaluations</h3>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../../../backend/data_handling/results/results.php">
-                        <img src="../../../frontend/assets/reports.jpg">
-                        <h3>View Reults</h3>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="viewResultsDropdown"
+                        onclick="toggleDropdown('viewResultsCollapse')">
+                        <img src="../../../frontend/assets/reports.jpg" width="21px">
+                        <h3>Reports ▼</h3>
                     </a>
+                    <div class="dropdown-content" id="viewResultsCollapse">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../../../backend/data_handling/results/results.php">
+                                    <img src="../../../frontend/assets/reports.jpg">
+                                    <h3>View Results</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../../../backend/data_handling/ranking/ranking.php">
+                                    <img src="../../../frontend/assets/ranking.png" width="21px">
+                                    <h3>Top Faculty</h3>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -98,22 +122,22 @@
     </aside>
 
     <script>
-        function toggleDropdown() {
-            var dropdownContent = document.getElementById("dataCollapse");
+        function toggleDropdown(dropdownId) {
+            var dropdownContent = document.getElementById(dropdownId);
             dropdownContent.classList.toggle("show");
         }
 
-        function closeDropdown() {
-            document.getElementById("dataCollapse").classList.remove("show");
-        }
-
+        // Close all dropdowns when clicking outside
         document.addEventListener('click', function (e) {
-            var dropdownContent = document.getElementById("dataCollapse");
-            if (!e.target.closest('#dataDropdown')) {
-                dropdownContent.classList.remove("show");
-            }
+            var dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(function (dropdown) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdown.classList.remove("show");
+                }
+            });
         });
     </script>
+
 </body>
 
 </html>

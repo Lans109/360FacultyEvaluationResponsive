@@ -14,6 +14,8 @@ if ($con->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $faculty_id = $_POST['faculty_id'];
     $survey_id = $_POST['survey_id'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
 } else {
     // Redirect back to the selection form if accessed directly
     header("Location: faculty_survey_selection.php");
@@ -56,6 +58,7 @@ if ($resultQuestions->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluation Form</title>
+    
     <style>
     body {
         font-family: Arial, sans-serif;
@@ -166,9 +169,12 @@ if ($resultQuestions->num_rows > 0) {
 
 <div class="container">
     <h1>Evaluation Form for <?= htmlspecialchars($faculty_id); ?> (Survey ID: <?= htmlspecialchars($survey_id); ?>)</h1>
+    <?php echo $date . " " . $time ?>
     <form action="submit_evaluation.php" method="post">
         <input type="hidden" name="faculty_id" value="<?= htmlspecialchars($faculty_id); ?>">
         <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey_id); ?>">
+        <input type="hidden" name="date" value="<?= htmlspecialchars($date); ?>">
+        <input type="hidden" name="time" value="<?= htmlspecialchars($time); ?>">
 
         <label for="course">Course:</label>
         <select name="course_section_id" id="course" required>

@@ -38,6 +38,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
@@ -66,187 +67,196 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                     </div> -->
             </div>
             <!-- Table of Faculty -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Faculty ID</th>
-                        <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Department</th>
-                        <th width="900px">Assigned Courses</th>
-                        <th width="2000px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($faculty = mysqli_fetch_assoc($faculty_result)): ?>
+            <div class="table">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo $faculty['faculty_id']; ?></td>
-                            <td><?php echo $faculty['email']; ?></td>
-                            <td><?php echo $faculty['first_name']; ?></td>
-                            <td><?php echo $faculty['last_name']; ?></td>
-                            <td>
-                                <?php
-                                // Fetch department name
-                                $department_id = $faculty['department_id'];
-                                $department_query = "SELECT department_name FROM departments WHERE department_id = $department_id";
-                                $department_result = mysqli_query($con, $department_query);
-                                $department = mysqli_fetch_assoc($department_result);
-                                echo $department['department_name'];
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                // Fetch assigned courses for the faculty
-                                $faculty_id = $faculty['faculty_id'];
-                                $assigned_courses_query = "
-                            SELECT cs.course_section_id, c.course_name, cs.section 
-                            FROM faculty_courses fc 
-                            JOIN course_sections cs ON fc.course_section_id = cs.course_section_id 
-                            JOIN courses c ON cs.course_id = c.course_id 
-                            WHERE fc.faculty_id = $faculty_id";
-                                $assigned_courses_result = mysqli_query($con, $assigned_courses_query);
-
-                                if (mysqli_num_rows($assigned_courses_result) > 0) {
-                                    while ($course = mysqli_fetch_assoc($assigned_courses_result)) {
-                                        echo $course['section'] . " - " . $course['course_name'] . " 
-                                <a href='delete_faculty_course.php?faculty_id=$faculty_id&course_section_id=" . $course['course_section_id'] . "' class='btn btn-sm btn-danger' onclick=\"return confirm('Are you sure you want to remove this course?')\">Remove</a><br>";
-                                    }
-                                } else {
-                                    echo "No courses assigned.";
-                                }
-                                ?>
-                            </td>
-                            <td>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#editModal<?php echo $faculty['faculty_id']; ?>"
-                                    data-id="<?php echo $faculty['faculty_id']; ?>"
-                                    data-first-name="<?php echo $faculty['first_name']; ?>"
-                                    data-last-name="<?php echo $faculty['last_name']; ?>"
-                                    data-department-id="<?php echo $faculty['department_id']; ?>">Edit</button>
-                                <button class="delete-btn">
-                                    <a href="delete_faculty.php?faculty_id=<?php echo $faculty['faculty_id']; ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure you want to delete this faculty member?')">Delete</a>
-                                </button>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#assignCourseModal<?php echo $faculty['faculty_id']; ?>">Assign
-                                    Course</button>
-                            </td>
+                            <th>Faculty ID</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Department</th>
+                            <th width="600px">Assigned Courses</th>
+                            <th width="250px">Actions</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($faculty = mysqli_fetch_assoc($faculty_result)): ?>
+                            <tr>
+                                <td><?php echo $faculty['faculty_id']; ?></td>
+                                <td><?php echo $faculty['email']; ?></td>
+                                <td><?php echo $faculty['first_name']; ?></td>
+                                <td><?php echo $faculty['last_name']; ?></td>
+                                <td>
+                                    <?php
+                                    // Fetch department name
+                                    $department_id = $faculty['department_id'];
+                                    $department_query = "SELECT department_name FROM departments WHERE department_id = $department_id";
+                                    $department_result = mysqli_query($con, $department_query);
+                                    $department = mysqli_fetch_assoc($department_result);
+                                    echo $department['department_name'];
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    // Fetch assigned courses for the faculty
+                                    $faculty_id = $faculty['faculty_id'];
+                                    $assigned_courses_query = "
+        SELECT cs.course_section_id, c.course_name, cs.section 
+        FROM faculty_courses fc 
+        JOIN course_sections cs ON fc.course_section_id = cs.course_section_id 
+        JOIN courses c ON cs.course_id = c.course_id 
+        WHERE fc.faculty_id = $faculty_id";
+                                    $assigned_courses_result = mysqli_query($con, $assigned_courses_query);
 
-                        <!-- Edit Faculty Modal -->
-                        <div class="modal fade" id="editModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel">Edit Faculty</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                    if (mysqli_num_rows($assigned_courses_result) > 0) {
+                                        while ($course = mysqli_fetch_assoc($assigned_courses_result)) { ?>
+                                            <div class="section-row">
+                                                <div class="section-details">
+                                                    <?php echo $course['section'] . " - " . $course['course_name']; ?>
+                                                </div>
+                                                <div class="section-action">
+                                                    <a href="delete_faculty_course.php?faculty_id=<?php echo $faculty_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>"
+                                                        class="delete-btn"
+                                                        onclick="return confirm('Are you sure you want to remove this course?')"><i
+                                                            class="fa fa-trash"></i></a>
+                                                </div>
+                                            </div>
+                                        <?php }
+                                    } else {
+                                        echo "No courses assigned.";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn" data-toggle="modal"
+                                            data-target="#editModal<?php echo $faculty['faculty_id']; ?>"
+                                            data-id="<?php echo $faculty['faculty_id']; ?>"
+                                            data-first-name="<?php echo $faculty['first_name']; ?>"
+                                            data-last-name="<?php echo $faculty['last_name']; ?>"
+                                            data-department-id="<?php echo $faculty['department_id']; ?>"><i
+                                                class="fa fa-edit"></i></button>
+
+                                        <a href="delete_faculty.php?faculty_id=<?php echo $faculty['faculty_id']; ?>"
+                                            class="delete-btn"
+                                            onclick="return confirm('Are you sure you want to delete this faculty member?')"><i
+                                                class="fa fa-trash"></i></a>
+
+                                        <button class="enroll-btn" data-toggle="modal"
+                                            data-target="#assignCourseModal<?php echo $faculty['faculty_id']; ?>">Assign
+                                            Course</button>
                                     </div>
-                                    <form method="POST" action="update_faculty.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="faculty_id"
-                                                value="<?php echo $faculty['faculty_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="first_name">First Name</label>
-                                                <input type="text" name="first_name" class="form-control"
-                                                    value="<?php echo $faculty['first_name']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="last_name">Last Name</label>
-                                                <input type="text" name="last_name" class="form-control"
-                                                    value="<?php echo $faculty['last_name']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="email" name="email" class="form-control"
-                                                    value="<?php echo $faculty['email']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="department_id">Select Department</label>
-                                                <select name="department_id" class="form-control" required>
-                                                    <option value="">Choose a department...</option>
-                                                    <?php foreach ($departments as $department): ?>
-                                                        <option value="<?php echo $department['department_id']; ?>" <?php echo ($department['department_id'] == $faculty['department_id']) ? 'selected' : ''; ?>>
-                                                            <?php echo $department['department_name']; ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
+                                </td>
+                            </tr>
+
+                            <!-- Edit Faculty Modal -->
+                            <div class="modal" id="editModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Edit Faculty</h5>
+                                            <span class="close" class="close" data-dismiss="modal"
+                                                aria-label="Close">&times;</span>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </form>
+                                        <form method="POST" action="update_faculty.php">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="faculty_id"
+                                                    value="<?php echo $faculty['faculty_id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="first_name">First Name</label>
+                                                    <input type="text" name="first_name" class="form-control"
+                                                        value="<?php echo $faculty['first_name']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="last_name">Last Name</label>
+                                                    <input type="text" name="last_name" class="form-control"
+                                                        value="<?php echo $faculty['last_name']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" name="email" class="form-control"
+                                                        value="<?php echo $faculty['email']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="department_id">Select Department</label>
+                                                    <select name="department_id" class="form-control" required>
+                                                        <option value="">Choose a department...</option>
+                                                        <?php foreach ($departments as $department): ?>
+                                                            <option value="<?php echo $department['department_id']; ?>" <?php echo ($department['department_id'] == $faculty['department_id']) ? 'selected' : ''; ?>>
+                                                                <?php echo $department['department_name']; ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="save-btn">Save changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Assign Course Modal -->
-                        <div class="modal fade" id="assignCourseModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="assignCourseLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="assignCourseLabel">Assign Course to
-                                            <?php echo $faculty['first_name'] . ' ' . $faculty['last_name']; ?>
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form method="POST" action="add_course_to_faculty.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="faculty_id"
-                                                value="<?php echo $faculty['faculty_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="course_section_id">Select Course Section</label>
-                                                <select name="course_section_id" class="form-control" required>
-                                                    <option value="">Choose a course...</option>
-                                                    <?php foreach ($courses as $department_id => $course_list): ?>
-                                                        <optgroup label="Department <?php echo $department_id; ?>">
-                                                            <?php foreach ($course_list as $course): ?>
-                                                                <option value="<?php echo $course['course_section_id']; ?>">
-                                                                    <?php echo $course['section'] . " - " . $course['course_name']; ?>
-                                                                </option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                            <!-- Assign Course Modal -->
+                            <div class="modal" id="assignCourseModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="assignCourseLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="assignCourseLabel">Assign Course to
+                                                <?php echo $faculty['first_name'] . ' ' . $faculty['last_name']; ?>
+                                            </h5>
+                                            <span class="close" class="close" data-dismiss="modal"
+                                                aria-label="Close">&times;</span>
+                                        </div>
+                                        <form method="POST" action="add_course_to_faculty.php">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="faculty_id"
+                                                    value="<?php echo $faculty['faculty_id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="course_section_id">Select Course Section</label>
+                                                    <select name="course_section_id" class="form-control" required>
+                                                        <option value="">Choose a course...</option>
+                                                        <?php foreach ($courses as $department_id => $course_list): ?>
+                                                            <optgroup label="Department <?php echo $department_id; ?>">
+                                                                <?php foreach ($course_list as $course): ?>
+                                                                    <option value="<?php echo $course['course_section_id']; ?>">
+                                                                        <?php echo $course['section'] . " - " . $course['course_name']; ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </optgroup>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Assign Course</button>
-                                        </div>
-                                    </form>
+                                            <div class="modal-footer">
+                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="save-btn">Assign Course</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </main>
 
     <!-- Add Faculty Modal -->
     <!-- Add Faculty Modal -->
-    <div class="modal fade" id="addFacultyModal" tabindex="-1" role="dialog" aria-labelledby="addFacultyLabel"
+    <div class="modal" id="addFacultyModal" tabindex="-1" role="dialog" aria-labelledby="addFacultyLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addFacultyLabel">Add Faculty</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
                 </div>
                 <form method="POST" action="add_faculty.php">
                     <div class="modal-body">
@@ -283,8 +293,8 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add Faculty</button>
+                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                        <button type="submit" class="save-btn">Add Faculty</button>
                     </div>
                 </form>
             </div>

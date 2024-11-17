@@ -64,7 +64,7 @@ include ROOT_PATH . '/modules/generate_report/data_graph.php';
                     <input type="hidden" id="selfImageData" name="selfImageData" value="">
                     <input type="hidden" id="overallImageData" name="overallImageData" value="">
                     <input type="hidden" id="combinedImageData" name="combinedImageData" value="">
-                    <button type="submit" class="edit-btn">Generate PDF</button>
+                    <button type="submit" class="enroll-btn">Generate PDF</button>
                 </form>
             </div>
         </div>

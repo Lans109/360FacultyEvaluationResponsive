@@ -23,6 +23,7 @@ $programs_result = mysqli_query($con, $programs_query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
@@ -51,7 +52,8 @@ $programs_result = mysqli_query($con, $programs_query);
                     </div> -->
             </div>
             <!-- Table of Students -->
-            <table class="table">
+            <div class="table">
+                <table>
                 <thead>
                     <tr>
                         <th>Student ID</th>
@@ -59,8 +61,8 @@ $programs_result = mysqli_query($con, $programs_query);
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Program</th>
-                        <th width="900px">Enrolled Sections</th>
-                        <th width="2000px">Actions</th>
+                        <th width="1000px">Enrolled Sections</th>
+                        <th width="270px">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,43 +86,54 @@ $programs_result = mysqli_query($con, $programs_query);
                                 $courses_result = mysqli_query($con, $courses_query);
 
                                 if (mysqli_num_rows($courses_result) > 0) {
-                                    while ($course = mysqli_fetch_assoc($courses_result)) {
-                                        echo $course['section'] . " - " . $course['course_name'] . " 
-                                <a href='delete_student_course.php?student_id=$student_id&course_section_id=" . $course['course_section_id'] . "' class='btn btn-sm btn-danger' onclick=\"return confirm('Are you sure you want to delete this course?')\">Remove</a><br>";
-                                    }
+                                    while ($course = mysqli_fetch_assoc($courses_result)) { ?>
+                                        <div class="section-row">
+                                            <div class="section-details">
+                                                <?php echo $course['section'] . " - " . $course['course_name']; ?>
+                                            </div>
+                                            <div class="section-action">
+                                                <a href="delete_student_course.php?student_id=<?php echo $student_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>"
+                                                    class="delete-btn"
+                                                    onclick="return confirm('Are you sure you want to delete this course?')"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </div>
+                                    <?php }
                                 } else {
                                     echo "No sections enrolled.";
                                 }
                                 ?>
                             </td>
                             <td>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#editModal<?php echo $student['student_id']; ?>"
-                                    data-id="<?php echo $student['student_id']; ?>"
-                                    data-first-name="<?php echo $student['first_name']; ?>"
-                                    data-last-name="<?php echo $student['last_name']; ?> "
-                                    data-program-id="<?php echo $student['program_id']; ?>">Edit</button>
-                                <button class="delete-btn">
+                                <div class="action-btns">
+                                    <button class="edit-btn" data-toggle="modal"
+                                        data-target="#editModal<?php echo $student['student_id']; ?>"
+                                        data-id="<?php echo $student['student_id']; ?>"
+                                        data-first-name="<?php echo $student['first_name']; ?>"
+                                        data-last-name="<?php echo $student['last_name']; ?> "
+                                        data-program-id="<?php echo $student['program_id']; ?>"><i
+                                            class="fa fa-edit"></i></button>
+
                                     <a href="delete_student.php?student_id=<?php echo $student['student_id']; ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure you want to delete this student?')">Delete</a>
-                                </button>
-                                <button class="edit-btn" data-toggle="modal"
-                                    data-target="#enrollCourseModal<?php echo $student['student_id']; ?>"
-                                    data-program-id="<?php echo $student['program_id']; ?>">Enroll Course</button>
+                                        class="delete-btn"
+                                        onclick="return confirm('Are you sure you want to delete this student?')"><i
+                                            class="fa fa-trash"></i></a>
+
+                                    <button class="enroll-btn" data-toggle="modal"
+                                        data-target="#enrollCourseModal<?php echo $student['student_id']; ?>"
+                                        data-program-id="<?php echo $student['program_id']; ?>">Enroll Course</button>
+                                </div>
                             </td>
                         </tr>
 
                         <!-- Edit Student Modal -->
-                        <div class="modal fade" id="editModal<?php echo $student['student_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal" id="editModal<?php echo $student['student_id']; ?>" tabindex="-1" role="dialog"
+                            aria-labelledby="editModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editModalLabel">Edit Student</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <span class="close" class="close" data-dismiss="modal"
+                                            aria-label="Close">&times;</span>
                                     </div>
                                     <form id="editForm<?php echo $student['student_id']; ?>" method="POST"
                                         action="update_student.php">
@@ -158,9 +171,8 @@ $programs_result = mysqli_query($con, $programs_query);
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="save-btn">Save changes</button>
                                         </div>
                                     </form>
                                 </div>
@@ -168,15 +180,14 @@ $programs_result = mysqli_query($con, $programs_query);
                         </div>
 
                         <!-- Enroll Course Modal -->
-                        <div class="modal fade" id="enrollCourseModal<?php echo $student['student_id']; ?>" tabindex="-1"
+                        <div class="modal" id="enrollCourseModal<?php echo $student['student_id']; ?>" tabindex="-1"
                             role="dialog" aria-labelledby="enrollCourseLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="enrollCourseLabel">Enroll Course</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <span class="close" class="close" data-dismiss="modal"
+                                            aria-label="Close">&times;</span>
                                     </div>
                                     <form method="POST" action="add_course_to_student.php">
                                         <div class="modal-body">
@@ -211,9 +222,8 @@ $programs_result = mysqli_query($con, $programs_query);
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Enroll</button>
+                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="save-btn">Enroll</button>
                                         </div>
                                     </form>
                                 </div>
@@ -226,15 +236,13 @@ $programs_result = mysqli_query($con, $programs_query);
     </main>
 
     <!-- Add Student Modal -->
-    <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentLabel"
+    <div class="modal" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addStudentLabel">Add Student</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
                 </div>
                 <form method="POST" action="add_student.php">
                     <div class="modal-body">
@@ -275,8 +283,8 @@ $programs_result = mysqli_query($con, $programs_query);
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add Student</button>
+                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                        <button type="submit" class="save-btn">Add Student</button>
                     </div>
                 </form>
             </div>

@@ -28,6 +28,7 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departments and Program Chairs</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
     </style>
@@ -55,55 +56,59 @@ if (!$result) {
                         </select>
                     </div> -->
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Department Name</th>
-                        <th>Department Code</th>
-                        <th>Description</th>
-                        <th>Program Chair</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <div class="table">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo $row['department_name']; ?></td>
-                            <td><?php echo $row['department_code']; ?></td>
-                            <td><?php echo $row['department_description']; ?></td>
-                            <td>
-                                <?php
-                                echo $row['first_name'] ? $row['first_name'] . ' ' . $row['last_name'] : 'Not Assigned';
-                                ?>
-                            </td>
-                            <td>
-                                <button class="edit-btn" data-toggle="modal" data-target="#editModal"
-                                    data-id="<?php echo $row['department_id']; ?>"
-                                    data-name="<?php echo $row['department_name']; ?>"
-                                    data-code="<?php echo $row['department_code']; ?>"
-                                    data-description="<?php echo $row['department_description']; ?>"
-                                    data-chair-id="<?php echo $row['chair_id']; ?>">Edit</button>
-                                <button class="delete-btn">
-                                    <a href="delete_department.php?department_id=<?php echo $row['department_id']; ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure you want to delete this department?')">Delete</a>
-                                </button>
-                            </td>
+                            <th>Department Name</th>
+                            <th>Department Code</th>
+                            <th>Description</th>
+                            <th>Program Chair</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <tr>
+                                <td><?php echo $row['department_name']; ?></td>
+                                <td><?php echo $row['department_code']; ?></td>
+                                <td><?php echo $row['department_description']; ?></td>
+                                <td>
+                                    <?php
+                                    echo $row['first_name'] ? $row['first_name'] . ' ' . $row['last_name'] : 'Not Assigned';
+                                    ?>
+                                </td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn" data-toggle="modal" data-target="#editModal"
+                                            data-id="<?php echo $row['department_id']; ?>"
+                                            data-name="<?php echo $row['department_name']; ?>"
+                                            data-code="<?php echo $row['department_code']; ?>"
+                                            data-description="<?php echo $row['department_description']; ?>"
+                                            data-chair-id="<?php echo $row['chair_id']; ?>"><i
+                                                class="fa fa-edit"></i></button>
+
+                                        <a href="delete_department.php?department_id=<?php echo $row['department_id']; ?>"
+                                            class="delete-btn"
+                                            onclick="return confirm('Are you sure you want to delete this department?')"><i
+                                                class="fa fa-trash"></i></a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Add Department Modal -->
-            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+            <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addModalLabel">Add New Department</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
                         </div>
                         <form action="add_department.php" method="POST">
                             <div class="modal-body">
@@ -141,8 +146,8 @@ if (!$result) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-success">Add Department</button>
+                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                <button type="submit" class="save-btn">Add Department</button>
                             </div>
                         </form>
                     </div>
@@ -150,15 +155,13 @@ if (!$result) {
             </div>
 
             <!-- Edit Department Modal -->
-            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+            <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editModalLabel">Edit Department</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
                         </div>
                         <form id="editForm" method="POST" action="update_department.php">
                             <div class="modal-body">
@@ -193,8 +196,8 @@ if (!$result) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                <button type="submit" class="save-btn">Save changes</button>
                             </div>
                         </form>
                     </div>

@@ -18,6 +18,7 @@ $courses_result = mysqli_query($con, $courses_query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
@@ -59,32 +60,35 @@ $courses_result = mysqli_query($con, $courses_query);
                             <th>Actions</th>
                         </tr>
                     </thead>
-                        <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
-                            <tr>
-                                <td><?php echo $course['course_id']; ?></td>
-                                <td><?php echo $course['course_name']; ?></td>
-                                <td><?php echo $course['course_code']; ?></td>
-                                <td><?php echo $course['course_description']; ?></td>
-                                <td><?php echo $course['department_name'] ?: 'Not Assigned'; ?></td>
-                                <td>
+                    <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
+                        <tr>
+                            <td><?php echo $course['course_id']; ?></td>
+                            <td><?php echo $course['course_name']; ?></td>
+                            <td><?php echo $course['course_code']; ?></td>
+                            <td><?php echo $course['course_description']; ?></td>
+                            <td><?php echo $course['department_name'] ?: 'Not Assigned'; ?></td>
+                            <td>
+                                <div class="action-btns">
                                     <button class="edit-btn" data-toggle="modal"
                                         data-target="#editModal<?php echo $course['course_id']; ?>"
                                         data-id="<?php echo $course['course_id']; ?>"
                                         data-name="<?php echo $course['course_name']; ?>"
                                         data-code="<?php echo $course['course_code']; ?>"
                                         data-description="<?php echo $course['course_description']; ?>"
-                                        data-department-id="<?php echo $course['department_id']; ?>">Edit</button>
-                                    <button class="delete-btn">
-                                        <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
-                                            class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this course?')">Delete</a>
-                                    </button>
+                                        data-department-id="<?php echo $course['department_id']; ?>"><i
+                                            class="fa fa-edit"></i></button>
 
-                                </td>
-                            </tr>
-                            <!-- Mobile view cards -->
-                            <?php
-                            echo "<div class='table-to-cards hidden'>
+                                    <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
+                                        class="delete-btn"
+                                        onclick="return confirm('Are you sure you want to delete this course?')"><i
+                                            class="fa fa-trash"></i></a>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <!-- Mobile view cards -->
+                        <?php
+                        echo "<div class='table-to-cards hidden'>
                                 <div class='ttc-course_id'>{$course['course_id']}</div>
                                 <div class='ttc-course_code'>{$course['course_code']}</div>
                                 <div class='ttc-course_name'>{$course['course_name']}</div>
@@ -105,76 +109,74 @@ $courses_result = mysqli_query($con, $courses_query);
                                             onclick='return confirm(\"Are you sure you want to delete this course?\")'>Delete</a>
                                 </div>
                             </div>";
-                            ?>
+                        ?>
 
 
-                            <!-- Edit Course Modal -->
-                            <div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog"
-                                aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Course</h5>
-                                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
-                                        </div>
-                                        <form id="editForm<?php echo $course['course_id']; ?>" method="POST"
-                                            action="update_course.php">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="course_id"
-                                                    value="<?php echo $course['course_id']; ?>">
-                                                <div class="form-group">
-                                                    <label for="edit_course_name">Course Name</label>
-                                                    <input type="text" name="course_name" class="form-control"
-                                                        value="<?php echo $course['course_name']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="edit_course_code">Course Code</label>
-                                                    <input type="text" name="course_code" class="form-control"
-                                                        value="<?php echo $course['course_code']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="edit_course_description">Description</label>
-                                                    <textarea name="course_description" class="form-control"
-                                                        required><?php echo $course['course_description']; ?></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="edit_department_id">Department</label>
-                                                    <select name="department_id" class="form-control"
-                                                        id="edit_department_id">
-                                                        <option value="">Select Department</option>
-                                                        <?php
-                                                        // Fetch all departments
-                                                        $departments_query = "SELECT department_id, department_name FROM departments";
-                                                        $departments_result = mysqli_query($con, $departments_query);
-
-                                                        while ($department = mysqli_fetch_assoc($departments_result)) {
-                                                            $selected = ($department['department_id'] == $course['department_id']) ? 'selected' : '';
-                                                            echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_name'] . "</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="cancel-btn"
-                                                    data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save changes</button>
-                                            </div>
-                                        </form>
+                        <!-- Edit Course Modal -->
+                        <div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog"
+                            aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel">Edit Course</h5>
+                                        <span class="close" class="close" data-dismiss="modal"
+                                            aria-label="Close">&times;</span>
                                     </div>
+                                    <form id="editForm<?php echo $course['course_id']; ?>" method="POST"
+                                        action="update_course.php">
+                                        <div class="modal-body">
+                                            <input type="hidden" name="course_id"
+                                                value="<?php echo $course['course_id']; ?>">
+                                            <div class="form-group">
+                                                <label for="edit_course_name">Course Name</label>
+                                                <input type="text" name="course_name" class="form-control"
+                                                    value="<?php echo $course['course_name']; ?>" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edit_course_code">Course Code</label>
+                                                <input type="text" name="course_code" class="form-control"
+                                                    value="<?php echo $course['course_code']; ?>" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edit_course_description">Description</label>
+                                                <textarea name="course_description" class="form-control"
+                                                    required><?php echo $course['course_description']; ?></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edit_department_id">Department</label>
+                                                <select name="department_id" class="form-control" id="edit_department_id">
+                                                    <option value="">Select Department</option>
+                                                    <?php
+                                                    // Fetch all departments
+                                                    $departments_query = "SELECT department_id, department_name FROM departments";
+                                                    $departments_result = mysqli_query($con, $departments_query);
+
+                                                    while ($department = mysqli_fetch_assoc($departments_result)) {
+                                                        $selected = ($department['department_id'] == $course['department_id']) ? 'selected' : '';
+                                                        echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_name'] . "</option>";
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="save-btn">Save changes</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
+                        </div>
 
-                        <?php endwhile; ?>
-                        </tbody>
+                    <?php endwhile; ?>
+                    </tbody>
                 </table>
             </div>
-            <div class="pagination">
+            <!-- <div class="pagination">
                 <button>1</button>
                 <button>2</button>
                 <button>3</button>
-                <!-- Add more pagination as needed -->
-            </div>
+            </div> -->
         </div>
     </main>
 
@@ -226,7 +228,7 @@ $courses_result = mysqli_query($con, $courses_query);
         </div>
     </div>
 
-    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>                           
+    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
     <!-- jQuery, Popper.js, and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

@@ -92,7 +92,7 @@ if ($resultPeriod->num_rows > 0) {
             color: #333;
         }
 
-        select, input[type="submit"] {
+        select, input[type="submit"], input[type="date"], input[type="time"] {
             padding: 10px;
             font-size: 1rem;
             border: 1px solid #ccc;
@@ -101,7 +101,7 @@ if ($resultPeriod->num_rows > 0) {
             width: 100%;
         }
 
-        select:focus, input[type="submit"]:focus {
+        select:focus, input[type="submit"]:focus, input[type="date"]:focus, input[type="time"]:focus {
             border-color: #0066cc;
         }
 
@@ -150,6 +150,13 @@ if ($resultPeriod->num_rows > 0) {
                         <option value="<?= $survey['survey_id']; ?>"><?= $survey['survey_name']; ?></option>
                     <?php endforeach; ?>
                 </select>
+
+                <!-- Add Date and Time selection -->
+                <label for="date">Select Date:</label>
+                <input type="date" id="date" name="date" required>
+
+                <label for="time">Select Time:</label>
+                <input type="time" id="time" name="time" required>
 
                 <input type="submit" value="Proceed to Evaluation Form">
             </form>
