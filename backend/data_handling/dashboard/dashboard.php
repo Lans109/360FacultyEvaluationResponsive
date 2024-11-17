@@ -125,9 +125,6 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                 </div>
                 <div class="charts">
                     <?php include 'monitor.php'; ?>
-                    <div id="myChart" style="height: 400px;"></div>
-                    <div id="completion_chart" style="height: 400px;"></div>
-                    <div id="completion_daily_chart" style="height: 400px;"></div>
                 </div>
             </div>
         </div>

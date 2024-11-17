@@ -23,6 +23,9 @@ if (mysqli_num_rows($results_completion)) {
         $evaluation_completed[] = [$formattedDate, (int)$row['students_evaluated']];
         $total_evaluated += $row['students_evaluated'];
     }
+} else {
+    $total_evaluated = 0;
+    $evaluation_completed[] = ['No results', 0];
 }
 
 $total_not_evaluated = $total_students - $total_evaluated;
@@ -45,5 +48,9 @@ if (mysqli_num_rows($results_daily_completion)) {
         $daily_completed[] = [$formattedDate, (int)$row['students_evaluated']];
         $total_daily_evaluated += $row['students_evaluated'];
     }
+} else {
+    // Fallback for no results
+    $daily_completed[] = ['No results', 0];
+    $total_daily_evaluated = 0;
 }
 ?>

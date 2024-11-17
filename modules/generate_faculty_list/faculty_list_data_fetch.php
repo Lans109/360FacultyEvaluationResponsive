@@ -28,16 +28,18 @@ $sql_faculty_list =
         AVG(CASE WHEN s.target_role = 'self' THEN r.rating * 0.05 ELSE NULL END), 0
     ) AS weighted_avg,
     CONCAT(f.first_name, ' ', f.last_name) AS Name, 
-    d.department_code
-FROM responses r
-JOIN evaluations e ON e.evaluation_id = r.evaluation_id
-JOIN course_sections cs ON cs.course_section_id = e.course_section_id
-JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id
-JOIN faculty f ON f.faculty_id = fc.faculty_id
-JOIN departments d ON f.department_id = d.department_id
-JOIN surveys s ON s.survey_id = e.survey_id
+    d.department_code,
+    COUNT(DISTINCT fc.course_section_id) as total_courses
+FROM faculty f
+LEFT JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
+LEFT JOIN course_sections cs ON cs.course_section_id = fc.course_section_id
+LEFT JOIN evaluations e ON e.course_section_id = cs.course_section_id
+LEFT JOIN responses r ON r.evaluation_id = e.evaluation_id
+LEFT JOIN surveys s ON s.survey_id = e.survey_id
+LEFT JOIN departments d ON f.department_id = d.department_id
 GROUP BY f.faculty_id, d.department_code
 ORDER BY weighted_avg DESC;
+
 
 ";
 
@@ -58,8 +60,8 @@ if(mysqli_num_rows($results_faculty_list) > 0) {
         $faculty_list_by_department[$department_code][] = [
             'faculty_name' => $row_faculty['Name'],
             'AVG' => ROUND($row_faculty['weighted_avg'], 2),
+            'total_courses' => $row_faculty['total_courses'],
         ];
     }
 }
-
 ?>

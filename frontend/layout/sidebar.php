@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="admin-style.css">
 </head>
-
 <body>
     <aside id="sidebar">
         <div class="top">
@@ -134,7 +133,7 @@
                 if (!e.target.closest('.dropdown')) {
                     dropdown.classList.remove("show");
                 }
-            });
+            }); 
         });
     </script>
 
