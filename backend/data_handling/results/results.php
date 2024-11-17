@@ -43,14 +43,18 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
                 </form>
 
                 <!-- Display charts -->
-                <div id="chart_div_student" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                <div id="chart_div_faculty" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                <div id="chart_div_chair" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                <div id="chart_div_self" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                
-                <div id="chart_div_overall" style="width: 900px; height: 500px;"  ></div>
+                <div id="chart_div_student"
+                    style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                <div id="chart_div_faculty"
+                    style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                <div id="chart_div_chair" style="width: 900px; height: 500px; visibility: hidden; position: absolute;">
+                </div>
+                <div id="chart_div_self" style="width: 900px; height: 500px; visibility: hidden; position: absolute;">
+                </div>
+
+                <div id="chart_div_overall" style="width: 900px; height: 500px;"></div>
                 <div id="combined_div_overall" style="width: 100%; height: 500px;"></div>
-                
+
 
                 <!-- Form for PDF generation -->
                 <form action="generate_summary.php" method="post">
@@ -68,3 +72,4 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
         </div>
     </main>
 </body>
+<script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
