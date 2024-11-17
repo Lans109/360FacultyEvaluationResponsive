@@ -4,7 +4,7 @@ include_once "../../../config.php";
 include '../../db/dbconnect.php';
 
 // Fetch all courses with their associated department
-$courses_query = "SELECT c.course_id, c.course_name, c.course_code, c.course_description, d.department_name, d.department_id
+$courses_query = "SELECT c.course_id, c.course_name, c.course_code, c.course_description, d.department_code, d.department_id
                   FROM courses c
                   LEFT JOIN departments d ON c.department_id = d.department_id";
 $courses_result = mysqli_query($con, $courses_query);
@@ -67,7 +67,7 @@ echo 'test';
                             <td><?php echo $course['course_name']; ?></td>
                             <td><?php echo $course['course_code']; ?></td>
                             <td><?php echo $course['course_description']; ?></td>
-                            <td><?php echo $course['department_name'] ?: 'Not Assigned'; ?></td>
+                            <td><?php echo $course['department_code'] ?: 'Not Assigned'; ?></td>
                             <td>
                                 <div class="action-btns">
                                     <button class="edit-btn" data-toggle="modal"
@@ -94,7 +94,7 @@ echo 'test';
                                 <div class='ttc-course_code'>{$course['course_code']}</div>
                                 <div class='ttc-course_name'>{$course['course_name']}</div>
                                 <div class='ttc-course_description'>{$course['course_description']}</div>
-                                <div class='ttc-course_department'>{$course['department_name']}</div>
+                                <div class='ttc-course_department'>{$course['department_code']}</div>
                                 <div class='ttc_btn-edit_course'>
                                     <button class='edit-btn' data-toggle='modal'
                                         data-target='#editModal{$course['course_id']}'
@@ -149,12 +149,12 @@ echo 'test';
                                                     <option value="">Select Department</option>
                                                     <?php
                                                     // Fetch all departments
-                                                    $departments_query = "SELECT department_id, department_name FROM departments";
+                                                    $departments_query = "SELECT department_id, department_code FROM departments";
                                                     $departments_result = mysqli_query($con, $departments_query);
 
                                                     while ($department = mysqli_fetch_assoc($departments_result)) {
                                                         $selected = ($department['department_id'] == $course['department_id']) ? 'selected' : '';
-                                                        echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_name'] . "</option>";
+                                                        echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_code'] . "</option>";
                                                     }
                                                     ?>
                                                 </select>
@@ -210,11 +210,11 @@ echo 'test';
                                 <option value="">Select Department</option>
                                 <?php
                                 // Fetch all departments for new course
-                                $departments_query = "SELECT department_id, department_name FROM departments";
+                                $departments_query = "SELECT department_id, department_code FROM departments";
                                 $departments_result = mysqli_query($con, $departments_query);
 
                                 while ($department = mysqli_fetch_assoc($departments_result)) {
-                                    echo "<option value='" . $department['department_id'] . "'>" . $department['department_name'] . "</option>";
+                                    echo "<option value='" . $department['department_id'] . "'>" . $department['department_code'] . "</option>";
                                 }
                                 ?>
                             </select>

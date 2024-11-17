@@ -48,6 +48,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             
 
             var options = {
+                backgroundColor: 'transparent',
                 title: title,
                 colors: ['#a2252f', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
                 fontName: 'Times New Roman',
