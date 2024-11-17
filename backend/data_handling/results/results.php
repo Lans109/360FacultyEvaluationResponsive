@@ -104,6 +104,7 @@ if (!$facultyResult) {
                                         <td>
                                             <!--test-->
                                             <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">
+
                                                 View Results
                                             </a>
                                         </td>
@@ -121,5 +122,7 @@ if (!$facultyResult) {
         </div>
     </main>
 </body>
+<!-- for sidebar button -->
+<script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
 
 </html>
