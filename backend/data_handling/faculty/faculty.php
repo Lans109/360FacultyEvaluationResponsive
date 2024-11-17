@@ -241,7 +241,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                             </div>
                         <?php endwhile; ?>
                     </tbody>
-                </table>
+                </table>s
             </div>
         </div>
 
