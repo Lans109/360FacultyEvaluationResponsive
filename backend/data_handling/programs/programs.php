@@ -182,6 +182,7 @@ $programs_result = mysqli_query($con, $programs_query);
                                                         <option value="">Select Department</option>
                                                         <?php
                                                         // Fetch all departments for the dropdown
+                                                        $departments_query = "SELECT department_id, department_name FROM departments";
                                                         $departments_result = mysqli_query($con, $departments_query);
                                                         while ($department = mysqli_fetch_assoc($departments_result)) {
                                                             $selected = ($department['department_id'] == $program['department_id']) ? 'selected' : '';

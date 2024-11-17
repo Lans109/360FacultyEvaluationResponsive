@@ -28,7 +28,7 @@
             const options = {
                 title: header,
                 colors: ['#a2252f', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],  
-                fontName: 'Roboto',
+                fontName: 'Times New Roman',
                 fontSize: 14,
                 hAxis: {
                     title: type,
@@ -83,7 +83,7 @@
             const options = {
                 title: 'Evaluation Percentage',
                 colors: ['#a2252f', 'grey'],
-                fontName: 'Roboto',
+                fontName: 'Times New Roman',
                 fontSize: 14,
                 legend: {
                     position: 'top',
@@ -112,6 +112,8 @@
     </script>
 </head>
 <body>
-    
+    <div id="myChart" style="width: 100%; height: 400px;"></div>
+    <div id="completion_chart" style="width: 100%; height: 400px;"></div>
+    <div id="completion_daily_chart" style="width: 100%; height: 400px;"></div>
 </body>
 </html>

@@ -6,9 +6,9 @@ include ROOT_PATH . '/backend/db/dbconnect.php';
 $facultyId = isset($_GET['facultyId']) ? $_GET['facultyId'] : 0;
 $period = isset($_GET['period']) ? $_GET['period'] : 1;
 
-include ROOT_PATH . '/modules/generate_report/data_fetch.php';
-include ROOT_PATH . '/modules/generate_report/data_results.php';
-include ROOT_PATH . '/modules/generate_report/data_graph.php';
+include ROOT_PATH . '/modules/generate_report/report_data_fetch.php';
+include ROOT_PATH . '/modules/generate_report/report_data_results.php';
+include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
 ?>
 
 <head>
@@ -43,19 +43,17 @@ include ROOT_PATH . '/modules/generate_report/data_graph.php';
                 </form>
 
                 <!-- Display charts -->
-                <div id="chart_div_student"
-                    style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                <div id="chart_div_faculty"
-                    style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                <div id="chart_div_chair" style="width: 900px; height: 500px; visibility: hidden; position: absolute;">
-                </div>
-                <div id="chart_div_self" style="width: 900px; height: 500px; visibility: hidden; position: absolute;">
-                </div>
-                <div id="chart_div_overall" style="width: 900px; height: 500px;"></div>
+                <div id="chart_div_student" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                <div id="chart_div_faculty" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                <div id="chart_div_chair" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                <div id="chart_div_self" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                
+                <div id="chart_div_overall" style="width: 900px; height: 500px;"  ></div>
                 <div id="combined_div_overall" style="width: 100%; height: 500px;"></div>
+                
 
                 <!-- Form for PDF generation -->
-                <form action="generate_PDF.php" method="post">
+                <form action="generate_summary.php" method="post">
                     <input type="hidden" id="facultyId" name="facultyId" value="<?php echo $facultyId; ?>">
                     <input type="hidden" id="period" name="period" value="<?php echo $period; ?>">
                     <input type="hidden" id="studentImageData" name="studentImageData" value="">
