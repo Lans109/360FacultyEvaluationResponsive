@@ -500,7 +500,8 @@ textarea {
     padding: 20px;
     text-align: left;
 }
-tr:hover{
+
+tr:hover {
     background-color: rgb(224, 224, 224);
 }
 
@@ -615,6 +616,47 @@ tr:hover{
 /* Hide .table-to-cards by default */
 .hidden {
     display: none;
+}
+
+/* for ranking.php */
+/* Styling the container of all departments */
+.departments-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+/* Styling each department box */
+.department-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+    max-width: calc(50% - 40px);
+}
+
+/* Table styles */
+.department-box .table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.department-box .table th,
+.department-box .table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.department-box .table th {
+    background-color: #6B0007;
+    color: white;
+    font-weight: bold;
 }
 
 /* Hide button above 1101px */
