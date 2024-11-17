@@ -72,14 +72,36 @@ $programs_result = mysqli_query($con, $programs_query);
                                 <td>
                                     <?php
                                     // Fetch courses for the program
-                                    $courses_query = "SELECT c.course_id, c.course_name FROM courses c
-                                          JOIN program_courses pc ON c.course_id = pc.course_id
-                                          WHERE pc.program_id = " . $program['program_id'];
+                                    $courses_query = "SELECT c.course_id, c.course_name 
+                  FROM courses c
+                  JOIN program_courses pc ON c.course_id = pc.course_id
+                  WHERE pc.program_id = " . $program['program_id'];
                                     $courses_result = mysqli_query($con, $courses_query);
-                                    while ($course = mysqli_fetch_assoc($courses_result)) {
-                                        echo $course['course_name'] . ' <a href="delete_program_course.php?program_id=' . $program['program_id'] . '&course_id=' . $course['course_id'] . '" class="text-danger" onclick="return confirm(\'Are you sure you want to remove this course?\')">[Remove]</a><br>';
-                                    }
+
+                                    if (mysqli_num_rows($courses_result) > 0) {
+                                        while ($course = mysqli_fetch_assoc($courses_result)) { ?>
+                                            <div class="section-row">
+                                                <div class="section-details">
+                                                    <?php echo $course['course_name']; ?>
+                                                </div>
+                                                <div class="section-action">
+                                                    <a href="delete_program_course.php?program_id=<?php echo $program['program_id']; ?>&course_id=<?php echo $course['course_id']; ?>"
+                                                        class="delete-btn"
+                                                        onclick="return confirm('Are you sure you want to remove this course?')">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php }
+                                    } else { ?>
+                                        <div class="section-row">
+                                            <div class="section-details">
+                                                No courses assigned to this program.
+                                            </div>
+                                        </div>
+                                    <?php }
                                     ?>
+
                                     <!-- Add Course Button -->
                                     <button class="table_add-btn" data-toggle="modal"
                                         data-target="#addCourseModal<?php echo $program['program_id']; ?>">Add
