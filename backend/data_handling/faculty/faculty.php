@@ -44,7 +44,6 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
 </head>
 
 <body>
-
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
