@@ -57,7 +57,6 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
 <body>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
-
         <div class="upperMain">
             <h1>Dashboard</h1>
         </div>
