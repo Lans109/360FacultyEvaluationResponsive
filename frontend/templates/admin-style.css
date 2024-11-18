@@ -55,6 +55,7 @@ body {
         "sidebar navbar"
         "sidebar main";
     overflow: hidden;
+    background-image: url(../assets/background.png);
 }
 
 nav {
@@ -69,7 +70,9 @@ aside {
     grid-area: sidebar;
     width: 14rem;
     min-height: 100vh;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    -webkit-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.2);
 }
 
 aside .top {
@@ -77,7 +80,7 @@ aside .top {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 1.4rem;
+    margin-top: 0;
 }
 
 aside .logo {
@@ -85,6 +88,7 @@ aside .logo {
     gap: 1rem;
     align-items: center;
     position: relative;
+    margin-top: 20px;
 }
 
 aside .sidebar {
