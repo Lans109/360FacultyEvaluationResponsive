@@ -188,8 +188,9 @@ main {
     border-radius: 4px;
     /* Rounded edges for consistency */
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-    
+
 }
+
 .banner-profile {
     margin: 10px;
     border-left: #6B0007 solid 20px;
@@ -198,6 +199,7 @@ main {
     /* Rounded edges for consistency */
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
+
 .banner h3 {
     margin: 0;
     font-size: 20px;
@@ -295,6 +297,7 @@ main {
     /* Light background for contrast */
     padding: 20px;
 }
+
 .profile {
     display: flex;
     align-items: center;
@@ -302,11 +305,13 @@ main {
     gap: 20px;
     max-width: 600px;
 }
+
 .profile-img {
     border-radius: 100%;
     width: 150px;
     height: 150px;
 }
+
 /* Individual Chart Styling */
 .charts>div {
     flex: 1;
@@ -323,69 +328,100 @@ main {
     justify-content: center;
     align-items: center;
 }
+
 .rating {
-    font-size: 3em; /* Large font size for the rating */
+    font-size: 3em;
+    /* Large font size for the rating */
     font-weight: bold;
-    color: #333; /* Dark color for the rating */
-    text-align: center; /* Center the rating */
-    margin-bottom: 20px; /* Space below the rating */
+    color: #333;
+    /* Dark color for the rating */
+    text-align: center;
+    /* Center the rating */
+    margin-bottom: 20px;
+    /* Space below the rating */
     font-style: italic;
 }
 
-.center h3, h5 {
-    text-align: center; /* Center the evaluation text */
-    color: #333; /* Dark color for the text */
+.center h3,
+h5 {
+    text-align: center;
+    /* Center the evaluation text */
+    color: #333;
+    /* Dark color for the text */
     margin-top: 10px;
 }
 
 .center h3 {
-    font-size: 2em; /* Size for Excellent/Good text */
-    color: #4CAF50; /* Green for Excellent/Good */
+    font-size: 2em;
+    /* Size for Excellent/Good text */
+    color: #4CAF50;
+    /* Green for Excellent/Good */
 }
 
 .center h5 {
-    font-size: 1.5em; /* Size for Satisfactory/Fair/Poor text */
-    color: #F44336; /* Red for Satisfactory/Fair/Poor */
+    font-size: 1.5em;
+    /* Size for Satisfactory/Fair/Poor text */
+    color: #F44336;
+    /* Red for Satisfactory/Fair/Poor */
 }
 
 .center {
-    text-align: center; /* Ensures everything inside is centered */
+    text-align: center;
+    /* Ensures everything inside is centered */
     margin: 20px;
 }
+
 .generate-pdf-btn {
-    background-color: #6B0007; /* Green background */
-    color: white; /* White text color */
-    padding: 12px 24px; /* Add padding for a nice button size */
-    font-size: 16px; /* Font size */
-    border: none; /* Remove the default border */
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer; /* Cursor changes to a pointer when hovered */
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transition on hover */
+    background-color: #6B0007;
+    /* Green background */
+    color: white;
+    /* White text color */
+    padding: 12px 24px;
+    /* Add padding for a nice button size */
+    font-size: 16px;
+    /* Font size */
+    border: none;
+    /* Remove the default border */
+    border-radius: 8px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Cursor changes to a pointer when hovered */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Smooth transition on hover */
 }
 
 .generate-pdf-btn:hover {
-    background-color: #6B0007; /* Darker green when hovered */
-    transform: translateY(-2px); /* Lift the button a little on hover */
+    background-color: #6B0007;
+    /* Darker green when hovered */
+    transform: translateY(-2px);
+    /* Lift the button a little on hover */
 }
 
 .generate-pdf-btn:active {
-    background-color: #6B0007; /* Even darker green when clicked */
-    transform: translateY(0); /* Remove lift effect when clicked */
+    background-color: #6B0007;
+    /* Even darker green when clicked */
+    transform: translateY(0);
+    /* Remove lift effect when clicked */
 }
 
 .generate-pdf-btn:focus {
-    outline: none; /* Remove the focus outline */
+    outline: none;
+    /* Remove the focus outline */
 }
+
 #rating {
     flex: .5;
     /* Full width for larger charts */
     max-width: 200;
 }
-#chart_div_overall, #combined_div_overall {
+
+#chart_div_overall,
+#combined_div_overall {
     flex: 1;
     /* Full width for larger charts */
     max-width: 1000px;
 }
+
 /* Smaller Chart Adjustments */
 #myChart {
     flex: 0.5;
@@ -545,8 +581,9 @@ textarea {
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
-    background-color: rgb(155, 21, 21);
-    color: white;
+    background-color: white;
+    color: #6B0007;
+    border: 1px solid #6B0007;
     border-radius: 7px;
 }
 
@@ -554,12 +591,18 @@ textarea {
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
-    background-color: green;
+    background-color: #6B0007;
     color: white;
     border-radius: 7px;
 }
 
+.save-btn:hover{
+    background-color: #8B0009;
+}
 
+.cancel-btn:hover{
+    background-color: #d8d8d8;
+}
 
 .sortDropDown {
     display: flex;
@@ -584,12 +627,6 @@ textarea {
 .table td {
     padding: 20px;
     text-align: left;
-}
-tr:nth-child(even) {
-    background-color: #fbfbfb; /* Light grey for even rows */
-}
-
-    background-color: rgb(224, 224, 224);
 }
 
 .action-btns {
@@ -636,14 +673,17 @@ tr:nth-child(even) {
 }
 
 .table_add-btn {
-    background-color: blue;
-    color: white;
+    background-color: #e4e4e4;
+    color: black;
     border: none;
     text-decoration: none;
     cursor: pointer;
     padding: 10px;
     border-radius: 7px;
-    font-size: x-small;
+}
+
+.table_add-btn:hover{
+    background-color: #d8d8d8;
 }
 
 /* for tables with remove in their cell */
@@ -744,6 +784,101 @@ tr:nth-child(even) {
     background-color: #6B0007;
     color: white;
     font-weight: bold;
+}
+
+/* css for searh bar  */
+.search-results {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 10px;
+    /* Adds space between the elements */
+    align-items: center;
+    /* Vertically aligns the items in the form */
+}
+
+.filter,
+.search-bar,
+.search-btn {
+    display: flex;
+    align-items: center;
+    /* Vertically aligns elements inside each div */
+}
+
+.search-bar input[type="text"] {
+    max-width: 1000px;
+    width: 100%;
+}
+
+.search-results select{
+    background-color: white;
+}
+
+.search-btn {
+    background-color: #6B0007;
+    color: white;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.enroll-btn {
+    padding: 5px 10px;
+    /* Adjusts padding for better button size */
+    cursor: pointer;
+}
+
+
+/* table css for results.php */
+.table-results table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.table-results table th,
+.table-results table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 16px;
+}
+
+.table-results table th {
+    background-color: #6B0007;
+    color: white;
+    font-weight: bold;
+}
+
+.table-results td:last-child {
+    text-align: center; /* Centers the content of the "Actions" column */
+}
+
+.view-btn{
+    background-color: #e4e4e4;
+    color: black;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 7px;
+    align-self: center;
+}
+
+.view-btn:hover{
+    background-color: #d8d8d8;
+}
+
+/* table hover colors */
+.table tbody tr:hover{
+    background-color: rgb(236, 236, 236);
 }
 
 /* Hide button above 1101px */

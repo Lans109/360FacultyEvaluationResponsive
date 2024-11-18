@@ -142,7 +142,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                             onclick="return confirm('Are you sure you want to delete this faculty member?')"><i
                                                 class="fa fa-trash"></i></a>
 
-                                        <button class="enroll-btn" data-toggle="modal"
+                                        <button class="table_add-btn" data-toggle="modal"
                                             data-target="#assignCourseModal<?php echo $faculty['faculty_id']; ?>">Assign
                                             Course</button>
                                     </div>

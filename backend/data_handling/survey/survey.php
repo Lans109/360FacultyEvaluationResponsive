@@ -78,7 +78,7 @@ $questions_result = mysqli_query($con, $questions_query);
                 <table>
                     <thead>
                         <tr>
-                            <th>Criteria Description</th>
+                            <th width="1330px">Criteria Description</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -267,10 +267,10 @@ $questions_result = mysqli_query($con, $questions_query);
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Question Code</th>
+                                    <th width ="150px">Question Code</th>
                                     <th>Question Text</th>
-                                    <th>Criteria</th>
-                                    <th>Actions</th>
+                                    <th width="400px">Criteria</th>
+                                    <th width ="200px">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

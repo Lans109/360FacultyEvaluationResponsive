@@ -52,6 +52,7 @@ if (!$facultyResult) {
 <head>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Faculty Results</title>
 </head>
 
@@ -63,9 +64,18 @@ if (!$facultyResult) {
         </div>
         <div class="content">
             <div class="container mt-4">
-                <div class="table">
+                
                     <!-- Filter and Search Form -->
+                     <div class="search-results">
                     <form method="get" class="filter-form">
+
+                    <div class="search-bar">
+                            <label for="search">Search Faculty:</label>
+                            <input type="text" name="search" id="search" placeholder="Enter name or ID" 
+                                value="<?php echo htmlspecialchars($searchTerm); ?>">
+                        </div>
+
+                        <div class="filter">
                         <label for="department">Filter by Department:</label>
                         <select name="department" id="department">
                             <option value="">All Departments</option>
@@ -76,16 +86,14 @@ if (!$facultyResult) {
                                 </option>
                             <?php endwhile; ?>
                         </select>
-
-                        <label for="search">Search Faculty:</label>
-                        <input type="text" name="search" id="search" placeholder="Enter name or ID" 
-                            value="<?php echo htmlspecialchars($searchTerm); ?>">
-
-                        <button type="submit" class="enroll-btn">Apply Filter</button>
+                        </div>
+                            <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
                     </form>
+                    </div>
 
                     <!-- Faculty Table -->
-                    <table class="table">
+                    <div class="table-results">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Faculty ID</th>
@@ -104,7 +112,6 @@ if (!$facultyResult) {
                                         <td>
                                             <!--test-->
                                             <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">
-
                                                 View Results
                                             </a>
                                         </td>
@@ -117,6 +124,7 @@ if (!$facultyResult) {
                             <?php endif; ?>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
