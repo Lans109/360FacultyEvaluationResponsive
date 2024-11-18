@@ -8,35 +8,26 @@ $departmentQuery = "SELECT department_id, department_name FROM departments";
 $departmentResult = mysqli_query($con, $departmentQuery);
 
 // Set filters
-$selectedDepartment = isset($_GET['department']) ? $_GET['department'] : '';
-$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Fetch filtered faculty members with department names
 $facultyQuery = "
-    SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, d.department_name, f.phone_number
+    SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, d.department_name, f.phone_number, d.department_code
     FROM faculty f
-    LEFT JOIN departments d ON f.department_id = d.department_id
-    WHERE 1=1";
+    LEFT JOIN departments d ON f.department_id = d.department_id";
 
-// Apply department filter
-if (!empty($selectedDepartment)) {
-    $facultyQuery .= " AND f.department_id = '" . mysqli_real_escape_string($con, $selectedDepartment) . "'";
+if ($search) {
+    $facultyQuery .= " WHERE (
+    f.faculty_id LIKE '%$search%' OR 
+    CONCAT(f.first_name, ' ', f.last_name) LIKE '%$search%' OR
+    f.phone_number LIKE '%$search%'
+    )";
 }
 
-// Apply search filter (search by name or ID)
-if (!empty($searchTerm)) {
-    // Split search term into parts (words)
-    $searchParts = explode(' ', $searchTerm);
-
-    // Build the SQL condition for each word
-    $searchConditions = [];
-    foreach ($searchParts as $part) {
-        $part = mysqli_real_escape_string($con, $part);
-        $searchConditions[] = "(f.first_name LIKE '%$part%' OR f.last_name LIKE '%$part%' OR f.faculty_id LIKE '%$part%')";
-    }
-
-    // Combine conditions with AND
-    $facultyQuery .= " AND (" . implode(' AND ', $searchConditions) . ")";
+// Add department filter condition if a department is selected
+if ($department_filter) {
+    $facultyQuery .= $search ? " AND d.department_id = '$department_filter'" : " WHERE d.department_id = '$department_filter'";
 }
 
 $facultyResult = mysqli_query($con, $facultyQuery);
@@ -66,30 +57,40 @@ if (!$facultyResult) {
             <div class="container mt-4">
                 
                     <!-- Filter and Search Form -->
-                     <div class="search-results">
-                    <form method="get" class="filter-form">
-
-                    <div class="search-bar">
-                            <label for="search">Search Faculty:</label>
-                            <input type="text" name="search" id="search" placeholder="Enter name or ID" 
-                                value="<?php echo htmlspecialchars($searchTerm); ?>">
+                    <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">
+                            
+                        <div class="search-container">
+                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                            <button type="submit" class="search-button">
+                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                            </button>
                         </div>
+                        <div class="select-container">
+                            <div class="select-wrapper">
+                                <select id="department_filter" name="department_filter" class="custom-select">
+                                    <option value="" selected>All Departments</option>
+                                    <?php
+                                    // Fetch all departments to populate the filter dropdown
+                                    $departments_query = "SELECT department_id, department_code FROM departments";
+                                    $departments_result = mysqli_query($con, $departments_query);
 
-                        <div class="filter">
-                        <label for="department">Filter by Department:</label>
-                        <select name="department" id="department">
-                            <option value="">All Departments</option>
-                            <?php while ($row = mysqli_fetch_assoc($departmentResult)): ?>
-                                <option value="<?php echo htmlspecialchars($row['department_id']); ?>"
-                                    <?php echo ($row['department_id'] == $selectedDepartment) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($row['department_name']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
+                                    // Fetch and display department options
+                                    while ($department = mysqli_fetch_assoc($departments_result)) {
+                                        $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
+                                        echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                            </div>
                         </div>
-                            <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+                            <button type="submit" class="fitler-btn">Filter</button>
+                            <a href="results.php" class="fitler-btn">Clear</a>
+                        </div>
                     </form>
-                    </div>
+                </div>
 
                     <!-- Faculty Table -->
                     <div class="table">
@@ -100,6 +101,7 @@ if (!$facultyResult) {
                                 <th width="300px">Faculty Name</th>
                                 <th width="260px">Phone Number</th>
                                 <th>Department</th>
+                                <th width="200px">Department Code</th>
                                 <th width="150px">Actions</th>
                             </tr>
                         </thead>
@@ -111,6 +113,7 @@ if (!$facultyResult) {
                                         <td><?php echo htmlspecialchars($row['faculty_name']); ?></td>
                                         <td><?php echo htmlspecialchars($row['phone_number']); ?></td>
                                         <td><?php echo htmlspecialchars($row['department_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['department_code']); ?></td>
                                         <td>
                                             <!--test-->
                                             <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">

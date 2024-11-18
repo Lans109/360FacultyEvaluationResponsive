@@ -3,8 +3,10 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+
 // Retrieve departments and program chairs
-$query = "SELECT 
+$department_query = "SELECT 
                 d.*, 
                 pc.chair_id,
                 pc.first_name,
@@ -13,7 +15,16 @@ $query = "SELECT
                 departments d
             LEFT JOIN 
                 program_chairs pc ON pc.department_id = d.department_id";
-$result = mysqli_query($con, $query);
+
+if ($search) {
+    $department_query .= " WHERE (
+    d.department_name LIKE '%$search%' OR 
+    d.department_code LIKE '%$search%' OR 
+    CONCAT(pc.first_name, ' ', pc.last_name) LIKE '%$search%'
+    )";
+}
+
+$result = mysqli_query($con, $department_query);
 
 if (!$result) {
     die("Error fetching departments: " . mysqli_error($con));
@@ -42,6 +53,20 @@ if (!$result) {
         </div>
         <div class="content">
             <div class="upperContent">
+
+                <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">
+                            <div class="search-container">
+                                <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                                <button type="submit" class="search-button">
+                                    <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                                </button>
+                            </div>
+                            <a href="departments.php" class="fitler-btn">Clear</a>
+                        </div>
+                    </form>
+                </div>
                 <div class="addBtn">
                     <button class="add-btn" data-toggle="modal" data-target="#addModal">Add New
                         Department</button>

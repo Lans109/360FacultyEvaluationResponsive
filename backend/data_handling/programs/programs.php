@@ -3,13 +3,26 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
+// Initialize search and filter variables
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+$department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
+
 // Fetch all programs with their associated department
 $programs_query = "SELECT p.program_id, p.program_name, p.program_code, p.program_description, d.department_name, p.department_id, d.department_code
                    FROM programs p
-                   LEFT JOIN departments d ON p.department_id = d.department_id
-                   ORDER BY d.department_id
-                   
-                   ";
+                   LEFT JOIN departments d ON p.department_id = d.department_id";
+
+// Check if a search term is provided
+if ($search) {
+    $programs_query .= " WHERE (p.program_name LIKE '%$search%' OR p.program_code LIKE '%$search%')";
+}
+
+// Add department filter condition if a department is selected
+if ($department_filter) {
+    $programs_query .= $search ? " AND p.department_id = '$department_filter'" : " WHERE p.department_id = '$department_filter'";
+}
+
+// Execute the query
 $programs_result = mysqli_query($con, $programs_query);
 ?>
 
@@ -22,8 +35,6 @@ $programs_result = mysqli_query($con, $programs_query);
     <title>Program Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
 
@@ -35,23 +46,44 @@ $programs_result = mysqli_query($con, $programs_query);
             <h1>Program Management</h1>
         </div>
         <div class="content">
-            
-            <div class="upperContent">
-            
-                <div class="addBtn">
-                    <button id="openModalBtn-add-program" class="add-btn" data-toggle="modal"
-                        data-target="#addProgramModal">Add
-                        Program</button>
-                </div>
 
-                <!-- no function yet add at app.js
-                    <div class="sortDropDown">
-                        <label for="sort">Sort by:</label>
-                        <select id="sort" onchange="sortProgram()">
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                        </select>
-                    </div> -->
+            <div class="upperContent">
+                <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">
+                            <div class="search-container">
+                                <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                                <button type="submit" class="search-button">
+                                    <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                                </button>
+                            </div>
+                            <div class="select-container">
+                                <div class="select-wrapper">
+                                    <select id="department_filter" name="department_filter" class="custom-select">
+                                        <option value="" selected>All Departments</option>
+                                        <?php
+                                        // Fetch all departments to populate the filter dropdown
+                                        $departments_query = "SELECT department_id, department_code FROM departments";
+                                        $departments_result = mysqli_query($con, $departments_query);
+
+                                        // Fetch and display department options
+                                        while ($department = mysqli_fetch_assoc($departments_result)) {
+                                            $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
+                                            echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_code'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                                </div>
+                            </div>
+                            <button type="submit" class="fitler-btn">Filter</button>
+                            <a href="programs.php" class="fitler-btn">Clear</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="addBtn">
+                    <button id="openModalBtn-add-program" class="add-btn" data-toggle="modal" data-target="#addProgramModal">Add Program</button>
+                </div>
             </div>
 
             <!-- Table of Programs -->
@@ -75,16 +107,6 @@ $programs_result = mysqli_query($con, $programs_query);
                                 <td><?php echo $program['program_description']; ?></td>
                                 <td><?php echo $program['department_code'] ?: 'Not Assigned'; ?></td>
                                 <td>
-                                <?php
-                                    // Fetch courses for the program
-                                    $courses_query = "SELECT c.course_id, c.course_name 
-                                        FROM courses c
-                                        JOIN program_courses pc ON c.course_id = pc.course_id
-                                        WHERE pc.program_id = " . $program['program_id'];
-                                    $courses_result = mysqli_query($con, $courses_query);
-                                    ?>
-
-
                                     <!-- Add Course Button -->
                                     <button class="view-btn" data-toggle="modal"
                                         data-target="#addCourseModal<?php echo $program['program_id']; ?>">View

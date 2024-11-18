@@ -3,12 +3,27 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
-// Fetch all courses with their associated department
+// Initialize search and filter variables
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+$department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
+
+// Base query to fetch courses
 $courses_query = "SELECT c.course_id, c.course_name, c.course_code, c.course_description, d.department_code, d.department_id
                   FROM courses c
                   LEFT JOIN departments d ON c.department_id = d.department_id";
+
+// Add search condition if search term is provided
+if ($search) {
+    $courses_query .= " WHERE (c.course_name LIKE '%$search%' OR c.course_code LIKE '%$search%')";
+}
+
+// Add department filter condition if a department is selected
+if ($department_filter) {
+    $courses_query .= $search ? " AND c.department_id = '$department_filter'" : " WHERE c.department_id = '$department_filter'";
+}
+
+// Execute the query
 $courses_result = mysqli_query($con, $courses_query);
-echo 'test';
 ?>
 
 <!DOCTYPE html>
@@ -25,30 +40,57 @@ echo 'test';
 </head>
 
 <body>
-
     <?php include '../../../frontend/layout/sidebar.php'; ?>
 
     <main>
         <div class="upperMain">
             <h1>Courses</h1>
         </div>
+
         <div class="content">
             <div class="upperContent">
-                <div class="addBtn">
-                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal"
-                        data-target="#addCourseModal">Add
-                        Course</button>
-                </div>
+                
 
-                <!-- no function yet add at app.js
-                    <div class="sortDropDown">
-                        <label for="sort">Sort by:</label>
-                        <select id="sort" onchange="sortCourses()">
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                        </select>
-                    </div> -->
+                <!-- Search and Filter Form -->
+                <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">
+                            
+                        <div class="search-container">
+                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                            <button type="submit" class="search-button">
+                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                            </button>
+                        </div>
+                        <div class="select-container">
+                            <div class="select-wrapper">
+                                <select id="department_filter" name="department_filter" class="custom-select">
+                                    <option value="" selected>All Departments</option>
+                                    <?php
+                                    // Fetch all departments to populate the filter dropdown
+                                    $departments_query = "SELECT department_id, department_code FROM departments";
+                                    $departments_result = mysqli_query($con, $departments_query);
+
+                                    // Fetch and display department options
+                                    while ($department = mysqli_fetch_assoc($departments_result)) {
+                                        $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
+                                        echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                            </div>
+                        </div>
+                            <button type="submit" class="fitler-btn">Filter</button>
+                            <a href="courses.php" class="fitler-btn">Clear</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="addBtn">
+                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addCourseModal">Add Course</button>
+                </div>
             </div>
+
             <div class="table">
                 <table>
                     <thead>
@@ -173,17 +215,12 @@ echo 'test';
                     </tbody>
                 </table>
             </div>
-            <!-- <div class="pagination">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-            </div> -->
+
         </div>
     </main>
 
     <!-- Add Course Modal -->
-    <div class="modal" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel"
-        aria-hidden="true">
+    <div class="modal" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -230,11 +267,9 @@ echo 'test';
     </div>
 
     <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
-    <!-- jQuery, Popper.js, and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 
 </html>
