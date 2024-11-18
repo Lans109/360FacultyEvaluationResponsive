@@ -13,7 +13,7 @@ $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Fetch filtered faculty members with department names
 $facultyQuery = "
-    SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, d.department_name 
+    SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, d.department_name, f.phone_number
     FROM faculty f
     LEFT JOIN departments d ON f.department_id = d.department_id
     WHERE 1=1";
@@ -92,14 +92,15 @@ if (!$facultyResult) {
                     </div>
 
                     <!-- Faculty Table -->
-                    <div class="table-results">
+                    <div class="table">
                     <table>
                         <thead>
                             <tr>
-                                <th>Faculty ID</th>
-                                <th>Faculty Name</th>
+                                <th width="150px">Faculty ID</th>
+                                <th width="300px">Faculty Name</th>
+                                <th width="200px">Phone Number</th>
                                 <th>Department</th>
-                                <th>Actions</th>
+                                <th width="150px">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,13 +109,14 @@ if (!$facultyResult) {
                                     <tr>
                                         <td><?php echo htmlspecialchars($row['faculty_id']); ?></td>
                                         <td><?php echo htmlspecialchars($row['faculty_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['phone_number']); ?></td>
                                         <td><?php echo htmlspecialchars($row['department_name']); ?></td>
                                         <td>
                                             <!--test-->
                                             <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">
                                                 View Results
                                             </a>
-                                        </td>
+                                        </td>   
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else: ?>

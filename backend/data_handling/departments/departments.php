@@ -60,18 +60,18 @@ if (!$result) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Department Name</th>
-                            <th>Department Code</th>
+                            <th width="180px">Department Code</th>
+                            <th width="300px">Department Name</th>
                             <th>Description</th>
-                            <th>Program Chair</th>
-                            <th>Actions</th>
+                            <th width="200px">Program Chair</th>
+                            <th width="100px">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($result)): ?>
                             <tr>
-                                <td><?php echo $row['department_name']; ?></td>
                                 <td><?php echo $row['department_code']; ?></td>
+                                <td><?php echo $row['department_name']; ?></td>
                                 <td><?php echo $row['department_description']; ?></td>
                                 <td>
                                     <?php

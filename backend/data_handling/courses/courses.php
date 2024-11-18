@@ -53,19 +53,18 @@ echo 'test';
                 <table>
                     <thead>
                         <tr>
-                            <th>Course ID</th>
-                            <th>Course Name</th>
-                            <th>Course Code</th>
+                            <th width="140px">Course Code</th>
+                            <th width="300px">Course Name</th>
                             <th>Description</th>
-                            <th>Department</th>
-                            <th>Actions</th>
+                            <th width="150px">Department</th>
+                            <th width="100px">Actions</th>
                         </tr>
                     </thead>
+                    <tbody>
                     <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
                         <tr>
-                            <td><?php echo $course['course_id']; ?></td>
-                            <td><?php echo $course['course_name']; ?></td>
                             <td><?php echo $course['course_code']; ?></td>
+                            <td><?php echo $course['course_name']; ?></td>
                             <td><?php echo $course['course_description']; ?></td>
                             <td><?php echo $course['department_code'] ?: 'Not Assigned'; ?></td>
                             <td>
@@ -76,8 +75,7 @@ echo 'test';
                                         data-name="<?php echo $course['course_name']; ?>"
                                         data-code="<?php echo $course['course_code']; ?>"
                                         data-description="<?php echo $course['course_description']; ?>"
-                                        data-department-id="<?php echo $course['department_id']; ?>"><i
-                                            class="fa fa-edit"></i></button>
+                                        data-department-id="<?php echo $course['department_id']; ?>"><i class="fa fa-edit"></i></button>
 
                                     <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
                                         class="delete-btn"

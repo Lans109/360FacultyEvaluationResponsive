@@ -46,7 +46,7 @@ small {
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: myFont;
     min-height: 100vh;
     display: grid;
     grid-template-columns: 14rem 1fr;
@@ -55,12 +55,12 @@ body {
         "sidebar navbar"
         "sidebar main";
     overflow: hidden;
-    background-image: url(../assets/background.png);
+    background-image: none;
 }
 
 nav {
     grid-area: navbar;
-    background-color: #6B0007;
+    background-color: #6A1314;
     padding: 1em;
     width: 100%;
     height: 50px;
@@ -117,19 +117,16 @@ aside .sidebar {
     display: flex;
 }
 
-aside .h3 {
-    font-weight: 500;
-}
-
 /* sidebar contents */
 aside .sidebar a {
     display: flex;
     margin-left: 2rem;
-    gap: 1rem;
+    gap: .5rem;
     align-items: center;
     height: 3.2rem;
     transition: all .1s ease-in;
-    color: black;
+    text-align: left;
+    color: #666;
     transition: background-color 0.2s;
 }
 
@@ -139,7 +136,7 @@ aside .sidebar a span {
 }
 
 aside .sidebar a:hover {
-    color: #6B0007;
+    color: #6A1314;
 }
 
 .close-btn {
@@ -187,7 +184,7 @@ main {
 /* academic year and evaluation status */
 .banner {
     margin: 10px;
-    border-left: #6B0007 solid 20px;
+    border-left: #6A1314 solid 20px;
     padding: 40px;
     border-radius: 4px;
     /* Rounded edges for consistency */
@@ -197,7 +194,7 @@ main {
 
 .banner-profile {
     margin: 10px;
-    border-left: #6B0007 solid 20px;
+    border-left: #6A1314 solid 20px;
     padding: 20px;
     border-radius: 4px;
     /* Rounded edges for consistency */
@@ -282,7 +279,7 @@ main {
 
 .card-icon {
     font-size: 20px;
-    color: #6B0007;
+    color: #6A1314;
 }
 
 /* Chart Section Styling */
@@ -376,7 +373,7 @@ h5 {
 }
 
 .generate-pdf-btn {
-    background-color: #6B0007;
+    background-color: #6A1314;
     /* Green background */
     color: white;
     /* White text color */
@@ -395,14 +392,14 @@ h5 {
 }
 
 .generate-pdf-btn:hover {
-    background-color: #6B0007;
+    background-color: #6A1314;
     /* Darker green when hovered */
     transform: translateY(-2px);
     /* Lift the button a little on hover */
 }
 
 .generate-pdf-btn:active {
-    background-color: #6B0007;
+    background-color: #6A1314;
     /* Even darker green when clicked */
     transform: translateY(0);
     /* Remove lift effect when clicked */
@@ -462,20 +459,21 @@ h5 {
 }
 
 .add-btn {
-    margin: 20px;
-    background-color: #6B0007;
-    color: white;
+    margin: 0;
+    background-color: #6A1314;
+    color: rgb(237, 237, 237);
     border: none;
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     padding: 15px;
-    border-radius: 7px;
+    border-radius: 3px;
+    font-family: myFont;
 }
 
 .add-btn:hover {
-    background-color: #8B0009;
+    background-color: #A40000;
 }
 
 /* modal css */
@@ -510,7 +508,7 @@ h5 {
     grid-template-columns: 1fr auto;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #6B0007;
+    border-bottom: 1px solid #6A1314;
 }
 
 .modal-body {
@@ -529,7 +527,7 @@ input[type=password] {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    accent-color: #6B0007;
+    accent-color: #6A1314;
 }
 
 /* input[type=text]:focus,
@@ -537,8 +535,8 @@ input[type=number]:focus,
 input[type=email]:focus,
 input[type=password]:focus
 select:focus {
-    outline: 1px solid #6B0007;
-    accent-color: #6B0007;
+    outline: 1px solid #6A1314;
+    accent-color: #6A1314;
 } */
 
 textarea {
@@ -552,7 +550,7 @@ textarea {
     font-size: 16px;
     resize: none;
     font-family: 'Roboto';
-    accent-color: #6B0007;
+    accent-color: #6A1314;
 }
 
 .modal-footer {
@@ -560,7 +558,7 @@ textarea {
     grid-template-columns: auto auto;
     align-items: center;
     padding: 10px;
-    border-top: 1px solid #6B0007;
+    border-top: 1px solid #6A1314;
     justify-content: end;
 }
 
@@ -586,8 +584,8 @@ textarea {
     margin: 5px;
     cursor: pointer;
     background-color: white;
-    color: #6B0007;
-    border: 1px solid #6B0007;
+    color: #6A1314;
+    border: 1px solid #6A1314;
     border-radius: 7px;
 }
 
@@ -595,13 +593,13 @@ textarea {
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
-    background-color: #6B0007;
+    background-color: #6A1314;
     color: white;
     border-radius: 7px;
 }
 
 .save-btn:hover{
-    background-color: #8B0009;
+    background-color: #6A1314;
 }
 
 .cancel-btn:hover{
@@ -621,46 +619,63 @@ textarea {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    border: 1px solid lightgrey;
 }
 
 .table th {
-    background-color: #6B0007;
-    color: white;
-    font-weight: bold;
+    background-color: #F8F8F8;
+    color: #666;
+    border: 1px solid #ddd;
+    font-weight: lighter;
+    padding: 10px;
+    text-align: left;
+    text-transform: uppercase;
 }
 
-.table th,
 .table td {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
+    border-top: 1px solid lightgrey;
     text-align: left;
-    padding: 12px;
+    padding: 10px;
+    background-color: white;
+    color: #666;
+    word-wrap: break-word;
+    white-space: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* Adjust as needed */
 }
 
 .action-btns {
     display: flex;
     gap: 10px;
     justify-content: center;
+    
 }
 
 .edit-btn {
-    background-color: #AF8F00;
-    color: white;
-    border: none;
+    background-color: #F8F8F8;
+    border: 1px solid #ddd;
+    color: #666;
+    
+    font-size: 15px;
     text-decoration: none;
     cursor: pointer;
     padding: 10px;
-    border-radius: 7px;
+    border-radius: 7px; 
 }
 
 .delete-btn {
-    background-color: #6B0007;
-    color: white;
-    border: none;
+    background-color: #666;
+    border: 1px solid #ddd;
+    color: #F8F8F8;
+    
+    font-size: 15px;
     text-decoration: none;
     cursor: pointer;
     padding: 10px;
     border-radius: 7px;
+    padding: auto;
 }
 
 .enroll-btn {
@@ -745,7 +760,7 @@ textarea {
 }
 
 .pagination button:hover {
-    background-color: #8B0009;
+    background-color: #6A1314;
     color: white;
 }
 
@@ -790,7 +805,7 @@ textarea {
 }
 
 .department-box .table th {
-    background-color: #6B0007;
+    background-color: #6A1314;
     color: white;
     font-weight: bold;
 }
@@ -829,7 +844,7 @@ textarea {
 }
 
 .search-btn {
-    background-color: #6B0007;
+    background-color: #6A1314;
     color: white;
     border: none;
     text-decoration: none;
@@ -861,7 +876,7 @@ textarea {
 }
 
 .table-results table th {
-    background-color: #6B0007;
+    background-color: #6A1314;
     color: white;
     font-weight: bold;
 }
@@ -871,13 +886,13 @@ textarea {
 }
 
 .view-btn{
-    background-color: #e4e4e4;
-    color: black;
-    border: none;
+    background-color: #F8F8F8;
+    border: 1px solid #ddd;
+    color: #666;
     text-decoration: none;
     cursor: pointer;
     padding: 10px;
-    border-radius: 7px;
+    border-radius: 3px;
     align-self: center;
 }
 
@@ -890,6 +905,10 @@ textarea {
     background-color: rgb(236, 236, 236);
 }
 
+@font-face {
+    font-family: myFont;
+    src: url(../assets/font/TT.ttf);
+}
 /* Hide button above 1101px */
 @media (min-width: 1101px) {
     .open-menu {
@@ -986,7 +1005,7 @@ textarea {
 
     .ttc-course_code {
         margin-top: 10px;
-        color: #6B0007;
+        color: #6A1314;
         font-weight: bold;
         font-size: 1.2em;
     }
