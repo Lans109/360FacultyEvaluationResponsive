@@ -70,9 +70,11 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                 <td><?php echo $chair['chair_username']; ?></td> <!-- Display Username -->
                                 <td><?php echo $chair['chair_email']; ?></td>
                                 <td>
-                                    <button class="edit-btn" data-toggle="modal"
-                                        data-target="#editChairModal<?php echo $chair['chair_id']; ?>"><i
-                                            class="fa fa-edit"></i></button>
+                                    <div class="action-btns">
+                                        <button class="edit-btn" data-toggle="modal"
+                                            data-target="#editChairModal<?php echo $chair['chair_id']; ?>"><i
+                                                class="fa fa-edit"></i></button>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -141,9 +143,11 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                 <td><?php echo $student['student_username']; ?></td> <!-- Display Username -->
                                 <td><?php echo $student['student_email']; ?></td>
                                 <td>
-                                    <button class="edit-btn" data-toggle="modal"
-                                        data-target="#editStudentModal<?php echo $student['student_id']; ?>"><i
-                                            class="fa fa-edit"></i></button>
+                                    <div class="action-btns">
+                                        <button class="edit-btn" data-toggle="modal"
+                                            data-target="#editStudentModal<?php echo $student['student_id']; ?>"><i
+                                                class="fa fa-edit"></i></button>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -212,9 +216,11 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                 <td><?php echo $faculty['faculty_username']; ?></td> <!-- Display Username -->
                                 <td><?php echo $faculty['faculty_email']; ?></td>
                                 <td>
-                                    <button class="edit-btn" data-toggle="modal"
-                                        data-target="#editFacultyModal<?php echo $faculty['faculty_id']; ?>"><i
-                                            class="fa fa-edit"></i></button>
+                                    <div class="action-btns">
+                                        <button class="edit-btn" data-toggle="modal"
+                                            data-target="#editFacultyModal<?php echo $faculty['faculty_id']; ?>"><i
+                                                class="fa fa-edit"></i></button>
+                                    </div>
                                 </td>
                             </tr>
 
