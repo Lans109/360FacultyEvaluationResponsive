@@ -56,7 +56,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th width="370px">Name</th>
                             <th>Username</th> <!-- New Username Column -->
                             <th>Email</th>
                             <th>Action</th>

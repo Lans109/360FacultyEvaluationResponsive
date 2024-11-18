@@ -78,7 +78,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                 </div>
                 <form action="generate_ranking.php" method="post">
                     <input type="hidden" value='<?php echo $ranking; ?>' name="ranking" id="ranking">
-                    <button type="submit" class="enroll-btn">Generate PDF</button>
+                    <button type="submit" class="add-btn">Generate PDF</button>
                 </form>
 
             </div>
