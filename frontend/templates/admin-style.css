@@ -616,26 +616,31 @@ textarea {
     margin: 20px;
 }
 
-/* table course */
+/* table all */
 .table table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
 .table th {
-    border-bottom: 1px solid;
-    color: #a1a1a1;
+    background-color: #6B0007;
+    color: white;
+    font-weight: bold;
 }
 
 .table th,
 .table td {
-    padding: 20px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
     text-align: left;
+    padding: 12px;
 }
 
 .action-btns {
     display: flex;
     gap: 10px;
+    justify-content: center;
 }
 
 .edit-btn {

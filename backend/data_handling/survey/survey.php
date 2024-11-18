@@ -284,7 +284,7 @@ $questions_result = mysqli_query($con, $questions_query);
                                 <td><?php echo htmlspecialchars($question['question_text']); ?></td>
                                 <td><?php echo htmlspecialchars($question['criteria_description']); ?></td>
                                 <td>
-                                    <div class="actions-btns">
+                                    <div class="action-btns">
                                         <button class="edit-btn" data-toggle="modal"
                                             data-target="#editModal<?php echo $question['question_id']; ?>"
                                             data-id="<?php echo $question['question_id']; ?>"

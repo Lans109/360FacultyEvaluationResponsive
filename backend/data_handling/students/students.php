@@ -61,7 +61,7 @@ $programs_result = mysqli_query($con, $programs_query);
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Program</th>
-                        <th width="1000px">Enrolled Sections</th>
+                        <th width="800px">Enrolled Sections</th>
                         <th width="270px">Actions</th>
                     </tr>
                 </thead>
@@ -118,7 +118,7 @@ $programs_result = mysqli_query($con, $programs_query);
                                         onclick="return confirm('Are you sure you want to delete this student?')"><i
                                             class="fa fa-trash"></i></a>
 
-                                    <button class="enroll-btn" data-toggle="modal"
+                                    <button class="view-btn" data-toggle="modal"
                                         data-target="#enrollCourseModal<?php echo $student['student_id']; ?>"
                                         data-program-id="<?php echo $student['program_id']; ?>">Enroll Course</button>
                                 </div>
