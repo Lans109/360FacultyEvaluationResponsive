@@ -56,10 +56,10 @@ $programs_result = mysqli_query($con, $programs_query);
                 <table>
                 <thead>
                     <tr>
-                        <th>Student ID</th>
-                        <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th width="150px">Student ID</th>
+                        <th width="400px">Email</th>
+                        <th width="200px">First Name</th>
+                        <th width="200px">Last Name</th>
                         <th>Program</th>
                         <th width="800px">Enrolled Sections</th>
                         <th width="270px">Actions</th>

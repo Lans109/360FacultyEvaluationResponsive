@@ -21,14 +21,19 @@ if ($courses_result) {
 }
 
 // Fetch all course sections with their associated courses and count of students
+// Fetch all course sections with their associated courses, faculty, and student count
 $sections_query = "
-    SELECT cs.course_section_id, cs.section, cs.course_id, c.course_name, 
-           COUNT(sc.student_id) AS student_count
+    SELECT cs.course_section_id, cs.section, cs.course_id, c.course_name, f.faculty_id,
+           CONCAT(f.first_name, ' ', f.last_name) as faculty_name, COUNT(sc.student_id) AS student_count
     FROM course_sections cs
     LEFT JOIN courses c ON cs.course_id = c.course_id
+    LEFT JOIN faculty_courses fc ON cs.course_section_id = fc.course_section_id
+    LEFT JOIN faculty f ON fc.faculty_id = f.faculty_id
     LEFT JOIN student_courses sc ON cs.course_section_id = sc.course_section_id
-    GROUP BY cs.course_section_id, cs.section, c.course_name";
+    GROUP BY cs.course_section_id, cs.section, c.course_name, faculty_name
+    ORDER BY faculty_name";
 $sections_result = mysqli_query($con, $sections_query);
+
 ?>
 
 <!DOCTYPE html>
@@ -73,19 +78,30 @@ $sections_result = mysqli_query($con, $sections_query);
             <!-- Table of Course Sections -->
             <div class="table">
                 <table>
-                <thead>
-                    <tr>
-                        <th>Section Name</th>
-                        <th>Course Name</th>
-                        <th>Number of Students</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($section = mysqli_fetch_assoc($sections_result)): ?>
+                    <thead>
+                        <tr>
+                            <th width="150px">Section Name</th>
+                            <th>Course Name</th>
+                            <th width="300px">Faculty Name</th>  <!-- Added column for faculty -->
+                            <th width="160px">No. of Students</th>
+                            <th width="100px">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Check if there are results
+                    if (mysqli_num_rows($sections_result) > 0) {
+                        while ($section = mysqli_fetch_assoc($sections_result)):
+                    ?>
                         <tr>
                             <td><?php echo htmlspecialchars($section['section']); ?></td>
                             <td><?php echo htmlspecialchars($section['course_name']); ?></td>
+                            <td>
+                                <?php 
+                                    // Check if faculty name is empty
+                                    echo !empty($section['faculty_name']) ? htmlspecialchars($section['faculty_name']) : 'No faculty assigned';
+                                ?>
+                            </td>
                             <td><?php echo htmlspecialchars($section['student_count']); ?></td>
                             <td>
                                 <div class="action-btns">
@@ -136,6 +152,22 @@ $sections_result = mysqli_query($con, $sections_query);
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="edit_faculty_id">Faculty</label>
+                                                <select name="faculty_id" class="form-control" required>
+                                                    <option value="">Select Faculty</option>
+                                                    <?php
+                                                    // Fetch faculty for dropdown
+                                                    $faculty_query = "SELECT faculty_id, CONCAT(first_name, ' ', last_name) as faculty_name FROM faculty";
+                                                    $faculty_result = mysqli_query($con, $faculty_query);
+                                                    while ($faculty = mysqli_fetch_assoc($faculty_result)):
+                                                    ?>
+                                                        <option value="<?php echo $faculty['faculty_id']; ?>" <?php echo ($faculty['faculty_id'] == $section['faculty_id']) ? 'selected' : ''; ?>>
+                                                            <?php echo htmlspecialchars($faculty['faculty_name']); ?>
+                                                        </option>
+                                                    <?php endwhile; ?>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
@@ -147,10 +179,14 @@ $sections_result = mysqli_query($con, $sections_query);
                         </div>
 
                     <?php endwhile; ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="5">No course sections found</td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
-            </table>
-
-        </div>
+                </table>
+            </div>
     </main>
 
     <!-- Add Course Section Modal -->
