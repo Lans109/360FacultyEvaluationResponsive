@@ -49,6 +49,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <title>Dashboard</title>
     <?php include '../../../frontend/layout/navbar.php'; ?>
 
@@ -81,7 +82,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p> Total Programs</p>
                         </div>
                         <div class="card-icon">
-                            <img src="../../../frontend/assets/programs.jpg">
+                            <img src="../../../frontend/assets/icons/program.svg">
                         </div>
                     </div>
                     <div class="card">
@@ -90,7 +91,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p> Total Course</p>
                         </div>
                         <div class="card-icon">
-                            <img src="../../../frontend/assets/courses.jpg">
+                            <img src="../../../frontend/assets/icons/course.svg">
                         </div>
                     </div>
                     <div class="card">
@@ -99,7 +100,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p> Total Students</p>
                         </div>
                         <div class="card-icon">
-                            <img src="../../../frontend/assets/students.jpg">
+                            <img src="../../../frontend/assets/icons/student.svg">
                         </div>
                     </div>
                     <div class="card">
@@ -108,7 +109,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p> Total Sections</p>
                         </div>
                         <div class="card-icon">
-                            <img src="../../../frontend/assets/sections.jpg">
+                            <img src="../../../frontend/assets/icons/section.svg">
                         </div>
                     </div>
                     <div class="card">
@@ -117,7 +118,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p> Total Faculty</p>
                         </div>
                         <div class="card-icon">
-                            <img src="../../../frontend/assets/faculty.jpg">
+                            <img src="../../../frontend/assets/icons/faculty.svg">
                         </div>
                     </div>
 

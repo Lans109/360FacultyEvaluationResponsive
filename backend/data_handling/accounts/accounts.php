@@ -72,8 +72,8 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                 <td>
                                     <div class="action-btns">
                                         <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editChairModal<?php echo $chair['chair_id']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-target="#editChairModal<?php echo $chair['chair_id']; ?>">
+                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
                                     </div>
                                 </td>
                             </tr>
@@ -145,8 +145,8 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                 <td>
                                     <div class="action-btns">
                                         <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editStudentModal<?php echo $student['student_id']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-target="#editStudentModal<?php echo $student['student_id']; ?>">
+                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
                                     </div>
                                 </td>
                             </tr>
@@ -218,8 +218,8 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                 <td>
                                     <div class="action-btns">
                                         <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editFacultyModal<?php echo $faculty['faculty_id']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-target="#editFacultyModal<?php echo $faculty['faculty_id']; ?>">
+                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
                                     </div>
                                 </td>
                             </tr>

@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <title>Current Evaluation Status</title>
     <script>

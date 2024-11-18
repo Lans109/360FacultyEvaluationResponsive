@@ -70,9 +70,8 @@ aside {
     grid-area: sidebar;
     width: 14rem;
     min-height: 100vh;
-    -webkit-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.2);
-    -moz-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.2);
-    box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.2);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
 }
 
 aside .top {
@@ -95,48 +94,72 @@ aside .sidebar {
     padding-top: 30px;
     display: flex;
     flex-direction: column;
-    background-color: white;
     height: 100vh;
     top: 50px;
     left: 0;
     width: 14rem;
 }
 
-#sidebar .dropdown-content {
-    display: none;
-    flex-direction: column;
-    padding-left: 2rem;
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    
+}
+
+/* When the dropdown is active */
+.dropdown-content.show {
+    max-height: 500px; /* Set a max-height large enough for your content */
+    opacity: 1;
+}
+
+.nav-item {
+    z-index: 2;
+    position: relative;
     background-color: white;
 }
-
-#sidebar .dropdown-content ul {
+#sidebar .dropdown-content ul li {
     padding: 0;
-}
-
-#sidebar .show {
-    display: flex;
+    background-color: #f8f8f8;
 }
 
 /* sidebar contents */
 aside .sidebar a {
     display: flex;
-    margin-left: 2rem;
+    margin-left: 1rem;
     gap: .5rem;
     align-items: center;
     height: 3.2rem;
     transition: all .1s ease-in;
     text-align: left;
     color: #666;
-    transition: background-color 0.2s;
 }
 
 aside .sidebar a span {
-    font-size: 1.6rem;
-    transition: all .1s ease-in;
+    position: absolute;
+    left: 200px;
 }
 
 aside .sidebar a:hover {
     color: #6A1314;
+}
+
+a img {
+    transition-duration: .2s;
+}
+
+aside .sidebar a:hover > img {
+    margin-right: 3px;
+}
+aside footer {
+    color: #666;
+    padding: 10px;
+    opacity: .5;
+    font-weight: lighter;
+    position: fixed;
+    bottom: 0;
+    z-index: 0;
 }
 
 .close-btn {
@@ -147,7 +170,6 @@ aside .sidebar a:hover {
 
 main {
     grid-area: main;
-    padding: 20px;
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
@@ -656,25 +678,28 @@ textarea {
     background-color: #F8F8F8;
     border: 1px solid #ddd;
     color: #666;
-    
+    transition-duration: .2s;
     font-size: 15px;
     text-decoration: none;
     cursor: pointer;
-    padding: 10px;
-    border-radius: 7px; 
+    padding: 5px;
+    border-radius: 3px; 
 }
-
+.edit-btn img, .delete-btn img {
+width: 20px;
+height: 20px;
+}
 .delete-btn {
     background-color: #666;
     border: 1px solid #ddd;
     color: #F8F8F8;
-    
+    transition-duration: .2s;
     font-size: 15px;
     text-decoration: none;
     cursor: pointer;
-    padding: 10px;
-    border-radius: 7px;
+    border-radius: 3px;
     padding: auto;
+    padding: 5px;
 }
 
 .edit-btn, .delete-btn {
@@ -697,11 +722,11 @@ textarea {
 }
 
 .edit-btn:hover {
-    background-color: #d3ac00;
+    background-color: #f5e8ae;
 }
 
 .delete-btn:hover {
-    background-color: #97000a;
+    background-color: #bb6c71;
 }
 
 .table_add-btn {
