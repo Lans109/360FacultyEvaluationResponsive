@@ -3,17 +3,52 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
-// Fetch all students with their program names
+// Get the search term and department filter
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+$program_filter = isset($_GET['program_filter']) ? mysqli_real_escape_string($con, $_GET['program_filter']) : '';
+
+// Build the base query for fetching students
 $students_query = "
-    SELECT s.student_id, s.email, s.first_name, s.last_name, p.program_id, p.program_code
-    FROM students s 
-    JOIN programs p ON s.program_id = p.program_id"; // Join to get program name
+    SELECT 
+        s.student_id, 
+        s.email, 
+        CONCAT(s.first_name, ' ', s.last_name) AS full_name, 
+        p.program_id, 
+        p.program_code, 
+        s.phone_number, 
+        s.first_name, 
+        s.last_name
+    FROM 
+        students s 
+    JOIN 
+        programs p ON s.program_id = p.program_id";
+
+// Apply search filter
+if ($search) {
+    $students_query .= "
+    WHERE (
+        p.program_code LIKE '%$search%' OR 
+        CONCAT(s.first_name, ' ', s.last_name) LIKE '%$search%' OR
+        s.phone_number LIKE '%$search%'
+    )";
+}
+
+// Apply department filter
+if ($program_filter) {
+    $students_query .= $search ? " AND s.program_id = '$program_filter'" : " WHERE s.program_id = '$program_filter'";
+}
+
+// Execute the query
 $students_result = mysqli_query($con, $students_query);
 
+$num_rows = mysqli_num_rows($students_result);
+
 // Fetch all programs for the dropdown
-$programs_query = "SELECT program_id, program_code FROM programs"; // Assuming you have a programs table
+$programs_query = "SELECT program_id, program_code FROM programs";
 $programs_result = mysqli_query($con, $programs_query);
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,13 +68,51 @@ $programs_result = mysqli_query($con, $programs_query);
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <h1>Student Management</h1>
+            <div><h1>Student Management</h1></div>
         </div>
         <div class="content">
             <div class="upperContent">
-                <div class="addBtn">
-                    <button class="add-btn" data-toggle="modal" data-target="#addStudentModal">Add
-                        Student</button>
+                <div>
+                    <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Student' : 'Students' ?></p>
+                </div>
+            <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">            
+                        <div class="search-container">
+                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                            <button type="submit" class="search-button">
+                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                            </button>
+                        </div>
+                        <div class="select-container">
+                            <div class="select-wrapper">
+                                <select id="program_filter" name="program_filter" class="custom-select">
+                                    <option value="" selected>All programs</option>
+                                    <?php
+                                    // Fetch all programs to populate the filter dropdown
+                                    $programs_query = "SELECT program_id, program_code FROM programs";
+                                    $programs_result = mysqli_query($con, $programs_query);
+
+                                    // Fetch and display program options
+                                    while ($program = mysqli_fetch_assoc($programs_result)) {
+                                        $selected = (isset($_GET['program_filter']) && $_GET['program_filter'] == $program['program_id']) ? 'selected' : '';
+                                        echo "<option value='" . $program['program_id'] . "' . $selected>" . $program['program_code'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                            </div>
+                        </div>
+                            <button type="submit" class="fitler-btn">Filter</button>
+                            <a href="students.php" class="fitler-btn">Clear</a>
+                        </div>
+                        
+                    </form>
+                </div>
+                <div>
+                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Student&nbsp;
+                    </button>
                 </div>
 
                 <!-- no function yet add at app.js
@@ -56,52 +129,31 @@ $programs_result = mysqli_query($con, $programs_query);
                 <table>
                 <thead>
                     <tr>
-                        <th width="150px">Student ID</th>
-                        <th width="400px">Email</th>
-                        <th width="200px">First Name</th>
-                        <th width="200px">Last Name</th>
+                        <th width="100px">Photo</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
                         <th>Program</th>
-                        <th width="800px">Enrolled Sections</th>
-                        <th width="270px">Actions</th>
+                        <th>Student ID</th>
+                        <th width="100px">Profile</th>
+                        <th width="100px">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                <?php if (mysqli_num_rows($students_result) > 0): ?>
                     <?php while ($student = mysqli_fetch_assoc($students_result)): ?>
-                        <tr>
-                            <td><?php echo $student['student_id']; ?></td>
+                        <tr>      
+                            <td><img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"></td>
+                            <td><?php echo $student['full_name']; ?></td>
                             <td><?php echo $student['email']; ?></td>
-                            <td><?php echo $student['first_name']; ?></td>
-                            <td><?php echo $student['last_name']; ?></td>
+                            <td><?php echo $student['phone_number']; ?></td>
                             <td><?php echo $student['program_code']; ?></td>
-                            <td>
-                                <?php
-                                // Fetch enrolled sections for the student
-                                $student_id = $student['student_id'];
-                                $courses_query = "
-                            SELECT sec.course_section_id, c.course_name, sec.section 
-                            FROM student_courses cs 
-                            JOIN course_sections sec ON cs.course_section_id = sec.course_section_id 
-                            JOIN courses c ON sec.course_id = c.course_id 
-                            WHERE cs.student_id = $student_id";
-                                $courses_result = mysqli_query($con, $courses_query);
-
-                                if (mysqli_num_rows($courses_result) > 0) {
-                                    while ($course = mysqli_fetch_assoc($courses_result)) { ?>
-                                        <div class="section-row">
-                                            <div class="section-details">
-                                                <?php echo $course['section'] . " - " . $course['course_name']; ?>
-                                            </div>
-                                            <div class="section-action">
-                                                <a href="delete_student_course.php?student_id=<?php echo $student_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>"
-                                                    class="delete-btn"
-                                                    onclick="return confirm('Are you sure you want to delete this course?')"><i class="fa fa-trash"></i></a>
-                                            </div>
-                                        </div>
-                                    <?php }
-                                } else {
-                                    echo "No sections enrolled.";
-                                }
-                                ?>
+                            <td><?php echo $student['student_id']; ?></td>
+                             <td>
+                                    <!-- View Profile Button -->
+                                    <a href="view_student_profile.php?student_id=<?php echo $student['student_id']; ?>" class="view-btn">
+                                        View Profile
+                                    </a>
                             </td>
                             <td>
                                 <div class="action-btns">
@@ -118,10 +170,6 @@ $programs_result = mysqli_query($con, $programs_query);
                                         class="delete-btn"
                                         onclick="return confirm('Are you sure you want to delete this student?')">
                                         <img src="../../../frontend/assets/icons/delete.svg"></a>
-
-                                    <button class="view-btn" data-toggle="modal"
-                                        data-target="#enrollCourseModal<?php echo $student['student_id']; ?>"
-                                        data-program-id="<?php echo $student['program_id']; ?>">Enroll Course</button>
                                 </div>
                             </td>
                         </tr>
@@ -180,64 +228,19 @@ $programs_result = mysqli_query($con, $programs_query);
                             </div>
                         </div>
 
-                        <!-- Enroll Course Modal -->
-                        <div class="modal" id="enrollCourseModal<?php echo $student['student_id']; ?>" tabindex="-1"
-                            role="dialog" aria-labelledby="enrollCourseLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="enrollCourseLabel">Enroll Course</h5>
-                                        <span class="close" class="close" data-dismiss="modal"
-                                            aria-label="Close">&times;</span>
-                                    </div>
-                                    <form method="POST" action="add_course_to_student.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="student_id"
-                                                value="<?php echo $student['student_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="course_section_id">Select Course Section</label>
-                                                <select name="course_section_id" class="form-control" required>
-                                                    <option value="">Select Course</option>
-                                                    <?php
-                                                    // Fetch sections based on the student's program
-                                                    $program_id = $student['program_id'];
-                                                    $program_sections_query = "
-                                                SELECT sec.course_section_id, c.course_name, sec.section 
-                                                FROM course_sections sec 
-                                                JOIN courses c ON sec.course_id = c.course_id 
-                                                JOIN program_courses pc ON c.course_id = pc.course_id 
-                                                WHERE pc.program_id = $program_id"; // Assuming a program_courses linking table
-                                                
-                                                    $program_sections_result = mysqli_query($con, $program_sections_query);
-
-                                                    // Check if sections exist for this program
-                                                    if (mysqli_num_rows($program_sections_result) > 0) {
-                                                        while ($section = mysqli_fetch_assoc($program_sections_result)) {
-                                                            echo "<option value='{$section['course_section_id']}'>{$section['section']} - {$section['course_name']}</option>";
-                                                        }
-                                                    } else {
-                                                        echo "<option value=''>No available sections</option>";
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="save-btn">Enroll</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
                     <?php endwhile; ?>
+                    <?php else: ?>
+                                <tr>
+                                    <td colspan="4">No Students found.</td>
+                                </tr>
+                            <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </main>
 
     <!-- Add Student Modal -->
-    <div class="modal" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentLabel"
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addStudentLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

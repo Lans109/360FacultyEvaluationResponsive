@@ -3,15 +3,47 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+$department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
 // Fetch all faculty members along with their department IDs
 $faculty_query = "
-    SELECT f.faculty_id, f.email, f.first_name, f.last_name, f.department_id 
-    FROM faculty f"; // No need to join faculty_departments anymore
+    SELECT 
+        f.phone_number, 
+        f.faculty_id, 
+        f.email, 
+        f.first_name, 
+        f.last_name, 
+        f.department_id, 
+        d.department_code, 
+        CONCAT(f.first_name, ' ', f.last_name) AS full_name
+    FROM faculty f
+    JOIN departments d ON f.department_id = d.department_id";
+
+// Apply search filter if the $search variable is set
+if (!empty($search)) {
+    $faculty_query .= " WHERE (
+        d.department_code LIKE '%$search%' OR 
+        CONCAT(f.first_name, ' ', f.last_name) LIKE '%$search%' OR
+        f.phone_number LIKE '%$search%'
+    )";
+}
+
+// Apply department filter condition if a department is selected
+if (!empty($department_filter)) {
+    $faculty_query .= !empty($search) 
+        ? " AND f.department_id = '$department_filter'" 
+        : " WHERE f.department_id = '$department_filter'";
+}
+
 $faculty_result = mysqli_query($con, $faculty_query);
+
+// Fetch the number of rows returned by the query
+$num_rows = mysqli_num_rows($faculty_result);
+
 
 // Fetch all course sections along with their department IDs
 $courses_query = "
-    SELECT cs.course_section_id, c.course_name, cs.section, d.department_id 
+    SELECT cs.course_section_id, c.course_name, cs.section, d.department_id
     FROM course_sections cs 
     JOIN courses c ON cs.course_id = c.course_id 
     JOIN departments d ON c.department_id = d.department_id"; // Assuming courses also have department_id
@@ -51,81 +83,80 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
         </div>
         <div class="content">
             <div class="upperContent">
-                <div class="addBtn">
-                    <button class="add-btn" data-toggle="modal" data-target="#addFacultyModal">Add
-                        Faculty</button>
+            <div>
+                    <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Faculty Member' : 'Faculty Members' ?></p>
                 </div>
+                <!-- Search and Filter Form -->
+                <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">            
+                        <div class="search-container">
+                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                            <button type="submit" class="search-button">
+                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                            </button>
+                        </div>
+                        <div class="select-container">
+                            <div class="select-wrapper">
+                                <select id="department_filter" name="department_filter" class="custom-select">
+                                    <option value="" selected>All Departments</option>
+                                    <?php
+                                    // Fetch all departments to populate the filter dropdown
+                                    $departments_query = "SELECT department_id, department_code FROM departments";
+                                    $departments_result = mysqli_query($con, $departments_query);
 
-                <!-- no function yet add at app.js
-                    <div class="sortDropDown">
-                        <label for="sort">Sort by:</label>
-                        <select id="sort" onchange="sortCourses()">
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                        </select>
-                    </div> -->
+                                    // Fetch and display department options
+                                    while ($department = mysqli_fetch_assoc($departments_result)) {
+                                        $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
+                                        echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                            </div>
+                        </div>
+                            <button type="submit" class="fitler-btn">Filter</button>
+                            <a href="faculty.php" class="fitler-btn">Clear</a>
+                        </div>
+                        
+                    </form>
+                </div>
+                <div>
+                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Faculty&nbsp;
+                    </button>
+                </div>
             </div>
             <!-- Table of Faculty -->
             <div class="table">
                 <table>
                     <thead>
                         <tr>
-                            <th>Faculty ID</th>
+                            <th width="100px">Photo</th>
+                            <th>Full Name</th>
                             <th>Email</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>Phone Number</th>
                             <th>Department</th>
-                            <th width="600px">Assigned Courses</th>
-                            <th width="250px">Actions</th>
+                            <th>Faculty ID</th>
+                            <th width="100px">Profile</th>
+                            <th width="100px">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                    <?php if (mysqli_num_rows($faculty_result) > 0): ?>
                         <?php while ($faculty = mysqli_fetch_assoc($faculty_result)): ?>
                             <tr>
-                                <td><?php echo $faculty['faculty_id']; ?></td>
+                                <td><img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"></td>
+                                <td><?php echo $faculty['full_name']; ?></td>
                                 <td><?php echo $faculty['email']; ?></td>
-                                <td><?php echo $faculty['first_name']; ?></td>
-                                <td><?php echo $faculty['last_name']; ?></td>
+                                <td><?php echo $faculty['phone_number']; ?></td>
+                                <td><?php echo $faculty['department_code']; ?></td>
+                                <td><?php echo $faculty['faculty_id']; ?></td>
                                 <td>
-                                    <?php
-                                    // Fetch department name
-                                    $department_id = $faculty['department_id'];
-                                    $department_query = "SELECT department_name FROM departments WHERE department_id = $department_id";
-                                    $department_result = mysqli_query($con, $department_query);
-                                    $department = mysqli_fetch_assoc($department_result);
-                                    echo $department['department_name'];
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    // Fetch assigned courses for the faculty
-                                    $faculty_id = $faculty['faculty_id'];
-                                    $assigned_courses_query = "
-        SELECT cs.course_section_id, c.course_name, cs.section 
-        FROM faculty_courses fc 
-        JOIN course_sections cs ON fc.course_section_id = cs.course_section_id 
-        JOIN courses c ON cs.course_id = c.course_id 
-        WHERE fc.faculty_id = $faculty_id";
-                                    $assigned_courses_result = mysqli_query($con, $assigned_courses_query);
-
-                                    if (mysqli_num_rows($assigned_courses_result) > 0) {
-                                        while ($course = mysqli_fetch_assoc($assigned_courses_result)) { ?>
-                                            <div class="section-row">
-                                                <div class="section-details">
-                                                    <?php echo $course['section'] . " - " . $course['course_name']; ?>
-                                                </div>
-                                                <div class="section-action">
-                                                    <a href="delete_faculty_course.php?faculty_id=<?php echo $faculty_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>"
-                                                        class="delete-btn"
-                                                        onclick="return confirm('Are you sure you want to remove this course?')"><i
-                                                            class="fa fa-trash"></i></a>
-                                                </div>
-                                            </div>
-                                        <?php }
-                                    } else {
-                                        echo "No courses assigned.";
-                                    }
-                                    ?>
+                                        <!-- View Profile Button -->
+                                        <a href="view_faculty_profile.php?faculty_id=<?php echo $faculty['faculty_id']; ?>" class="view-btn">
+                                            View Profile
+                                        </a>
                                 </td>
                                 <td>
                                     <div class="action-btns">
@@ -142,9 +173,6 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                             onclick="return confirm('Are you sure you want to delete this faculty member?')">
                                             <img src="../../../frontend/assets/icons/delete.svg"></a>
 
-                                        <button class="table_add-btn" data-toggle="modal"
-                                            data-target="#assignCourseModal<?php echo $faculty['faculty_id']; ?>">Assign
-                                            Course</button>
                                     </div>
                                 </td>
                             </tr>
@@ -240,16 +268,20 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                 </div>
                             </div>
                         <?php endwhile; ?>
+                        <?php else: ?>
+                                <tr>
+                                    <td colspan="4">No faculty members found.</td>
+                                </tr>
+                            <?php endif; ?>
                     </tbody>
-                </table>s
+                </table>
             </div>
         </div>
 
     </main>
 
     <!-- Add Faculty Modal -->
-    <!-- Add Faculty Modal -->
-    <div class="modal" id="addFacultyModal" tabindex="-1" role="dialog" aria-labelledby="addFacultyLabel"
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addFacultyLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

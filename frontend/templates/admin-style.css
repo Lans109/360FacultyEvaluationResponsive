@@ -60,7 +60,7 @@ body {
 
 nav {
     grid-area: navbar;
-    background-color: #6A1314;
+    background-color: #631111;
     padding: 1em;
     width: 100%;
     height: 50px;
@@ -142,7 +142,7 @@ aside .sidebar a span {
 }
 
 aside .sidebar a:hover {
-    color: #6A1314;
+    color: #631111;
 }
 
 a img {
@@ -153,13 +153,14 @@ aside .sidebar a:hover > img {
     margin-right: 3px;
 }
 aside footer {
-    color: #666;
+    color: #2A2723;
     padding: 10px;
     opacity: .5;
     font-weight: lighter;
     position: fixed;
     bottom: 0;
     z-index: 0;
+    font-family: myFont2;
 }
 
 .close-btn {
@@ -182,10 +183,18 @@ main {
 }
 
 .upperMain h1 {
-    font-size: 2rem;
+    font-size: 20px;
     font-weight: bold;
-    margin-left: 40px;
     margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.upperMain div {
+    margin-left: 40px;
+}
+
+.upperMain p {
+    color: #2A2723;
 }
 
 /* content of main */
@@ -206,7 +215,7 @@ main {
 /* academic year and evaluation status */
 .banner {
     margin: 10px;
-    border-left: #6A1314 solid 20px;
+    border-left: #631111 solid 20px;
     padding: 40px;
     border-radius: 4px;
     /* Rounded edges for consistency */
@@ -216,7 +225,7 @@ main {
 
 .banner-profile {
     margin: 10px;
-    border-left: #6A1314 solid 20px;
+    border-left: #631111 solid 20px;
     padding: 20px;
     border-radius: 4px;
     /* Rounded edges for consistency */
@@ -290,18 +299,18 @@ main {
     margin: 0;
     font-size: 2rem;
     font-weight: bold;
-    color: #666;
+    color: #2A2723;
 }
 
 .card-info p {
     margin: 0;
     font-size: 0.9rem;
-    color: #666;
+    color: #2A2723;
 }
 
 .card-icon {
     font-size: 20px;
-    color: #6A1314;
+    color: #631111;
 }
 
 /* Chart Section Styling */
@@ -395,7 +404,7 @@ h5 {
 }
 
 .generate-pdf-btn {
-    background-color: #6A1314;
+    background-color: #631111;
     /* Green background */
     color: white;
     /* White text color */
@@ -414,14 +423,14 @@ h5 {
 }
 
 .generate-pdf-btn:hover {
-    background-color: #6A1314;
+    background-color: #631111;
     /* Darker green when hovered */
     transform: translateY(-2px);
     /* Lift the button a little on hover */
 }
 
 .generate-pdf-btn:active {
-    background-color: #6A1314;
+    background-color: #631111;
     /* Even darker green when clicked */
     transform: translateY(0);
     /* Remove lift effect when clicked */
@@ -472,8 +481,8 @@ h5 {
 
 
 .search-filter .form-group input {
-    width: 600px;
     border-radius: 3px;
+    width: 500px;
 }
 
 .search-container {
@@ -486,8 +495,15 @@ h5 {
     padding: 10px 30px 10px 10px;
     font-size: 15px;                   
     border-radius: 3px;          
-    width: 250px;        
+    width: 500px;        
     font-family: myFont;        
+}
+
+.search-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px; /* Default width */
 }
 
 /* Style for the search icon button */
@@ -542,7 +558,7 @@ h5 {
     -webkit-appearance: none;      /* For Safari */
     -moz-appearance: none;         /* For Firefox */
     font-family: myFont;
-    color: #666;
+    color: #2A2723;
 }
 
 /* Style for the custom dropdown arrow (icon) */
@@ -570,36 +586,47 @@ h5 {
 
 /* admin-pages elements */
 .upperContent {
-    align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly; /* Aligns elements to the right */
+    align-items: center; /* Centers vertically */
+    width: 100%;
+    padding: 10px;
+    flex-wrap: nowrap; /* Ensures all elements stay in one line */
+}
+.upperContent p {
+    font-family: myFont;
+    opacity: .5;
+    font-size: 15px;
 }
 
 .add-btn {
     margin: 0;
-    background-color: #6A1314;
-    color: #ddd;
+    background-color: #923534;
+    color: white;
     border: none;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;  /* Change to inline-flex to align child elements */
+    align-items: center;  /* Vertically center the text and image */
+    justify-content: center;  /* Horizontally center the text and image */
     cursor: pointer;
-    font-size: 15px;
-    padding: 12px 30px 12px 30px;
+    padding: 9px 20px;
     border-radius: 6px;
     font-family: myFont;
+    font-size: 15px;
+    font-weight: lighter;
+    transition-duration: .2s;
+}
+.add-btn:hover {
+    background-color: #631111;
 }
 
 .fitler-btn {
     padding: 12px;
-    color: #666;
+    color: #2A2723;
     font-family: myFont;
     font-size: 15px;
     background: none;
     cursor: pointer;
-}
-
-.add-btn:hover {
-    background-color: #A40000;
 }
 
 /* modal css */
@@ -634,7 +661,7 @@ h5 {
     grid-template-columns: 1fr auto;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #6A1314;
+    border-bottom: 1px solid #631111;
 }
 
 .modal-body {
@@ -653,7 +680,7 @@ input[type=password] {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    accent-color: #6A1314;
+    accent-color: #631111;
 }
 
 /* input[type=text]:focus,
@@ -661,8 +688,8 @@ input[type=number]:focus,
 input[type=email]:focus,
 input[type=password]:focus
 select:focus {
-    outline: 1px solid #6A1314;
-    accent-color: #6A1314;
+    outline: 1px solid #631111;
+    accent-color: #631111;
 } */
 
 textarea {
@@ -676,7 +703,7 @@ textarea {
     font-size: 16px;
     resize: none;
     font-family: 'Roboto';
-    accent-color: #6A1314;
+    accent-color: #631111;
 }
 
 .modal-footer {
@@ -684,7 +711,7 @@ textarea {
     grid-template-columns: auto auto;
     align-items: center;
     padding: 10px;
-    border-top: 1px solid #6A1314;
+    border-top: 1px solid #631111;
     justify-content: end;
 }
 
@@ -710,8 +737,8 @@ textarea {
     margin: 5px;
     cursor: pointer;
     background-color: white;
-    color: #6A1314;
-    border: 1px solid #6A1314;
+    color: #631111;
+    border: 1px solid #631111;
     border-radius: 7px;
 }
 
@@ -719,13 +746,13 @@ textarea {
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
-    background-color: #6A1314;
+    background-color: #631111;
     color: white;
     border-radius: 7px;
 }
 
 .save-btn:hover{
-    background-color: #6A1314;
+    background-color: #631111;
 }
 
 .cancel-btn:hover{
@@ -746,11 +773,12 @@ textarea {
     border-collapse: collapse;
     margin-top: 10px;
     border: 1px solid lightgrey;
+    font-family: myFont2;
 }
 
 .table th {
     background-color: #F8F8F8;
-    color: #666;
+    color: #2A2723;
     border: 1px solid #ddd;
     font-weight: lighter;
     padding: 10px;
@@ -772,6 +800,14 @@ textarea {
     max-width: 150px; /* Adjust as needed */
 }
 
+.table img {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+}
 .action-btns {
     display: flex;
     gap: 10px;
@@ -779,9 +815,9 @@ textarea {
 }
 
 .edit-btn {
-    background-color: #F8F8F8;
+    background-color: #ddd;
     border: 1px solid #ddd;
-    color: #666;
+    color: #2A2723;
     transition-duration: .2s;
     font-size: 15px;
     text-decoration: none;
@@ -920,7 +956,7 @@ height: 20px;
 }
 
 .department-box .table th {
-    background-color: #6A1314;
+    background-color: #631111;
     color: white;
     font-weight: bold;
 }
@@ -970,7 +1006,7 @@ height: 20px;
 }
 
 .search-btn {
-    background-color: #6A1314;
+    background-color: #631111;
     color: white;
     border: none;
     text-decoration: none;
@@ -1002,7 +1038,7 @@ height: 20px;
 }
 
 .table-results table th {
-    background-color: #6A1314;
+    background-color: #631111;
     color: white;
     font-weight: bold;
 }
@@ -1014,7 +1050,7 @@ height: 20px;
 .view-btn {
     background-color: #F8F8F8;
     border: 1px solid #ddd;
-    color: #666;
+    color: #2A2723;
     text-decoration: none;
     cursor: pointer;
     padding: 8px 15px; 
@@ -1022,6 +1058,8 @@ height: 20px;
     margin: 5px auto; 
     display: inline-block; 
     text-align: center;
+    font-size: 15px;
+    font-family: myFont2;
 }
 
 
@@ -1031,6 +1069,10 @@ height: 20px;
 
 @font-face {
     font-family: myFont;
+    src: url(../assets/font/Silka-Regular.otf);
+}
+@font-face {
+    font-family: myFont2;
     src: url(../assets/font/TT.ttf);
 }
 /* Hide button above 1101px */
@@ -1129,7 +1171,7 @@ height: 20px;
 
     .ttc-course_code {
         margin-top: 10px;
-        color: #6A1314;
+        color: #631111;
         font-weight: bold;
         font-size: 1.2em;
     }

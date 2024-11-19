@@ -24,6 +24,8 @@ if ($department_filter) {
 
 // Execute the query
 $programs_result = mysqli_query($con, $programs_query);
+
+$num_rows = mysqli_num_rows($programs_result);
 ?>
 
 <!DOCTYPE html>
@@ -43,11 +45,14 @@ $programs_result = mysqli_query($con, $programs_query);
 
     <main>
         <div class="upperMain">
-            <h1>Program Management</h1>
+            <div><h1>Program Management</h1></div>
         </div>
         <div class="content">
 
             <div class="upperContent">
+                <div>
+                    <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Program' : 'Programs' ?></p>
+                </div>
                 <div class="search-filter">
                     <form method="GET" action="">
                         <div class="form-group">
@@ -81,8 +86,10 @@ $programs_result = mysqli_query($con, $programs_query);
                         </div>
                     </form>
                 </div>
-                <div class="addBtn">
-                    <button id="openModalBtn-add-program" class="add-btn" data-toggle="modal" data-target="#addProgramModal">Add Program</button>
+                <div>
+                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Program&nbsp;
+                    </button>
                 </div>
             </div>
 
@@ -100,6 +107,7 @@ $programs_result = mysqli_query($con, $programs_query);
                         </tr>
                     </thead>
                     <tbody>
+                    <?php if (mysqli_num_rows($programs_result) > 0): ?>
                         <?php while ($program = mysqli_fetch_assoc($programs_result)): ?>
                             <tr>
                                 <td><?php echo $program['program_code']; ?></td>
@@ -258,6 +266,11 @@ $programs_result = mysqli_query($con, $programs_query);
                                 </div>
                             </div>
                         <?php endwhile; ?>
+                        <?php else: ?>
+                                <tr>
+                                    <td colspan="4">No Programs found.</td>
+                                </tr>
+                            <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -271,7 +284,7 @@ $programs_result = mysqli_query($con, $programs_query);
     </main>
 
     <!-- Add Program Modal -->
-    <div class="modal" id="addProgramModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel"
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

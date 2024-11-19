@@ -21,9 +21,10 @@ if ($search) {
 if ($department_filter) {
     $courses_query .= $search ? " AND c.department_id = '$department_filter'" : " WHERE c.department_id = '$department_filter'";
 }
-
 // Execute the query
 $courses_result = mysqli_query($con, $courses_query);
+
+$num_rows = mysqli_num_rows($courses_result);
 ?>
 
 <!DOCTYPE html>
@@ -44,18 +45,18 @@ $courses_result = mysqli_query($con, $courses_query);
 
     <main>
         <div class="upperMain">
-            <h1>Courses</h1>
+            <div><h1>Courses Management</h1></div>
         </div>
 
         <div class="content">
             <div class="upperContent">
-                
-
+                <div>
+                    <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Course' : 'Courses' ?></p>
+                </div>
                 <!-- Search and Filter Form -->
                 <div class="search-filter">
                     <form method="GET" action="">
-                        <div class="form-group">
-                            
+                        <div class="form-group">            
                         <div class="search-container">
                             <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
                             <button type="submit" class="search-button">
@@ -84,10 +85,13 @@ $courses_result = mysqli_query($con, $courses_query);
                             <button type="submit" class="fitler-btn">Filter</button>
                             <a href="courses.php" class="fitler-btn">Clear</a>
                         </div>
+                        
                     </form>
                 </div>
-                <div class="addBtn">
-                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addCourseModal">Add Course</button>
+                <div>
+                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Course&nbsp;
+                    </button>
                 </div>
             </div>
 
@@ -103,6 +107,7 @@ $courses_result = mysqli_query($con, $courses_query);
                         </tr>
                     </thead>
                     <tbody>
+                    <?php if (mysqli_num_rows($courses_result) > 0): ?>
                     <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
                         <tr>
                             <td><?php echo $course['course_code']; ?></td>
@@ -212,6 +217,11 @@ $courses_result = mysqli_query($con, $courses_query);
                         </div>
 
                     <?php endwhile; ?>
+                    <?php else: ?>
+                                <tr>
+                                    <td colspan="4">No Courses found.</td>
+                                </tr>
+                            <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -220,7 +230,7 @@ $courses_result = mysqli_query($con, $courses_query);
     </main>
 
     <!-- Add Course Modal -->
-    <div class="modal" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
