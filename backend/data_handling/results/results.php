@@ -98,7 +98,7 @@ if (!$facultyResult) {
                             <tr>
                                 <th width="150px">Faculty ID</th>
                                 <th width="300px">Faculty Name</th>
-                                <th width="200px">Phone Number</th>
+                                <th width="260px">Phone Number</th>
                                 <th>Department</th>
                                 <th width="150px">Actions</th>
                             </tr>

@@ -50,13 +50,15 @@ $result_faculty = mysqli_query($con, $query_faculty);
             </div>
 
             <!-- Program Chairs Table -->
-            <h4>Program Chairs</h4>
+            <div class="account-roles-program-chair">
+                <h2>Program Chairs</h2>
+            </div>
             <div class="table">
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th width="370px">Name</th>
+                            <th>Name</th>
                             <th>Username</th> <!-- New Username Column -->
                             <th>Email</th>
                             <th>Action</th>
@@ -123,13 +125,15 @@ $result_faculty = mysqli_query($con, $query_faculty);
             </div>
 
             <!-- Students Table -->
-            <h4>Students</h4>
+            <div class="account-roles-student">
+                <h2>Students</h2>
+            </div>
             <div class="table">
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th width="390px">Name</th>
                             <th>Username</th> <!-- New Username Column -->
                             <th>Email</th>
                             <th>Action</th>
@@ -196,13 +200,15 @@ $result_faculty = mysqli_query($con, $query_faculty);
             </div>
 
             <!-- Faculty Table -->
-            <h4>Faculty</h4>
+            <div class="account-roles-faculty">
+                <h2>Faculty</h2>
+            </div>
             <div class="table">
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th width="390px">Name</th>
                             <th>Username</th> <!-- New Username Column -->
                             <th>Email</th>
                             <th>Action</th>

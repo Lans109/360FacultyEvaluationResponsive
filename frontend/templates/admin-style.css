@@ -750,28 +750,6 @@ textarea {
 }
 
 
-/* pagination
-.pagination {
-    margin-top: auto;
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 10px;
-    border-top: 1px solid #666;
-} */
-
-.pagination button {
-    padding: 8px 12px;
-    margin-left: 5px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.pagination button:hover {
-    background-color: #6A1314;
-    color: white;
-}
-
 /* Hide .table-to-cards by default */
 .hidden {
     display: none;
@@ -816,6 +794,11 @@ textarea {
     background-color: #6A1314;
     color: white;
     font-weight: bold;
+}
+
+/* css for account.php page */
+.account-roles-faculty, .account-roles-student{
+    margin-top: 20px;
 }
 
 /* css for searh bar  */
@@ -893,16 +876,19 @@ textarea {
     text-align: center; /* Centers the content of the "Actions" column */
 }
 
-.view-btn{
+.view-btn {
     background-color: #F8F8F8;
     border: 1px solid #ddd;
     color: #666;
     text-decoration: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px 15px; 
     border-radius: 3px;
-    align-self: center;
+    margin: 5px auto; 
+    display: inline-block; 
+    text-align: center;
 }
+
 
 .view-btn:hover{
     background-color: #d8d8d8;
