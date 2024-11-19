@@ -49,6 +49,7 @@ $sections_query .= " GROUP BY cs.course_section_id, cs.section, c.course_name, f
 
 $sections_result = mysqli_query($con, $sections_query);
 
+$num_rows = mysqli_num_rows($sections_result);
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +58,7 @@ $sections_result = mysqli_query($con, $sections_query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Section Management</title>
+    <title>Section Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -70,10 +71,13 @@ $sections_result = mysqli_query($con, $sections_query);
 
     <main>
         <div class="upperMain">
-            <h1>Course Section Management</h1>
+            <div><h1>Section Management</h1></div>
         </div>
         <div class="content">
             <div class="upperContent">
+                <div>
+                    <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Section' : 'Sections' ?></p>
+                </div>
             <div class="search-filter">
                     <form method="GET" action="">
                         <div class="form-group">
@@ -108,10 +112,10 @@ $sections_result = mysqli_query($con, $sections_query);
                         </div>
                     </form>
                 </div>
-                <div class="addBtn">
-                    <button class="add-btn" data-toggle="modal" data-target="#addSectionModal">Add New
-                        Course
-                        Section</button>
+                <div>
+                    <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Section&nbsp;
+                    </button>
                 </div>
             </div>
 
@@ -225,7 +229,7 @@ $sections_result = mysqli_query($con, $sections_query);
                     <?php endwhile; ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="5">No course sections found</td>
+                            <td colspan="5">No Sections found</td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -234,7 +238,7 @@ $sections_result = mysqli_query($con, $sections_query);
     </main>
 
     <!-- Add Course Section Modal -->
-    <div class="modal fade" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel"
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

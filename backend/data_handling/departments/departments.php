@@ -24,9 +24,11 @@ if ($search) {
     )";
 }
 
-$result = mysqli_query($con, $department_query);
+$department_result = mysqli_query($con, $department_query);
 
-if (!$result) {
+$num_rows = mysqli_num_rows($department_result);
+
+if (!$department_result) {
     die("Error fetching departments: " . mysqli_error($con));
 }
 ?>
@@ -37,7 +39,7 @@ if (!$result) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Departments and Program Chairs</title>
+    <title>Department Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -49,11 +51,11 @@ if (!$result) {
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <h1>Departments and Program Chairs</h1>
+            <div><h1>Department Management</h1></div>
         </div>
         <div class="content">
             <div class="upperContent">
-
+                <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Department' : 'Departments' ?></p>
                 <div class="search-filter">
                     <form method="GET" action="">
                         <div class="form-group">
@@ -67,9 +69,10 @@ if (!$result) {
                         </div>
                     </form>
                 </div>
-                <div class="addBtn">
-                    <button class="add-btn" data-toggle="modal" data-target="#addModal">Add New
-                        Department</button>
+                <div>
+                    <button id="openModalBtn-add-department" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Department&nbsp;
+                    </button>
                 </div>
 
                 <!-- no function yet add at app.js
@@ -93,7 +96,8 @@ if (!$result) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <?php if (mysqli_num_rows($department_result) > 0): ?>
+                        <?php while ($row = mysqli_fetch_assoc($department_result)): ?>
                             <tr>
                                 <td><?php echo $row['department_code']; ?></td>
                                 <td><?php echo $row['department_name']; ?></td>
@@ -124,6 +128,11 @@ if (!$result) {
                                 </td>
                             </tr>
                         <?php endwhile; ?>
+                        <?php else: ?>
+                                <tr>
+                                    <td colspan="4">No Departments found.</td>
+                                </tr>
+                            <?php endif; ?>
                     </tbody>
                 </table>
             </div>
