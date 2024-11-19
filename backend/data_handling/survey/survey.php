@@ -90,13 +90,13 @@ $questions_result = mysqli_query($con, $questions_query);
                                     <div class="action-btns">
                                         <!-- Edit Button -->
                                         <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editCriteriaModal<?php echo $criteria_id; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-target="#editCriteriaModal<?php echo $criteria_id; ?>"><img
+                                                src="../../../frontend/assets/icons/edit.svg"></button>
 
                                         <!-- Delete Button -->
                                         <button class="delete-btn" data-toggle="modal"
-                                            data-target="#deleteCriteriaModal<?php echo $criteria_id; ?>"><i
-                                                class="fa fa-trash"></i></button>
+                                            data-target="#deleteCriteriaModal<?php echo $criteria_id; ?>"><img
+                                                src="../../../frontend/assets/icons/delete.svg"></button>
                                     </div>
 
                                 </td>
@@ -261,16 +261,18 @@ $questions_result = mysqli_query($con, $questions_query);
                         </tbody>
                         </table>
                     <?php endif; ?>
-
-                    <h3><?php echo htmlspecialchars($question['survey_name']); ?></h3>
+                    
+                    <div class="survey-name-label">
+                        <h2><?php echo htmlspecialchars($question['survey_name']); ?></h2>
+                    </div>
                     <div class="table">
                         <table>
                             <thead>
                                 <tr>
-                                    <th width ="150px">Question Code</th>
+                                    <th width="150px">Question Code</th>
                                     <th>Question Text</th>
                                     <th width="400px">Criteria</th>
-                                    <th width ="200px">Actions</th>
+                                    <th width="240px">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -289,11 +291,11 @@ $questions_result = mysqli_query($con, $questions_query);
                                             data-target="#editModal<?php echo $question['question_id']; ?>"
                                             data-id="<?php echo $question['question_id']; ?>"
                                             data-question-code="<?php echo $question['question_code']; ?>"
-                                            data-question-text="<?php echo $question['question_text']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-question-text="<?php echo $question['question_text']; ?>"><img
+                                            src="../../../frontend/assets/icons/edit.svg"></button>
                                         <button class="delete-btn" data-toggle="modal"
-                                            data-target="#deleteModal<?php echo $question['question_id']; ?>"><i
-                                                class="fa fa-trash"></i></button>
+                                            data-target="#deleteModal<?php echo $question['question_id']; ?>"><img
+                                            src="../../../frontend/assets/icons/delete.svg"></button>
                                     </div>
                                 </td>
                             </tr>

@@ -115,7 +115,7 @@ aside .sidebar {
 }
 
 .nav-item {
-    z-index: 2;
+    z-index: 1;
     position: relative;
     background-color: white;
 }
@@ -823,6 +823,11 @@ height: 20px;
 
 /* css for account.php page */
 .account-roles-faculty, .account-roles-student{
+    margin-top: 20px;
+}
+
+/* css for survey.php */
+.survey-name-label{
     margin-top: 20px;
 }
 
