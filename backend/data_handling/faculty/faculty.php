@@ -134,13 +134,13 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                             data-id="<?php echo $faculty['faculty_id']; ?>"
                                             data-first-name="<?php echo $faculty['first_name']; ?>"
                                             data-last-name="<?php echo $faculty['last_name']; ?>"
-                                            data-department-id="<?php echo $faculty['department_id']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-department-id="<?php echo $faculty['department_id']; ?>">
+                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
 
                                         <a href="delete_faculty.php?faculty_id=<?php echo $faculty['faculty_id']; ?>"
                                             class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this faculty member?')"><i
-                                                class="fa fa-trash"></i></a>
+                                            onclick="return confirm('Are you sure you want to delete this faculty member?')">
+                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
 
                                         <button class="table_add-btn" data-toggle="modal"
                                             data-target="#assignCourseModal<?php echo $faculty['faculty_id']; ?>">Assign

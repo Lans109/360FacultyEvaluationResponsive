@@ -75,12 +75,14 @@ echo 'test';
                                         data-name="<?php echo $course['course_name']; ?>"
                                         data-code="<?php echo $course['course_code']; ?>"
                                         data-description="<?php echo $course['course_description']; ?>"
-                                        data-department-id="<?php echo $course['department_id']; ?>"><i class="fa fa-edit"></i></button>
+                                        data-department-id="<?php echo $course['department_id']; ?>">
+                                        <img src="../../../frontend/assets/icons/edit.svg"></button>
 
-                                    <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
+                                        <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
                                         class="delete-btn"
-                                        onclick="return confirm('Are you sure you want to delete this course?')"><i
-                                            class="fa fa-trash"></i></a>
+                                        onclick="return confirm('Are you sure you want to delete this course?')">
+                                        
+                                        <img src="../../../frontend/assets/icons/delete.svg"></a>
                                 </div>
 
                             </td>

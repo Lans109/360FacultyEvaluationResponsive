@@ -110,13 +110,14 @@ $programs_result = mysqli_query($con, $programs_query);
                                         data-id="<?php echo $student['student_id']; ?>"
                                         data-first-name="<?php echo $student['first_name']; ?>"
                                         data-last-name="<?php echo $student['last_name']; ?> "
-                                        data-program-id="<?php echo $student['program_id']; ?>"><i
-                                            class="fa fa-edit"></i></button>
+                                        data-program-id="<?php echo $student['program_id']; ?>">
+                                    
+                                        <img src="../../../frontend/assets/icons/edit.svg"></button>
 
                                     <a href="delete_student.php?student_id=<?php echo $student['student_id']; ?>"
                                         class="delete-btn"
-                                        onclick="return confirm('Are you sure you want to delete this student?')"><i
-                                            class="fa fa-trash"></i></a>
+                                        onclick="return confirm('Are you sure you want to delete this student?')">
+                                        <img src="../../../frontend/assets/icons/delete.svg"></a>
 
                                     <button class="view-btn" data-toggle="modal"
                                         data-target="#enrollCourseModal<?php echo $student['student_id']; ?>"

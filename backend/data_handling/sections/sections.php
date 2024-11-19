@@ -109,13 +109,15 @@ $sections_result = mysqli_query($con, $sections_query);
                                         data-target="#editModal<?php echo $section['course_section_id']; ?>"
                                         data-id="<?php echo $section['course_section_id']; ?>"
                                         data-section="<?php echo $section['section']; ?>"
-                                        data-course-id="<?php echo $section['course_id']; ?>"><i
-                                            class="fa fa-edit"></i></button>
+                                        data-course-id="<?php echo $section['course_id']; ?>">
+                                    
+                                        <img src="../../../frontend/assets/icons/edit.svg"></button>
 
                                     <a href="delete_section.php?course_section_id=<?php echo $section['course_section_id']; ?>"
                                         class="delete-btn"
-                                        onclick="return confirm('Are you sure you want to delete this course section?')"><i
-                                            class="fa fa-trash"></i></a>
+                                        onclick="return confirm('Are you sure you want to delete this course section?')">
+                                    
+                                        <img src="../../../frontend/assets/icons/delete.svg"></a>
 
                                 </div>
                             </td>

@@ -169,13 +169,15 @@ $programs_result = mysqli_query($con, $programs_query);
                                             data-name="<?php echo $program['program_name']; ?>"
                                             data-code="<?php echo $program['program_code']; ?>"
                                             data-description="<?php echo $program['program_description']; ?>"
-                                            data-department-id="<?php echo $program['department_id']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-department-id="<?php echo $program['department_id']; ?>">
+                                        
+                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
 
                                         <a href="delete_program.php?program_id=<?php echo $program['program_id']; ?>"
                                             class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this program?')"><i
-                                                class="fa fa-trash"></i></a>
+                                            onclick="return confirm('Are you sure you want to delete this program?')">
+                                        
+                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
 
                                     </div>
                                 </td>

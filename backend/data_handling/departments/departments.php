@@ -85,13 +85,15 @@ if (!$result) {
                                             data-name="<?php echo $row['department_name']; ?>"
                                             data-code="<?php echo $row['department_code']; ?>"
                                             data-description="<?php echo $row['department_description']; ?>"
-                                            data-chair-id="<?php echo $row['chair_id']; ?>"><i
-                                                class="fa fa-edit"></i></button>
+                                            data-chair-id="<?php echo $row['chair_id']; ?>">
+                                            <img src="../../../frontend/assets/icons/edit.svg">
+                                        </button>
 
                                         <a href="delete_department.php?department_id=<?php echo $row['department_id']; ?>"
                                             class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this department?')"><i
-                                                class="fa fa-trash"></i></a>
+                                            onclick="return confirm('Are you sure you want to delete this department?')">
+                                            
+                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
 
                                     </div>
                                 </td>

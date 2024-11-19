@@ -12,7 +12,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Faculty List</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <?php include ROOT_PATH . '/frontend/layout/navbar.php'; ?>
     <style>
         .department-table {
