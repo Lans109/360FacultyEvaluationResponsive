@@ -65,7 +65,8 @@ if (!$department_result) {
                                     <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
                                 </button>
                             </div>
-                            <a href="departments.php" class="fitler-btn">Clear</a>
+                            <a href="departments.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
+
                         </div>
                     </form>
                 </div>

@@ -81,8 +81,8 @@ $num_rows = mysqli_num_rows($programs_result);
                                     <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
                                 </div>
                             </div>
-                            <button type="submit" class="fitler-btn">Filter</button>
-                            <a href="programs.php" class="fitler-btn">Clear</a>
+                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+                            <a href="programs.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>                
                         </div>
                     </form>
                 </div>
