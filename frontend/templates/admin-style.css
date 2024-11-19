@@ -650,7 +650,6 @@ textarea {
     display: flex;
     gap: 10px;
     justify-content: center;
-    
 }
 
 .edit-btn {
@@ -677,6 +676,15 @@ textarea {
     border-radius: 7px;
     padding: auto;
 }
+
+.edit-btn, .delete-btn {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    width: auto; 
+    height: 35px;
+}
+
 
 .enroll-btn {
     background-color: #0044ff;
