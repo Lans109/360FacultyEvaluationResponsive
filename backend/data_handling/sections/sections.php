@@ -20,18 +20,33 @@ if ($courses_result) {
     echo "Error fetching courses: " . mysqli_error($con);
 }
 
-// Fetch all course sections with their associated courses and count of students
-// Fetch all course sections with their associated courses, faculty, and student count
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+$course_filter = isset($_GET['course_filter']) ? $_GET['course_filter'] : '';
+
 $sections_query = "
-    SELECT cs.course_section_id, cs.section, cs.course_id, c.course_name, f.faculty_id,
+    SELECT cs.course_section_id, cs.section, cs.course_id, c.course_name, f.faculty_id, c.course_code,
            CONCAT(f.first_name, ' ', f.last_name) as faculty_name, COUNT(sc.student_id) AS student_count
     FROM course_sections cs
     LEFT JOIN courses c ON cs.course_id = c.course_id
     LEFT JOIN faculty_courses fc ON cs.course_section_id = fc.course_section_id
     LEFT JOIN faculty f ON fc.faculty_id = f.faculty_id
-    LEFT JOIN student_courses sc ON cs.course_section_id = sc.course_section_id
-    GROUP BY cs.course_section_id, cs.section, c.course_name, faculty_name
-    ORDER BY faculty_name";
+    LEFT JOIN student_courses sc ON cs.course_section_id = sc.course_section_id";
+
+if ($search) {
+    $sections_query .= " WHERE (
+        cs.section LIKE '%$search%' OR 
+        c.course_name LIKE '%$search%' OR 
+        CONCAT(f.first_name, ' ', f.last_name) LIKE '%$search%'
+    )";
+}
+
+// Add department filter condition if a department is selected
+if ($course_filter) {
+    $sections_query .= $search ? " AND cs.course_id = '$course_filter'" : " WHERE cs.course_id = '$course_filter'";
+}
+
+$sections_query .= " GROUP BY cs.course_section_id, cs.section, c.course_name, f.faculty_id ORDER BY faculty_name;";
+
 $sections_result = mysqli_query($con, $sections_query);
 
 ?>
@@ -59,20 +74,45 @@ $sections_result = mysqli_query($con, $sections_query);
         </div>
         <div class="content">
             <div class="upperContent">
+            <div class="search-filter">
+                    <form method="GET" action="">
+                        <div class="form-group">
+                            
+                        <div class="search-container">
+                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                            <button type="submit" class="search-button">
+                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                            </button>
+                        </div>
+                        <div class="select-container">
+                            <div class="select-wrapper">
+                                <select id="course_filter" name="course_filter" class="custom-select">
+                                    <option value="" selected>All Courses</option>
+                                    <?php
+                                    // Fetch all departments to populate the filter dropdown
+                                    $departments_query = "SELECT course_id, course_code FROM courses";
+                                    $departments_result = mysqli_query($con, $departments_query);
+
+                                    // Fetch and display department options
+                                    while ($department = mysqli_fetch_assoc($departments_result)) {
+                                        $selected = (isset($_GET['course_filter']) && $_GET['course_filter'] == $department['course_id']) ? 'selected' : '';
+                                        echo "<option value='" . $department['course_id'] . "' . $selected>" . $department['course_code'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                            </div>
+                        </div>
+                            <button type="submit" class="fitler-btn">Filter</button>
+                            <a href="sections.php" class="fitler-btn">Clear</a>
+                        </div>
+                    </form>
+                </div>
                 <div class="addBtn">
                     <button class="add-btn" data-toggle="modal" data-target="#addSectionModal">Add New
                         Course
                         Section</button>
                 </div>
-
-                <!-- no function yet add at app.js
-                    <div class="sortDropDown">
-                        <label for="sort">Sort by:</label>
-                        <select id="sort" onchange="sortCourses()">
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                        </select>
-                    </div> -->
             </div>
 
             <!-- Table of Course Sections -->
@@ -81,6 +121,7 @@ $sections_result = mysqli_query($con, $sections_query);
                     <thead>
                         <tr>
                             <th width="150px">Section Name</th>
+                            <th width="200px">Course Code</th>
                             <th>Course Name</th>
                             <th width="300px">Faculty Name</th>  <!-- Added column for faculty -->
                             <th width="160px">No. of Students</th>
@@ -95,6 +136,7 @@ $sections_result = mysqli_query($con, $sections_query);
                     ?>
                         <tr>
                             <td><?php echo htmlspecialchars($section['section']); ?></td>
+                            <td><?php echo htmlspecialchars($section['course_code']); ?></td>
                             <td><?php echo htmlspecialchars($section['course_name']); ?></td>
                             <td>
                                 <?php 
