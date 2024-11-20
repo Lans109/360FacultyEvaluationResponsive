@@ -100,6 +100,7 @@ aside .sidebar {
     width: 14rem;
 }
 
+
 .dropdown-content {
     max-height: 0;
     overflow: hidden;
@@ -161,6 +162,7 @@ aside footer {
     bottom: 0;
     z-index: 0;
     font-family: myFont2;
+    font-size: 15px;
 }
 
 .close-btn {
@@ -491,19 +493,18 @@ h5 {
 }
 
 /* Style for the input field */
+/* Style for the search input */
+/* Style for the search input */
 .search-input {
     padding: 10px 30px 10px 10px;
-    font-size: 15px;                   
-    border-radius: 3px;          
-    width: 500px;        
-    font-family: myFont;        
-}
+    font-size: 15px;
+    border-radius: 3px;
+    width: 500px;
+    font-family: myFont;
+    position: relative; /* Keep button inside the input box */
+    box-sizing: border-box; /* Prevent the border from affecting the input width */
+    transition: all 0.2s ease; /* Add transition for smooth effect */
 
-.search-input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 300px; /* Default width */
 }
 
 /* Style for the search icon button */
@@ -511,22 +512,29 @@ h5 {
     position: absolute;
     top: 50%;
     right: 20px;
-    transform: translateY(-50%);  
-    background: none;            
-    border: none;               
-    font-size: 16px;             
-    color: #aaa;                    
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #aaa;
     cursor: pointer;
+    transition: all 0.2s ease; /* Add transition for smooth effect */
 }
 
 /* Focus and hover effects */
 .search-input:focus {
-    border-color: #007bff;  /* Change border color on focus */
+    border-color: #631111;  /* Change border color on focus */
     outline: none;          /* Remove outline on focus */
 }
 
+/* Hover effect on input changes the button */
+.search-input:hover + .search-button {
+    color: #923534; /* Change color when hovering over input */
+    transform: translateY(-50%) scale(1.2); /* Make the button bigger */
+}
+
 .search-input:hover {
-    border-color: #aaa;    /* Change border color on hover */
+    border-color: #923534;
 }
 
 .search-filter .form-group input::placeholder {
@@ -558,9 +566,14 @@ h5 {
     -webkit-appearance: none;      /* For Safari */
     -moz-appearance: none;         /* For Firefox */
     font-family: myFont;
-    color: #2A2723;
+    color: #666;
+    transition: all 0.2s ease; /* Add transition for smooth effect */
 }
 
+.custom-select option {
+    padding: 15px;
+    list-style-type: none;
+}
 /* Style for the custom dropdown arrow (icon) */
 .select-icon {
     position: absolute;
@@ -570,17 +583,12 @@ h5 {
     font-size: 16px;                 /* Size of the icon */
     color: #aaa;                     /* Color of the icon */
     pointer-events: none;            /* Prevent the icon from interfering with the select action */
+    transition: all 0.2s ease; /* Add transition for smooth effect */
 }
 
 /* Focus and hover effects */
 .custom-select:focus {
-    border-color: #007bff;          /* Change border color on focus */
-    outline: none;                  /* Remove the default outline */
-}
-
-/* Hover effect for the select box */
-.custom-select:hover {
-    border-color: #aaa;             /* Change border color on hover */
+    border-color: #2A2723;          /* Change border color on focus */
 }
 
 
@@ -614,15 +622,18 @@ h5 {
     font-family: myFont;
     font-size: 15px;
     font-weight: lighter;
-    transition-duration: .2s;
+    transition: all 0.2s ease; /* Add transition for smooth effect */
 }
-.add-btn:hover {
-    background-color: #631111;
+.add-btn img {
+    transition: all 0.2s ease; /* Add transition for smooth effect */
+    display: inline-flex;  /* Change to inline-flex to align child elements */
+    align-items: center;  /* Vertically center the text and image */
+    justify-content: center;  /* Horizontally center the text and image */
 }
 
 .fitler-btn {
     padding: 12px;
-    color: #2A2723;
+    color: #666;
     font-family: myFont;
     font-size: 15px;
     background: none;
@@ -786,11 +797,17 @@ textarea {
     text-transform: uppercase;
 }
 
+.table tr {
+    transition: all .1s ease;
+    margin: 1px;
+    border: 1px solid #ddd;
+}
+.table tbody tr:hover {
+    background-color: #f8f8f8; 
+}
 .table td {
-    border-top: 1px solid lightgrey;
     text-align: left;
     padding: 10px;
-    background-color: white;
     color: #666;
     word-wrap: break-word;
     white-space: normal;
@@ -801,13 +818,18 @@ textarea {
 }
 
 .table img {
-    width: 50px;
-    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 100%;
 }
+
+.table .profile-icon {
+    width: 35px;
+    height: 35px;
+    margin: 5px;
+}
+
 .action-btns {
     display: flex;
     gap: 10px;
@@ -987,34 +1009,6 @@ height: 20px;
     /* Vertically aligns the items in the form */
 }
 
-.filter,
-.search-bar,
-.search-btn {
-    display: flex;
-    align-items: center;
-    /* Vertically aligns elements inside each div */
-    
-}
-
-.search-bar input[type="text"] {
-    max-width: 1000px;
-    width: 100%;
-}
-
-.search-results select{
-    background-color: white;
-}
-
-.search-btn {
-    background-color: #631111;
-    color: white;
-    border: none;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 7px;
-}
-
 .enroll-btn {
     padding: 5px 10px;
     /* Adjusts padding for better button size */
@@ -1065,6 +1059,35 @@ height: 20px;
 
 .view-btn:hover{
     background-color: #d8d8d8;
+}
+.profile-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; /* Vertically center the student info */
+    margin: 20px;
+    gap: 30px;
+}
+
+.profile-info .profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+}
+
+.student-info div {
+    display: flex;
+    margin: 5px;
+    margin-left: 0;
+}
+.profile-info h3 {
+    font-size: 30px;
+}
+
+.profile-info p {
+    font-family: myFont2;
+    color: #666;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
 @font-face {

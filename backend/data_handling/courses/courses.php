@@ -63,6 +63,7 @@ $num_rows = mysqli_num_rows($courses_result);
                                 <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
                             </button>
                         </div>
+
                         <div class="select-container">
                             <div class="select-wrapper">
                                 <select id="department_filter" name="department_filter" class="custom-select">
@@ -82,18 +83,42 @@ $num_rows = mysqli_num_rows($courses_result);
                                 <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
                             </div>
                         </div>
+
                             <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
                             <a href="courses.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
                         </div>
-                        
                     </form>
                 </div>
+                
                 <div>
                     <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
                         <img src="../../../frontend/assets/icons/add.svg">&nbsp;Course&nbsp;
                     </button>
                 </div>
             </div>
+
+            <!--
+            <div class="department">
+                <div class="select-department">
+                        <a class="nav-link dropdown-toggle" href="#" id="dataDropdown" onclick="toggleDropdown('dataCollapseDepartment', this)">
+                            Data Management<i class="fa fa-chevron-down select-icon-department"></i>
+                        </a>
+                        
+                        <div class="dropdown-content" id="dataCollapseDepartment">
+                            <ul class="nav-department flex-column">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Courses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Programs</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                </div>
+            </div>
+                                -->
+
 
             <div class="table">
                 <table>
