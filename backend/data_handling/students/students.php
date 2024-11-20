@@ -17,7 +17,8 @@ $students_query = "
         p.program_code, 
         s.phone_number, 
         s.first_name, 
-        s.last_name
+        s.last_name,
+        s.profile_image
     FROM 
         students s 
     JOIN 
@@ -144,7 +145,7 @@ $programs_result = mysqli_query($con, $programs_query);
                 <?php if (mysqli_num_rows($students_result) > 0): ?>
                     <?php while ($student = mysqli_fetch_assoc($students_result)): ?>
                         <tr>      
-                            <td><img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"></td>
+                            <td><img class="profile-icon" src="../../../<?= $student['profile_image'] ?>"></td>
                             <td><?php echo $student['full_name']; ?></td>
                             <td><?php echo $student['email']; ?></td>
                             <td><?php echo $student['phone_number']; ?></td>

@@ -14,6 +14,7 @@ $faculty_query = "
         f.first_name, 
         f.last_name, 
         f.department_id, 
+        f.profile_image,
         d.department_code, 
         CONCAT(f.first_name, ' ', f.last_name) AS full_name
     FROM faculty f
@@ -146,7 +147,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                     <?php if (mysqli_num_rows($faculty_result) > 0): ?>
                         <?php while ($faculty = mysqli_fetch_assoc($faculty_result)): ?>
                             <tr>
-                                <td><img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"></td>
+                                <td><img class="profile-icon" src="../../../<?= $faculty['profile_image'] ?>"></td>
                                 <td><?php echo $faculty['full_name']; ?></td>
                                 <td><?php echo $faculty['email']; ?></td>
                                 <td><?php echo $faculty['phone_number']; ?></td>
