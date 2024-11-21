@@ -18,16 +18,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Execute the query
         if (mysqli_query($con, $enroll_query)) {
             // Successful enrollment
-            header("Location: students.php?success=Course enrolled successfully!");
+            header("Location: view_student_profile.php?student_id=$student_id");
             exit();
         } else {
             // Failed to enroll
-            header("Location: students.php?error=Error enrolling course. Please try again.");
+            header("Location: view_student_profile.php?student_id=$student_id");
             exit();
         }
     } else {
         // Invalid input
-        header("Location: students.php?error=Please provide both student ID and course section ID.");
+        header("Location: view_student_profile.php?student_id=$student_id");
         exit();
     }
 }

@@ -18,11 +18,16 @@ $students_query = "
         s.phone_number, 
         s.first_name, 
         s.last_name,
-        s.profile_image
+        s.profile_image,
+        COUNT(sc.student_id) AS total_courses
     FROM 
-        students s 
+        students s
+    LEFT JOIN 
+        student_courses sc ON s.student_id = sc.student_id
     JOIN 
-        programs p ON s.program_id = p.program_id";
+        programs p ON s.program_id = p.program_id
+
+";
 
 // Apply search filter
 if ($search) {
@@ -39,6 +44,9 @@ if ($program_filter) {
     $students_query .= $search ? " AND s.program_id = '$program_filter'" : " WHERE s.program_id = '$program_filter'";
 }
 
+$students_query .= "
+GROUP BY
+        s.student_id, s.email, s.first_name, s.last_name, p.program_id, p.program_code, s.phone_number, s.profile_image";
 // Execute the query
 $students_result = mysqli_query($con, $students_query);
 
@@ -132,11 +140,12 @@ $programs_result = mysqli_query($con, $programs_query);
                 <thead>
                     <tr>
                         <th width="100px">Photo</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Program</th>
-                        <th>Student ID</th>
+                        <th width="250px">Full Name</th>
+                        <th width="250px">Email</th>
+                        <th width="200px">Phone Number</th>
+                        <th width="200px">Program</th>
+                        <th width="150px">Student ID</th>
+                        <th width="155px">No. of Courses</th>
                         <th width="100px">Profile</th>
                         <th width="100px">Actions</th>
                     </tr>
@@ -151,6 +160,7 @@ $programs_result = mysqli_query($con, $programs_query);
                             <td><?php echo $student['phone_number']; ?></td>
                             <td><?php echo $student['program_code']; ?></td>
                             <td><?php echo $student['student_id']; ?></td>
+                            <td><?php echo $student['total_courses']; ?></td>
                              <td>
                                     <!-- View Profile Button -->
                                     <a href="view_student_profile.php?student_id=<?php echo $student['student_id']; ?>" class="view-btn">
@@ -295,6 +305,7 @@ $programs_result = mysqli_query($con, $programs_query);
                 </form>
             </div>
         </div>
+    </div>
 
         <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

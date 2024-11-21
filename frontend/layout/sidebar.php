@@ -32,6 +32,18 @@
                     <div class="dropdown-content" id="dataCollapse">
                         <ul class="nav flex-column">
                             <li class="nav-item">
+                                <a class="nav-link" href="../../../backend/data_handling/faculty/faculty.php">
+                                    <img src="../../../frontend/assets/icons/faculty.svg">
+                                    <h3>Faculty</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../../../backend/data_handling/students/students.php">
+                                    <img src="../../../frontend/assets/icons/student.svg">
+                                    <h3>Students</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="../../../backend/data_handling/courses/courses.php">
                                     <img src="../../../frontend/assets/icons/course.svg">
                                     <h3>Courses</h3>
@@ -44,39 +56,27 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="../../../backend/data_handling/sections/sections.php">
-                                    <img src="../../../frontend/assets/icons/section.svg">
-                                    <h3>Sections</h3>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="../../../backend/data_handling/students/students.php">
-                                    <img src="../../../frontend/assets/icons/student.svg">
-                                    <h3>Students</h3>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="../../../backend/data_handling/departments/departments.php">
                                     <img src="../../../frontend/assets/icons/department.svg">
                                     <h3>Departments</h3>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="../../../backend/data_handling/faculty/faculty.php">
-                                    <img src="../../../frontend/assets/icons/faculty.svg">
-                                    <h3>Faculty</h3>
+                                <a class="nav-link" href="../../../backend/data_handling/survey/survey.php">
+                                    <img src="../../../frontend/assets/icons/survey.svg">
+                                    <h3>Survey</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../../../backend/data_handling/sections/sections.php">
+                                    <img src="../../../frontend/assets/icons/section.svg">
+                                    <h3>Sections</h3>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="../../../backend/data_handling/accounts/accounts.php">
                                     <img src="../../../frontend/assets/icons/account.svg">
                                     <h3>Accounts</h3>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="../../../backend/data_handling/survey/survey.php">
-                                    <img src="../../../frontend/assets/icons/survey.svg">
-                                    <h3>Survey</h3>
                                 </a>
                             </li>
                         </ul>

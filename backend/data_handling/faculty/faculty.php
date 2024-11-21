@@ -7,18 +7,24 @@ $search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search
 $department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
 // Fetch all faculty members along with their department IDs
 $faculty_query = "
-    SELECT 
-        f.phone_number, 
-        f.faculty_id, 
-        f.email, 
-        f.first_name, 
-        f.last_name, 
-        f.department_id, 
-        f.profile_image,
-        d.department_code, 
-        CONCAT(f.first_name, ' ', f.last_name) AS full_name
-    FROM faculty f
-    JOIN departments d ON f.department_id = d.department_id";
+SELECT 
+    f.phone_number, 
+    f.faculty_id, 
+    f.email, 
+    f.first_name, 
+    f.last_name, 
+    f.department_id, 
+    f.profile_image,
+    d.department_code, 
+    CONCAT(f.first_name, ' ', f.last_name) AS full_name,
+    COUNT(fc.course_section_id) AS total_courses
+FROM 
+    faculty f
+JOIN 
+    departments d ON f.department_id = d.department_id
+LEFT JOIN 
+    faculty_courses fc ON f.faculty_id = fc.faculty_id  -- Assuming there's a table tracking courses taught by faculty
+";
 
 // Apply search filter if the $search variable is set
 if (!empty($search)) {
@@ -35,6 +41,10 @@ if (!empty($department_filter)) {
         ? " AND f.department_id = '$department_filter'" 
         : " WHERE f.department_id = '$department_filter'";
 }
+
+$faculty_query .= "
+GROUP BY 
+    f.faculty_id, f.phone_number, f.email, f.first_name, f.last_name, f.department_id, f.profile_image, d.department_code";
 
 $faculty_result = mysqli_query($con, $faculty_query);
 
@@ -80,7 +90,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <h1>Faculty Management</h1>
+            <div><h1>Faculty Management</h1></div>
         </div>
         <div class="content">
             <div class="upperContent">
@@ -134,11 +144,12 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                     <thead>
                         <tr>
                             <th width="100px">Photo</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Department</th>
-                            <th>Faculty ID</th>
+                            <th width="250px">Full Name</th>
+                            <th width="250px">Email</th>
+                            <th width="200px">Phone Number</th>
+                            <th width="200px">Department</th>
+                            <th width="150px">Faculty ID</th>
+                            <th width="155px">No. of Courses</th>
                             <th width="100px">Profile</th>
                             <th width="100px">Actions</th>
                         </tr>
@@ -153,6 +164,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                 <td><?php echo $faculty['phone_number']; ?></td>
                                 <td><?php echo $faculty['department_code']; ?></td>
                                 <td><?php echo $faculty['faculty_id']; ?></td>
+                                <td><?php echo $faculty['total_courses']; ?></td>
                                 <td>
                                         <!-- View Profile Button -->
                                         <a href="view_faculty_profile.php?faculty_id=<?php echo $faculty['faculty_id']; ?>" class="view-btn">
