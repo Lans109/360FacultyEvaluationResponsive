@@ -122,6 +122,7 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             </div>
                         </div>
                         
+                        
                 </div>
                 <div class="charts">
                             <?php include 'monitor.php'; ?>

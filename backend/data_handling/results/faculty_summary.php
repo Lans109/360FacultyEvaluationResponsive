@@ -7,7 +7,16 @@ $facultyId = isset($_GET['facultyId']) ? $_GET['facultyId'] : 0;
 $period = isset($_GET['period']) ? $_GET['period'] : 1;
 
 // Fetch faculty details
-$facultyQuery = "SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, f.email, d.department_name 
+$facultyQuery = "SELECT 
+                    f.faculty_id, 
+                    f.first_name, 
+                    f.last_name, 
+                    f.email, 
+                    f.phone_number, 
+                    d.department_code,
+                    d.department_name,
+                    d.department_id,
+                    f.profile_image
                  FROM faculty f 
                  LEFT JOIN departments d ON f.department_id = d.department_id 
                  WHERE f.faculty_id = '" . (mysqli_real_escape_string($con, $facultyId)+1) . "'";
@@ -23,50 +32,41 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
 <head>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
     <?php include ROOT_PATH . '/frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <h1>Results</h1>
+            <div><h1>Results</h1></div>
         </div>
         <div class="content">
             <div class="container mt-5">
-                <h2> Faculty Profile</h2>
                 <div class="faculty-profile">
-
-                    <div class="banner-profile">
-                        <div class="profile">
-                            <div class="profile-image">
-                                <!-- Faculty Profile Section -->
-                                <img class="profile-img" src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250" alt="Faculty Profile Image">
-                            </div>
-                            <?php if ($facultyDetails): ?>
-                                <div class="faculty-details">
-                                    <h2><strong><?php echo htmlspecialchars($facultyDetails['faculty_name']); ?></strong></h2>
-                                    <p>ID: <?php echo htmlspecialchars($facultyDetails['faculty_id']); ?></p>
-                                    <p>Email: <?php echo htmlspecialchars($facultyDetails['email']); ?></p>
-                                    <p>Department: <?php echo htmlspecialchars($facultyDetails['department_name']); ?></p>
-                                </div>
-                            <?php else: ?>
-                                <p>Faculty details not found.</p>
-                            <?php endif; ?>
-                            
-                        </div>
+                    <div class="profile-info">
+                        <img class="profile-image" src="../../../<?= $facultyDetails['profile_image'] ?>">
+                        <div class="faculty-info">
+                            <h3><?php echo $facultyDetails['first_name'] . " " . $facultyDetails['last_name']; ?></h3>
+                            <div><img class="icon" src="../../../frontend/assets/icons/message.svg"><p><?php echo $facultyDetails['email']; ?></p></div>
+                            <div><img class="icon" src="../../../frontend/assets/icons/call.svg"><p><?php echo $facultyDetails['phone_number']; ?></p></div>
+                            <div><img class="icon" src="../../../frontend/assets/icons/department.svg"><p><?php echo $facultyDetails['department_name']; ?> - <?php echo $facultyDetails['department_code']; ?></p></div>
+                           
+                        </div>       
                     </div>
+                </div>
                         
                     </div>
                     <!-- Display charts -->
-                    <div id="chart_div_student" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                    <div id="chart_div_faculty" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                    <div id="chart_div_chair" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
-                    <div id="chart_div_self" style="width: 900px; height: 500px; visibility: hidden; position: absolute;"></div>
+                    <div id="chart_div_student" style="width: 600px; height: 400px; visibility: hidden; position: absolute;"></div>
+                    <div id="chart_div_faculty" style="width: 600px; height: 400px; visibility: hidden; position: absolute;"></div>
+                    <div id="chart_div_chair" style="width: 600px; height: 400px; visibility: hidden; position: absolute;"></div>
+                    <div id="chart_div_self" style="width: 600px; height: 400px; visibility: hidden; position: absolute;"></div>
                     <div class="charts">
                         <div id="rating">
                         <form action="generate_summary.php" method="post">
                         <div class="rating"><?= round($overallTotal, 2) ?></div>
-                            <div class="center">
+                            <div class="rating-info">
                                 <?php
                                 // Check the range of the score and display the appropriate evaluation
                                 if ($overallTotal >= 4.5) {
@@ -81,7 +81,9 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
                                     echo '<h5>Poor</h5><br><p>Performance consistently does not meet expectations. Significant improvement is needed.</p><br>';
                                 }
                                 ?>
-                                <button type="submit" class="generate-pdf-btn">Generate PDF</button>
+                                <button type="submit" class="add-btn">
+                                    <img src="../../../frontend/assets/icons/pdf.svg">&nbsp;Geberate PDF&nbsp;
+                                </button>
                             </div>
                             
                             <input type="hidden" id="facultyId" name="facultyId" value="<?php echo $facultyId; ?>">

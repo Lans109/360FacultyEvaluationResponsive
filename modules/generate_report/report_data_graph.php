@@ -50,43 +50,69 @@ while ($row = mysqli_fetch_assoc($result)) {
             var options = {
                 backgroundColor: 'transparent',
                 title: title,
-                colors: ['#a2252f', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
-                fontName: 'myFont',
+                titleTextStyle: {
+                    fontSize: 15,   // Adjust font size of the header title
+                    color: '#666',  // Change the color of the title header
+                },
+                colors: [
+                    '#923534', // Maroon (primary color)
+                    '#b2493b', // Reddish-brown (complementary to maroon)
+                    '#ff8c42', // Soft amber (to add warmth and contrast)
+                    '#4a3f35', // Dark brown (for depth and grounding)
+                    '#ffb6b6', // Soft blush pink (light and subtle)
+                    '#2c3e50', // Dark blue-gray (providing contrast)
+                    '#e1c8b1', // Beige (soft neutral to balance boldness)
+                ], 
+                fontName: 'myFont2', // Custom font name from the first example
                 fontSize: 14,
                 hAxis: {
-                    title: 'Evaluators',
-                    titleTextStyle: { fontSize: 16 },
-                    textStyle: { fontSize: 15 },
-                    gridlines: { color: '#e0e0e0' }
+                    title: 'Evaluators', // Maintain x-axis title
+                    titleTextStyle: { fontSize: 15, color: '#666' }, // Match x-axis title style
+                    textStyle: { fontSize: 15, color: '#666' }, // Adjust x-axis text style
+                    gridlines: {
+                        color: '#e0e0e0',
+                        count: 5 // Limit horizontal gridlines to 5
+                    },
+                    slantedTextAngle: 45, // Add text angle for labels
                 },
                 vAxis: {
-                    title: 'Rating',
-                    titleTextStyle: { fontSize: 16 },
-                    textStyle: { fontSize: 12 },
-                    gridlines: { color: '#e0e0e0' },
+                    title: 'Rating', // Maintain y-axis title
+                    titleTextStyle: { fontSize: 16, color: '#666' }, // Match y-axis title style
+                    textStyle: { fontSize: 12, color: '#ddd' }, // Adjust y-axis text style
+                    gridlines: {
+                        color: '#ddd', // Gridline color
+                        count: 5 // Limit vertical gridlines to 5
+                    },
                     minValue: 1,
                     maxValue: 5,
-                    ticks: [1, 2, 3, 4, 5]
+                    ticks: [1, 2, 3, 4, 5], // Y-axis ticks
                 },
                 legend: {
-                    position: 'top',
-                    alignment: 'center',
-                    textStyle: { fontSize: 15 }
+                    position: 'top', // Legend position
+                    alignment: 'center', // Align legend text
+                    textStyle: { fontSize: 15, color: '#666' } // Legend text style
                 },
                 chartArea: {
-                    left: 40,
-                    top: 150,
-                    right: 40,
-                    bottom: 50
+                    left: 50, // Match padding and margins
+                    top: 50,
+                    right: 20,
+                    bottom: 50,
+                    width: '100%',
+                    height: '100%'
                 },
-                bars: 'vertical',
-                isStacked: false,
-                bar: { groupWidth: '50%' },
+                bars: 'vertical', // Keep bars vertical
+                isStacked: false, // No stacking
+                bar: {
+                    groupWidth: '50%' // Adjust bar width
+                },
                 animation: {
-                    duration: 1000,
-                    easing: 'inAndOut',
-                }
+                    duration: 1000, // Smooth animation duration
+                    easing: 'inAndOut' // Easing effect
+                },
+                tooltip: { isHtml: true }, // HTML tooltips
+                curveType: 'function' // Enable smooth curves if applicable
             };
+
 
             var chart = new google.visualization.ColumnChart(document.getElementById(elementId));
 

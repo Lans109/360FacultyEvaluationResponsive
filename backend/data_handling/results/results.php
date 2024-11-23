@@ -13,7 +13,14 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Fetch filtered faculty members with department names
 $facultyQuery = "
-    SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, d.department_name, f.phone_number, d.department_code
+    SELECT 
+        f.faculty_id, 
+        CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, 
+        d.department_name, 
+        f.phone_number, 
+        d.department_code, 
+        f.email,
+        f.profile_image
     FROM faculty f
     LEFT JOIN departments d ON f.department_id = d.department_id";
 
@@ -21,7 +28,8 @@ if ($search) {
     $facultyQuery .= " WHERE (
     f.faculty_id LIKE '%$search%' OR 
     CONCAT(f.first_name, ' ', f.last_name) LIKE '%$search%' OR
-    f.phone_number LIKE '%$search%'
+    f.phone_number LIKE '%$search%' OR
+    f.email LIKE '%$search%'
     )";
 }
 
@@ -35,6 +43,8 @@ $facultyResult = mysqli_query($con, $facultyQuery);
 if (!$facultyResult) {
     die("Query failed: " . mysqli_error($con));
 }
+
+$num_rows = mysqli_num_rows($facultyResult);
 ?>
 
 <!DOCTYPE html>
@@ -51,11 +61,13 @@ if (!$facultyResult) {
     <?php include ROOT_PATH . '/frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <h1>Faculty Results</h1>
+            <div><h1>Faculty Results</h1></div>
         </div>
         <div class="content">
-            <div class="container mt-4">
-                
+            <div class="upperContent">
+            <div>
+                    <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Faculty Member' : 'Faculty Members' ?></p>
+                </div>
                     <!-- Filter and Search Form -->
                     <div class="search-filter">
                     <form method="GET" action="">
@@ -86,23 +98,25 @@ if (!$facultyResult) {
                                 <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
                             </div>
                         </div>
-                            <button type="submit" class="fitler-btn">Filter</button>
-                            <a href="results.php" class="fitler-btn">Clear</a>
+                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+                            <a href="results.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
                         </div>
                     </form>
                 </div>
+            </div>
 
                     <!-- Faculty Table -->
+                     
                     <div class="table">
                     <table>
                         <thead>
                             <tr>
                                 <th width="150px">Faculty ID</th>
-                                <th width="300px">Faculty Name</th>
-                                <th width="260px">Phone Number</th>
+                                <th width="50px">P.P</th>
+                                <th width="400px">Faculty INFO</th>
+                                <th width="260px">CONTACT No.</th>
                                 <th>Department</th>
-                                <th width="200px">Department Code</th>
-                                <th width="150px">Actions</th>
+                                <th width="150px">Results</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -110,10 +124,14 @@ if (!$facultyResult) {
                                 <?php while ($row = mysqli_fetch_assoc($facultyResult)): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($row['faculty_id']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['faculty_name']); ?></td>
+                                        <td><img class="profile-icon" src="../../../<?= $row['profile_image'] ?>" alt="Profile Image"></td>
+                                        <td>
+                                            <?php echo htmlspecialchars($row['faculty_name']); ?><br>
+                                            <?php echo htmlspecialchars($row['email']); ?>
+                                    
+                                        </td>
                                         <td><?php echo htmlspecialchars($row['phone_number']); ?></td>
                                         <td><?php echo htmlspecialchars($row['department_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['department_code']); ?></td>
                                         <td>
                                             <!--test-->
                                             <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">
@@ -132,7 +150,6 @@ if (!$facultyResult) {
 
                 </div>
             </div>
-        </div>
     </main>
 </body>
 <!-- for sidebar button -->

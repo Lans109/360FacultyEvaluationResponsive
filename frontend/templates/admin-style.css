@@ -17,16 +17,18 @@ p {
 }
 
 a {
-    color: black;
+    color: #2A2723;
 }
 
 h1 {
     font-weight: 800;
     font-size: 1.8rem;
+    color: #2A2723;
 }
 
 h2 {
     font-size: 1.4rem;
+    color: #2A2723;
 }
 
 h3 {
@@ -366,7 +368,7 @@ main {
     font-size: 3em;
     /* Large font size for the rating */
     font-weight: bold;
-    color: #333;
+    color: #2a2723;
     /* Dark color for the rating */
     text-align: center;
     /* Center the rating */
@@ -375,77 +377,33 @@ main {
     font-style: italic;
 }
 
-.center h3,
-h5 {
-    text-align: center;
-    /* Center the evaluation text */
-    color: #333;
-    /* Dark color for the text */
-    margin-top: 10px;
-}
-
-.center h3 {
+.rating-info h3 {
     font-size: 2em;
     /* Size for Excellent/Good text */
     color: #4CAF50;
     /* Green for Excellent/Good */
 }
 
-.center h5 {
+.rating-info h5 {
     font-size: 1.5em;
     /* Size for Satisfactory/Fair/Poor text */
     color: #F44336;
     /* Red for Satisfactory/Fair/Poor */
 }
 
-.center {
+.rating-info {
     text-align: center;
     /* Ensures everything inside is centered */
     margin: 20px;
 }
 
-.generate-pdf-btn {
-    background-color: #631111;
-    /* Green background */
-    color: white;
-    /* White text color */
-    padding: 12px 24px;
-    /* Add padding for a nice button size */
-    font-size: 16px;
-    /* Font size */
-    border: none;
-    /* Remove the default border */
-    border-radius: 8px;
-    /* Rounded corners */
-    cursor: pointer;
-    /* Cursor changes to a pointer when hovered */
-    transition: background-color 0.3s, transform 0.2s;
-    /* Smooth transition on hover */
+.rating-info p {
+    color: #666;
 }
-
-.generate-pdf-btn:hover {
-    background-color: #631111;
-    /* Darker green when hovered */
-    transform: translateY(-2px);
-    /* Lift the button a little on hover */
-}
-
-.generate-pdf-btn:active {
-    background-color: #631111;
-    /* Even darker green when clicked */
-    transform: translateY(0);
-    /* Remove lift effect when clicked */
-}
-
-.generate-pdf-btn:focus {
-    outline: none;
-    /* Remove the focus outline */
-}
-
 #rating {
     flex: .5;
     /* Full width for larger charts */
-    max-width: 200;
+    max-width: 50;
 }
 
 #chart_div_overall,
@@ -936,13 +894,14 @@ textarea {
 }
 
 .table tr {
-    transition: all .1s ease;
+    transition: background-color 0.1s ease, transform 0.2s ease; /* No delay here */
     margin: 1px;
     border: 1px solid #ddd;
 }
 
 .table tbody tr:hover {
-    background-color: #f8f8f8;
+    background-color: #f8f8f8; 
+    cursor: default;
 }
 
 .table td {
@@ -1098,14 +1057,16 @@ textarea {
 
 /* Styling each department box */
 .department-box {
-    background-color: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 7px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
     padding: 20px;
     flex: 1 1 calc(50% - 40px);
     box-sizing: border-box;
-    max-width: calc(50% - 40px);
+    max-width: calc(60% - 40px);
+}
+
+.department-box h3 {
+    color: #2A2723;
 }
 
 /* Table styles */
@@ -1118,14 +1079,12 @@ textarea {
 .department-box .table th,
 .department-box .table td {
     padding: 8px 12px;
-    border: 1px solid #ddd;
     text-align: left;
 }
 
 .department-box .table th {
-    background-color: #631111;
+    background-color: #923534;
     color: white;
-    font-weight: bold;
 }
 
 /* css for account.php page */
@@ -1223,13 +1182,7 @@ textarea {
     border-radius: 100%;
 }
 
-.student-info div {
-    display: flex;
-    margin: 5px;
-    margin-left: 0;
-}
-
-.faculty-info div {
+.faculty-info div, .student-info div  {
     display: flex;
     margin: 5px;
     margin-left: 0;
@@ -1237,6 +1190,7 @@ textarea {
 
 .profile-info h3 {
     font-size: 30px;
+    color: #2A2723;
 }
 
 .profile-info p {
@@ -1252,6 +1206,22 @@ textarea {
 
 .enroll-btn {
     display: flex;
+}
+
+.evaluation-status {
+    display: flex;
+    justify-content: flex-start;
+    gap: 100px;
+}
+
+.rank-container {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+}
+
+.rank-container .rank-icon {
+    width: 20px; /* Adjust the width of the icon */
+    margin-left: 5px; /* Add space between the number and the icon */
 }
 
 @font-face {
