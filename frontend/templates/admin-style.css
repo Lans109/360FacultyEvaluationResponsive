@@ -218,11 +218,11 @@ main {
 /* academic year and evaluation status */
 .banner {
     margin: 10px;
+    border: 1px solid #ddd;
     border-left: #631111 solid 20px;
     padding: 40px;
-    border-radius: 4px;
-    /* Rounded edges for consistency */
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    border-radius: 3px;
+    
 
 }
 
@@ -239,12 +239,12 @@ main {
     margin: 0;
     font-size: 20px;
     font-weight: bold;
-    color: #000000;
+    color: #2a2723;
 }
 
 .banner p {
     margin-top: 0;
-    color: #000;
+    color: #666;
 }
 
 /* Make the dashboard-content a flex container */
@@ -253,7 +253,7 @@ main {
     /* Flexbox layout */
     flex-direction: column;
     /* Stack items vertically */
-    gap: 20px;
+    gap: 1;
     /* Space between the cards and charts */
     margin: 0;
     width: 100%;
@@ -266,7 +266,7 @@ main {
     /* Arrange cards horizontally */
     justify-content: space-evenly;
     /* Space the cards evenly */
-    gap: 20px;
+    gap: 1px;
     /* Space between each card */
     margin: 0;
     width: 100%;
@@ -276,7 +276,7 @@ main {
 
 /* Individual card style */
 .card {
-    margin: 10px;
+    margin: 5px;
     background-color: #F8F8F8;
     padding: 20px;
     display: flex;
@@ -284,11 +284,10 @@ main {
     align-items: center;
     transition: box-shadow 0.3s ease-in-out;
     height: 120px;
-    width: 260px;
+    max-width: 300px;
+    width: 19%;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    /* Rounded edges for consistency */
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    border-radius: 3px;
 }
 
 /* Card info styles */
@@ -302,13 +301,13 @@ main {
     margin: 0;
     font-size: 2rem;
     font-weight: bold;
-    color: #2A2723;
+    color: #666;
 }
 
 .card-info p {
     margin: 0;
     font-size: 0.9rem;
-    color: #2A2723;
+    color: #666;
 }
 
 .card-icon {
@@ -321,16 +320,13 @@ main {
     display: flex;
     flex-wrap: wrap;
     /* Allow wrapping for smaller screens */
-    gap: 20px;
     /* Space between charts */
     justify-content: space-between;
     /* Distribute space evenly */
     align-items: flex-start;
     /* Align charts to the top */
     width: 100%;
-    background: #f8f9fa;
     /* Light background for contrast */
-    padding: 20px;
 }
 
 .profile {
@@ -350,14 +346,13 @@ main {
 /* Individual Chart Styling */
 .charts>div {
     flex: 1;
+    margin: 10px;
     min-width: 300px;
     max-width: 500px;
     height: 400px;
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 4px;
-    /* Rounded edges for consistency */
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     display: flex;
     /* Center content */
     justify-content: center;
