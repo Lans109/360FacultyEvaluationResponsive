@@ -36,6 +36,7 @@ $num_rows = mysqli_num_rows($courses_result);
     <title>Course Management</title>
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
 </head>
@@ -45,7 +46,9 @@ $num_rows = mysqli_num_rows($courses_result);
 
     <main>
         <div class="upperMain">
-            <div><h1>Courses Management</h1></div>
+            <div>
+                <h1>Courses Management</h1>
+            </div>
         </div>
 
         <div class="content">
@@ -56,69 +59,46 @@ $num_rows = mysqli_num_rows($courses_result);
                 <!-- Search and Filter Form -->
                 <div class="search-filter">
                     <form method="GET" action="">
-                        <div class="form-group">            
-                        <div class="search-container">
-                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
-                            <button type="submit" class="search-button">
-                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
-                            </button>
-                        </div>
-
-                        <div class="select-container">
-                            <div class="select-wrapper">
-                                <select id="department_filter" name="department_filter" class="custom-select">
-                                    <option value="" selected>All Departments</option>
-                                    <?php
-                                    // Fetch all departments to populate the filter dropdown
-                                    $departments_query = "SELECT department_id, department_code FROM departments";
-                                    $departments_result = mysqli_query($con, $departments_query);
-
-                                    // Fetch and display department options
-                                    while ($department = mysqli_fetch_assoc($departments_result)) {
-                                        $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
-                                        echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
-                                    }
-                                    ?>
-                                </select>
-                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                        <div class="form-group">
+                            <div class="search-container">
+                                <input type="text" placeholder="Search..." id="search" name="search"
+                                    class="search-input">
+                                <button type="submit" class="search-button">
+                                    <i class="fa fa-search"></i> <!-- Magnifying Glass Icon -->
+                                </button>
                             </div>
-                        </div>
+                            <div class="select-container">
+                                <div class="select-wrapper">
+                                    <select id="department_filter" name="department_filter" class="custom-select">
+                                        <option value="" selected>All Departments</option>
+                                        <?php
+                                        // Fetch all departments to populate the filter dropdown
+                                        $departments_query = "SELECT department_id, department_code FROM departments";
+                                        $departments_result = mysqli_query($con, $departments_query);
 
-                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+                                        // Fetch and display department options
+                                        while ($department = mysqli_fetch_assoc($departments_result)) {
+                                            $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
+                                            echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <i class="fa fa-chevron-down select-icon"></i> <!-- Icon for dropdown -->
+                                </div>
+                            </div>
+                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i>
+                                Filter</button>
                             <a href="courses.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
                         </div>
+
                     </form>
                 </div>
-                
                 <div>
                     <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
                         <img src="../../../frontend/assets/icons/add.svg">&nbsp;Course&nbsp;
                     </button>
                 </div>
             </div>
-
-            <!--
-            <div class="department">
-                <div class="select-department">
-                        <a class="nav-link dropdown-toggle" href="#" id="dataDropdown" onclick="toggleDropdown('dataCollapseDepartment', this)">
-                            Data Management<i class="fa fa-chevron-down select-icon-department"></i>
-                        </a>
-                        
-                        <div class="dropdown-content" id="dataCollapseDepartment">
-                            <ul class="nav-department flex-column">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">Courses</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">Programs</a>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                </div>
-            </div>
-                                -->
-
 
             <div class="table">
                 <table>
@@ -132,36 +112,35 @@ $num_rows = mysqli_num_rows($courses_result);
                         </tr>
                     </thead>
                     <tbody>
-                    <?php if (mysqli_num_rows($courses_result) > 0): ?>
-                    <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
-                        <tr>
-                            <td><?php echo $course['course_code']; ?></td>
-                            <td><?php echo $course['course_name']; ?></td>
-                            <td><?php echo $course['course_description']; ?></td>
-                            <td><?php echo $course['department_code'] ?: 'Not Assigned'; ?></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="edit-btn" data-toggle="modal"
-                                        data-target="#editModal<?php echo $course['course_id']; ?>"
-                                        data-id="<?php echo $course['course_id']; ?>"
-                                        data-name="<?php echo $course['course_name']; ?>"
-                                        data-code="<?php echo $course['course_code']; ?>"
-                                        data-description="<?php echo $course['course_description']; ?>"
-                                        data-department-id="<?php echo $course['department_id']; ?>">
-                                        <img src="../../../frontend/assets/icons/edit.svg"></button>
+                        <?php if (mysqli_num_rows($courses_result) > 0): ?>
+                            <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
+                                <tr>
+                                    <td><?php echo $course['course_code']; ?></td>
+                                    <td><?php echo $course['course_name']; ?></td>
+                                    <td><?php echo $course['course_description']; ?></td>
+                                    <td><?php echo $course['department_code'] ?: 'Not Assigned'; ?></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="edit-btn" data-toggle="modal"
+                                                data-target="#editModal<?php echo $course['course_id']; ?>"
+                                                data-id="<?php echo $course['course_id']; ?>"
+                                                data-name="<?php echo $course['course_name']; ?>"
+                                                data-code="<?php echo $course['course_code']; ?>"
+                                                data-description="<?php echo $course['course_description']; ?>"
+                                                data-department-id="<?php echo $course['department_id']; ?>">
+                                                <img src="../../../frontend/assets/icons/edit.svg"></button>
 
-                                        <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
-                                        class="delete-btn"
-                                        onclick="return confirm('Are you sure you want to delete this course?')">
-                                        
-                                        <img src="../../../frontend/assets/icons/delete.svg"></a>
-                                </div>
+                                            <a href="delete_course.php?course_id=<?php echo $course['course_id']; ?>"
+                                                class="delete-btn" onclick="openDeleteConfirmationModal(event, this)">
 
-                            </td>
-                        </tr>
-                        <!-- Mobile view cards -->
-                        <?php
-                        echo "<div class='table-to-cards hidden'>
+                                                <img src="../../../frontend/assets/icons/delete.svg"></a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <!-- Mobile view cards -->
+                                <?php
+                                echo "<div class='table-to-cards hidden'>
                                 <div class='ttc-course_id'>{$course['course_id']}</div>
                                 <div class='ttc-course_code'>{$course['course_code']}</div>
                                 <div class='ttc-course_name'>{$course['course_name']}</div>
@@ -179,74 +158,76 @@ $num_rows = mysqli_num_rows($courses_result);
                                 <div class='ttc_btn-delete_course'>
                                         <a href='delete_course.php?course_id={$course['course_id']}'
                                             class='delete-btn'
-                                            onclick='return confirm(\"Are you sure you want to delete this course?\")'>Delete</a>
+                                            onclick='openDeleteConfirmationModal(event, this)'>Delete</a>
                                 </div>
                             </div>";
-                        ?>
+                                ?>
 
 
-                        <!-- Edit Course Modal -->
-                        <div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog"
-                            aria-labelledby="editModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel">Edit Course</h5>
-                                        <span class="close" class="close" data-dismiss="modal"
-                                            aria-label="Close">&times;</span>
+                                <!-- Edit Course Modal -->
+                                <div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog"
+                                    aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Edit Course</h5>
+                                                <span class="close" class="close" data-dismiss="modal"
+                                                    aria-label="Close">&times;</span>
+                                            </div>
+                                            <form id="editForm<?php echo $course['course_id']; ?>" method="POST"
+                                                action="update_course.php">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="course_id"
+                                                        value="<?php echo $course['course_id']; ?>">
+                                                    <div class="form-group">
+                                                        <label for="edit_course_name">Course Name</label>
+                                                        <input type="text" name="course_name" class="form-control"
+                                                            value="<?php echo $course['course_name']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit_course_code">Course Code</label>
+                                                        <input type="text" name="course_code" class="form-control"
+                                                            value="<?php echo $course['course_code']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit_course_description">Description</label>
+                                                        <textarea name="course_description" class="form-control"
+                                                            required><?php echo $course['course_description']; ?></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit_department_id">Department</label>
+                                                        <select name="department_id" class="form-control"
+                                                            id="edit_department_id">
+                                                            <option value="">Select Department</option>
+                                                            <?php
+                                                            // Fetch all departments
+                                                            $departments_query = "SELECT department_id, department_code FROM departments";
+                                                            $departments_result = mysqli_query($con, $departments_query);
+
+                                                            while ($department = mysqli_fetch_assoc($departments_result)) {
+                                                                $selected = ($department['department_id'] == $course['department_id']) ? 'selected' : '';
+                                                                echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_code'] . "</option>";
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save
+                                                        changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
-                                    <form id="editForm<?php echo $course['course_id']; ?>" method="POST"
-                                        action="update_course.php">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="course_id"
-                                                value="<?php echo $course['course_id']; ?>">
-                                            <div class="form-group">
-                                                <label for="edit_course_name">Course Name</label>
-                                                <input type="text" name="course_name" class="form-control"
-                                                    value="<?php echo $course['course_name']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="edit_course_code">Course Code</label>
-                                                <input type="text" name="course_code" class="form-control"
-                                                    value="<?php echo $course['course_code']; ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="edit_course_description">Description</label>
-                                                <textarea name="course_description" class="form-control"
-                                                    required><?php echo $course['course_description']; ?></textarea>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="edit_department_id">Department</label>
-                                                <select name="department_id" class="form-control" id="edit_department_id">
-                                                    <option value="">Select Department</option>
-                                                    <?php
-                                                    // Fetch all departments
-                                                    $departments_query = "SELECT department_id, department_code FROM departments";
-                                                    $departments_result = mysqli_query($con, $departments_query);
-
-                                                    while ($department = mysqli_fetch_assoc($departments_result)) {
-                                                        $selected = ($department['department_id'] == $course['department_id']) ? 'selected' : '';
-                                                        echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_code'] . "</option>";
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="save-btn">Save changes</button>
-                                        </div>
-                                    </form>
                                 </div>
-                            </div>
-                        </div>
 
-                    <?php endwhile; ?>
-                    <?php else: ?>
-                                <tr>
-                                    <td colspan="4">No Courses found.</td>
-                                </tr>
-                            <?php endif; ?>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No Courses found.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -255,7 +236,8 @@ $num_rows = mysqli_num_rows($courses_result);
     </main>
 
     <!-- Add Course Modal -->
-    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

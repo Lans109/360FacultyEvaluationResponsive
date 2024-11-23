@@ -44,7 +44,7 @@ if (!$department_result) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
-    </style>
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
 </head>
 
 <body>
@@ -121,7 +121,7 @@ if (!$department_result) {
 
                                         <a href="delete_department.php?department_id=<?php echo $row['department_id']; ?>"
                                             class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this department?')">
+                                            onclick="openDeleteConfirmationModal(event, this)">
                                             
                                             <img src="../../../frontend/assets/icons/delete.svg"></a>
 
@@ -234,7 +234,7 @@ if (!$department_result) {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                <button type="submit" class="save-btn">Save changes</button>
+                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
                             </div>
                         </form>
                     </div>
