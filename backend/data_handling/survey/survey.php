@@ -52,7 +52,8 @@ $questions_result = mysqli_query($con, $questions_query);
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <?php include '../../../frontend/layout/navbar.php'; ?>s
+    <?php include '../../../frontend/layout/navbar.php'; ?>
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
 </head>
 
 <body>
@@ -114,7 +115,7 @@ $questions_result = mysqli_query($con, $questions_query);
                                             <span class="close" class="close" data-dismiss="modal"
                                                 aria-label="Close">&times;</span>
                                         </div>
-                                        <form action="update_criteria.php" method="POST">
+                                        <form id="editForm" action="update_criteria.php" method="POST">
                                             <input type="hidden" name="criteria_id" value="<?php echo $criteria_id; ?>">
                                             <div class="modal-body">
                                                 <div class="form-group">
@@ -125,7 +126,7 @@ $questions_result = mysqli_query($con, $questions_query);
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save Changes</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save Changes</button>
                                             </div>
                                         </form>
                                     </div>
@@ -344,7 +345,7 @@ $questions_result = mysqli_query($con, $questions_query);
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save Changes</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save Changes</button>
                                             </div>
                                         </form>
                                     </div>

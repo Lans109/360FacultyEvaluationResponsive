@@ -27,6 +27,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
 </head>
 
 <body>
@@ -112,7 +113,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save changes</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
                                             </div>
                                         </form>
                                     </div>
@@ -187,7 +188,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save changes</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
                                             </div>
                                         </form>
                                     </div>
@@ -262,7 +263,7 @@ $result_faculty = mysqli_query($con, $query_faculty);
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save changes</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
                                             </div>
                                         </form>
                                     </div>

@@ -108,12 +108,13 @@ aside .sidebar {
     overflow: hidden;
     opacity: 0;
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-    
+
 }
 
 /* When the dropdown is active */
 .dropdown-content.show {
-    max-height: 500px; /* Set a max-height large enough for your content */
+    max-height: 500px;
+    /* Set a max-height large enough for your content */
     opacity: 1;
 }
 
@@ -122,6 +123,7 @@ aside .sidebar {
     position: relative;
     background-color: white;
 }
+
 #sidebar .dropdown-content ul li {
     padding: 0;
     background-color: #f8f8f8;
@@ -153,9 +155,10 @@ a img {
     transition-duration: .2s;
 }
 
-aside .sidebar a:hover > img {
+aside .sidebar a:hover>img {
     margin-right: 3px;
 }
+
 aside footer {
     color: #2A2723;
     padding: 10px;
@@ -224,7 +227,7 @@ main {
     border-left: #631111 solid 20px;
     padding: 40px;
     border-radius: 3px;
-    
+
 
 }
 
@@ -455,9 +458,12 @@ main {
     border-radius: 3px;
     width: 500px;
     font-family: myFont;
-    position: relative; /* Keep button inside the input box */
-    box-sizing: border-box; /* Prevent the border from affecting the input width */
-    transition: all 0.2s ease; /* Add transition for smooth effect */
+    position: relative;
+    /* Keep button inside the input box */
+    box-sizing: border-box;
+    /* Prevent the border from affecting the input width */
+    transition: all 0.2s ease;
+    /* Add transition for smooth effect */
 
 }
 
@@ -472,19 +478,24 @@ main {
     font-size: 16px;
     color: #aaa;
     cursor: pointer;
-    transition: all 0.2s ease; /* Add transition for smooth effect */
+    transition: all 0.2s ease;
+    /* Add transition for smooth effect */
 }
 
 /* Focus and hover effects */
 .search-input:focus {
-    border-color: #631111;  /* Change border color on focus */
-    outline: none;          /* Remove outline on focus */
+    border-color: #631111;
+    /* Change border color on focus */
+    outline: none;
+    /* Remove outline on focus */
 }
 
 /* Hover effect on input changes the button */
-.search-input:hover + .search-button {
-    color: #923534; /* Change color when hovering over input */
-    transform: translateY(-50%) scale(1.2); /* Make the button bigger */
+.search-input:hover+.search-button {
+    color: #923534;
+    /* Change color when hovering over input */
+    transform: translateY(-50%) scale(1.2);
+    /* Make the button bigger */
 }
 
 .search-input:hover {
@@ -498,9 +509,11 @@ main {
 }
 
 .select-container {
-    position: relative;  /* To position the icon inside the dropdown */
+    position: relative;
+    /* To position the icon inside the dropdown */
     display: inline-block;
-    width: 250px;  /* Adjust width as needed */
+    width: 250px;
+    /* Adjust width as needed */
 }
 
 /* Wrapper around the select element */
@@ -510,51 +523,73 @@ main {
 
 /* Style for the select dropdown */
 .custom-select {
-    padding: 12px 30px 12px 10px; /* Add padding to leave space for the icon */
-    font-size: 15px;               /* Font size for the dropdown */
-    border: 1px solid #ddd;        /* Border color for the dropdown */
-    border-radius: 3px;           /* Rounded corners */
-    width: 100%;                   /* Full width of the container */
-    background-color: #F8F8F8;        /* Background color */
-    appearance: none;              /* Remove default dropdown arrow */
-    -webkit-appearance: none;      /* For Safari */
-    -moz-appearance: none;         /* For Firefox */
+    padding: 12px 30px 12px 10px;
+    /* Add padding to leave space for the icon */
+    font-size: 15px;
+    /* Font size for the dropdown */
+    border: 1px solid #ddd;
+    /* Border color for the dropdown */
+    border-radius: 3px;
+    /* Rounded corners */
+    width: 100%;
+    /* Full width of the container */
+    background-color: #F8F8F8;
+    /* Background color */
+    appearance: none;
+    /* Remove default dropdown arrow */
+    -webkit-appearance: none;
+    /* For Safari */
+    -moz-appearance: none;
+    /* For Firefox */
     font-family: myFont;
     color: #666;
-    transition: all 0.2s ease; /* Add transition for smooth effect */
+    transition: all 0.2s ease;
+    /* Add transition for smooth effect */
 }
 
 .custom-select option {
     padding: 15px;
     list-style-type: none;
 }
+
 /* Style for the custom dropdown arrow (icon) */
 .select-icon {
     position: absolute;
     top: 50%;
-    right: 10px;                    /* Position the icon on the right */
-    transform: translateY(-50%);     /* Center the icon vertically */
-    font-size: 16px;                 /* Size of the icon */
-    color: #aaa;                     /* Color of the icon */
-    pointer-events: none;            /* Prevent the icon from interfering with the select action */
-    transition: all 0.2s ease; /* Add transition for smooth effect */
+    right: 10px;
+    /* Position the icon on the right */
+    transform: translateY(-50%);
+    /* Center the icon vertically */
+    font-size: 16px;
+    /* Size of the icon */
+    color: #aaa;
+    /* Color of the icon */
+    pointer-events: none;
+    /* Prevent the icon from interfering with the select action */
+    transition: all 0.2s ease;
+    /* Add transition for smooth effect */
 }
 
 /* Focus and hover effects */
 .custom-select:focus {
-    border-color: #2A2723;          /* Change border color on focus */
+    border-color: #2A2723;
+    /* Change border color on focus */
 }
 
 
 /* admin-pages elements */
 .upperContent {
     display: flex;
-    justify-content: space-evenly; /* Aligns elements to the right */
-    align-items: center; /* Centers vertically */
+    justify-content: space-evenly;
+    /* Aligns elements to the right */
+    align-items: center;
+    /* Centers vertically */
     width: 100%;
     padding: 10px;
-    flex-wrap: nowrap; /* Ensures all elements stay in one line */
+    flex-wrap: nowrap;
+    /* Ensures all elements stay in one line */
 }
+
 .upperContent p {
     font-family: myFont;
     opacity: .5;
@@ -567,27 +602,40 @@ main {
     color: white;
     border: none;
     text-decoration: none;
-    display: inline-flex;  /* Change to inline-flex to align child elements */
-    align-items: center;  /* Vertically center the text and image */
-    justify-content: center;  /* Horizontally center the text and image */
+    display: inline-flex;
+    /* Change to inline-flex to align child elements */
+    align-items: center;
+    /* Vertically center the text and image */
+    justify-content: center;
+    /* Horizontally center the text and image */
     cursor: pointer;
     padding: 9px 20px;
     border-radius: 6px;
     font-family: myFont;
     font-size: 15px;
     font-weight: lighter;
-    transition: all 0.2s ease; /* Add transition for smooth effect */
+    transition: all 0.2s ease;
+    /* Add transition for smooth effect */
 }
+
 .add-btn img {
-    display: inline-flex;  /* Ensures alignment for flex context */
-    align-items: center;  /* Vertically centers content */
-    justify-content: center;  /* Horizontally centers content */
-    transform: scale(1); /* Initial scale */
-    transition: transform 0.2s cubic-bezier(.73, 0, .27, 1); /* Smooth transition */
+    display: inline-flex;
+    /* Ensures alignment for flex context */
+    align-items: center;
+    /* Vertically centers content */
+    justify-content: center;
+    /* Horizontally centers content */
+    transform: scale(1);
+    /* Initial scale */
+    transition: transform 0.2s cubic-bezier(.73, 0, .27, 1);
+    /* Smooth transition */
 }
+
 .add-btn:hover {
-    transform: scale(1.05); /* Scale up smoothly on hover */
+    transform: scale(1.05);
+    /* Scale up smoothly on hover */
 }
+
 .fitler-btn {
     padding: 12px;
     color: #666;
@@ -652,15 +700,6 @@ input[type=password] {
     accent-color: #631111;
 }
 
-/* input[type=text]:focus,
-input[type=number]:focus,
-input[type=email]:focus,
-input[type=password]:focus
-select:focus {
-    outline: 1px solid #631111;
-    accent-color: #631111;
-} */
-
 textarea {
     width: 100%;
     height: 150px;
@@ -720,11 +759,11 @@ textarea {
     border-radius: 7px;
 }
 
-.save-btn:hover{
-    background-color: #631111;
+.save-btn:hover {
+    background-color: #923534;
 }
 
-.cancel-btn:hover{
+.cancel-btn:hover {
     background-color: #d8d8d8;
 }
 
@@ -735,6 +774,106 @@ textarea {
     gap: 5px;
     margin: 20px;
 }
+
+/* Confirmation Modal Styles */
+#editConfirmationModal,
+#deleteConfirmationModal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+#editConfirmationModal .modal-dialog,
+#deleteConfirmationModal .modal-dialog {
+    max-width: 500px;
+    margin: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon and Text Layout */
+#editConfirmationModal .modal-content,
+#deleteConfirmationModal .modal-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Icon styling for editConfirmationModal and deleteConfirmationModal */
+#editConfirmationModal .modal-icon,
+#deleteConfirmationModal .modal-icon {
+    width: 60px; 
+    height: 60px;
+    flex-shrink: 0; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px; 
+}
+
+#editConfirmationModal .modal-icon img,
+#deleteConfirmationModal .modal-icon img {
+    width: 100%; 
+    height: auto;
+}
+
+
+/* Text Layout */
+#editConfirmationModal .text-content,
+#deleteConfirmationModal .text-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Text styling for both modals */
+#editConfirmationModal .text-content .modal-header,
+#deleteConfirmationModal .text-content .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: none;
+}
+
+#editConfirmationModal .text-content .modal-title,
+#deleteConfirmationModal .text-content .modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+#editConfirmationModal .text-content .modal-body,
+#deleteConfirmationModal .text-content .modal-body {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #555;
+    border-bottom: none;
+}
+
+#editConfirmationModal .text-content .modal-footer,
+#deleteConfirmationModal .text-content .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: none;
+    padding-top: 10px;
+}
+
 
 /* table all */
 .table table {
@@ -774,7 +913,8 @@ textarea {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px; /* Adjust as needed */
+    max-width: 150px;
+    /* Adjust as needed */
 }
 
 .table img {
@@ -805,12 +945,15 @@ textarea {
     text-decoration: none;
     cursor: pointer;
     padding: 5px;
-    border-radius: 3px; 
+    border-radius: 3px;
 }
-.edit-btn img, .delete-btn img {
-width: 20px;
-height: 20px;
+
+.edit-btn img,
+.delete-btn img {
+    width: 20px;
+    height: 20px;
 }
+
 .delete-btn {
     background-color: #666;
     border: 1px solid #ddd;
@@ -824,11 +967,12 @@ height: 20px;
     padding: 5px;
 }
 
-.edit-btn, .delete-btn {
-    display: flex; 
-    align-items: center; 
+.edit-btn,
+.delete-btn {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    width: auto; 
+    width: auto;
     height: 35px;
 }
 
@@ -861,7 +1005,7 @@ height: 20px;
     border-radius: 7px;
 }
 
-.table_add-btn:hover{
+.table_add-btn:hover {
     background-color: #d8d8d8;
 }
 
@@ -944,12 +1088,13 @@ height: 20px;
 }
 
 /* css for account.php page */
-.account-roles-faculty, .account-roles-student{
+.account-roles-faculty,
+.account-roles-student {
     margin-top: 20px;
 }
 
 /* css for survey.php */
-.survey-name-label{
+.survey-name-label {
     margin-top: 20px;
 }
 
@@ -998,7 +1143,8 @@ height: 20px;
 }
 
 .table-results td:last-child {
-    text-align: center; /* Centers the content of the "Actions" column */
+    text-align: center;
+    /* Centers the content of the "Actions" column */
 }
 
 .view-btn {
@@ -1007,26 +1153,29 @@ height: 20px;
     color: #2A2723;
     text-decoration: none;
     cursor: pointer;
-    padding: 8px 15px; 
+    padding: 8px 15px;
     border-radius: 3px;
-    margin: 5px auto; 
-    display: inline-block; 
+    margin: 5px auto;
+    display: inline-block;
     text-align: center;
     font-size: 15px;
     font-family: myFont2;
 }
 
 
-.view-btn:hover{
+.view-btn:hover {
     background-color: #E5E5E5;
 }
+
 .profile-info {
     display: flex;
     justify-content: flex-start;
-    align-items: center; /* Vertically center the student info */
+    align-items: center;
+    /* Vertically center the student info */
     margin: 20px;
     gap: 30px;
 }
+
 .profile-info .profile-image {
     width: 250px;
     height: 250px;
@@ -1054,6 +1203,7 @@ height: 20px;
 .profile-info button {
     margin: 10px 0;
 }
+
 .enroll-btn {
     display: flex;
 }
@@ -1078,10 +1228,12 @@ height: 20px;
     font-family: myFont;
     src: url(../assets/font/Silka-Regular.otf);
 }
+
 @font-face {
     font-family: myFont2;
     src: url(../assets/font/TT.ttf);
 }
+
 /* Hide button above 1101px */
 @media (min-width: 1101px) {
     .open-menu {

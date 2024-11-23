@@ -97,6 +97,7 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
     
     <main>
         <div class="upperMain">
@@ -141,7 +142,9 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                         <td><?php echo $course['faculty']; ?></td>
                         <td>
                             <div class="action-btns">
-                                <a href="delete_student_course.php?student_id=<?php echo $student_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>" class="delete-btn">
+                                <a href="delete_student_course.php?student_id=<?php echo $student_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>" 
+                                onclick="openDeleteConfirmationModal(event, this)"
+                                class="delete-btn">
                                     <img src="../../../frontend/assets/icons/delete.svg">
                                 </a>
                             </div>
