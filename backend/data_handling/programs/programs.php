@@ -38,6 +38,7 @@ $num_rows = mysqli_num_rows($programs_result);
     <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <?php include '../../../frontend/layout/navbar.php'; ?>
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
 </head>
 
 <body>
@@ -170,7 +171,7 @@ $num_rows = mysqli_num_rows($programs_result);
                                                                         echo $course['course_name'];
                                                                         echo "<a href='delete_program_course.php?course_id=" . $course['course_id'] . "&program_id=" . $program['program_id'] . "' 
                                                                                 class='btn btn-danger btn-sm ml-3'
-                                                                                onclick='return confirm(\"Are you sure you want to remove this course?\")'> Remove</a>";
+                                                                               onclick='openDeleteConfirmationModal(event, this)'> Remove</a>";
                                                                         echo "</li>";
                                                                     }
                                                                     echo "</ul>";
@@ -205,7 +206,7 @@ $num_rows = mysqli_num_rows($programs_result);
 
                                         <a href="delete_program.php?program_id=<?php echo $program['program_id']; ?>"
                                             class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this program?')">
+                                            onclick="openDeleteConfirmationModal(event, this)">
                                         
                                             <img src="../../../frontend/assets/icons/delete.svg"></a>
 
@@ -259,7 +260,7 @@ $num_rows = mysqli_num_rows($programs_result);
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Update Program</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Update Program</button>
                                             </div>
                                         </form>
                                     </div>
