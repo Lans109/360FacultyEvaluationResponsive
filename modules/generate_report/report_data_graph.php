@@ -51,7 +51,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                 backgroundColor: 'transparent',
                 title: title,
                 colors: ['#a2252f', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
-                fontName: 'Times New Roman',
+                fontName: 'myFont',
                 fontSize: 14,
                 hAxis: {
                     title: 'Evaluators',
