@@ -29,6 +29,9 @@ $sql_faculty_list =
     ) AS weighted_avg,
     CONCAT(f.first_name, ' ', f.last_name) AS Name, 
     d.department_code,
+    f.profile_image,
+    f.faculty_id,
+    f.email,
     COUNT(DISTINCT fc.course_section_id) as total_courses
 FROM faculty f
 LEFT JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
@@ -61,6 +64,8 @@ if(mysqli_num_rows($results_faculty_list) > 0) {
             'faculty_name' => $row_faculty['Name'],
             'AVG' => ROUND($row_faculty['weighted_avg'], 2),
             'total_courses' => $row_faculty['total_courses'],
+            'profile_image' => $row_faculty['profile_image'],
+            'faculty_id' => $row_faculty['faculty_id'],
         ];
     }
 }

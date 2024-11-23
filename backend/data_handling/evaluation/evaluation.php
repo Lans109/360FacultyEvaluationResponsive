@@ -59,61 +59,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     <main>
         <main>
             <div class="upperMain">
-                <h1>Current Evaluation Status</h1>
+                <div><h1>Current Evaluation Status</h1></div>
             </div>
             <div class="content">
-                <div class="upperContent">
                     <h2>Evaluation Details</h2>
-                </div>  
                     <?php if ($current_evaluation): ?>
                         <div class="banner">
-                            <div class="card-body">
-                                <h3 class="card-title">Academic Year:
-                                    <?php echo htmlspecialchars($current_evaluation['academic_year']); ?>
-                                </h3>
-                                <p class="card-title">Semester:
-                                    <?php echo htmlspecialchars($current_evaluation['semester']); ?></p>
-                                <p class="card-title">Status:
-                                    <?php
-                                    $status = htmlspecialchars($current_evaluation['status']);
-                                    switch ($status) {
-                                        case 'completed':
-                                            echo '<span class="text-success">Completed</span>';
-                                            break;
-                                        case 'active':
-                                            echo '<span class="text-info">Active</span>';
-                                            break;
-                                        case 'upcoming':
-                                            echo '<span class="text-warning">Upcoming</span>';
-                                            break;
-                                        default:
-                                            echo '<span class="text-muted">Unknown Status</span>';
-                                            break;
-                                    }
-                                    ?>
-                                </p><br>
+                            <div class="evaluation-status">
+                                <div class="academic-year">
+                                    <h3 class="card-title">Academic Year:
+                                        <?php echo htmlspecialchars($current_evaluation['academic_year']); ?>
+                                    </h3>
+                                    <p class="card-title">Semester:
+                                        <?php echo htmlspecialchars($current_evaluation['semester']); ?></p>
+                                    <p class="card-title">Status:
+                                        <?php
+                                        $status = htmlspecialchars($current_evaluation['status']);
+                                        switch ($status) {
+                                            case 'completed':
+                                                echo '<span class="text-success">Completed</span>';
+                                                break;
+                                            case 'active':
+                                                echo '<span class="text-info">Active</span>';
+                                                break;
+                                            case 'upcoming':
+                                                echo '<span class="text-warning">Upcoming</span>';
+                                                break;
+                                            default:
+                                                echo '<span class="text-muted">Unknown Status</span>';
+                                                break;
+                                        }
+                                        ?>
+                                    </p><br>
+                                </div>
 
-                                <!-- Update Status Form -->
-                                <div class="mt-4">
-                                    <h3>Update Evaluation Status</h3>
-                                    <form action="update_evaluation.php" method="post" onsubmit="return confirmUpdate();">
-                                        <input type="hidden" name="period_id"
-                                            value="<?php echo htmlspecialchars($current_evaluation['period_id']); ?>">
-                                        <div class="form-group">
-                                            <label for="status">Status:</label>
-                                            <select class="form-control" id="status" name="status" required
-                                                style="border: none;">
-                                                <option value="completed" <?php echo ($status === 'completed') ? 'selected' : ''; ?>>
-                                                    Completed</option>
-                                                <option value="active" <?php echo ($status === 'active') ? 'selected' : ''; ?>>Active
-                                                </option>
-                                                <option value="upcoming" <?php echo ($status === 'upcoming') ? 'selected' : ''; ?>>
-                                                    Upcoming</option>
-                                            </select>
-                                        </div>
-                                        <button type="submit" name="update_status" class="save-btn">Update
-                                            Status</button>
-                                    </form>
+                                <div class="evaluation-status">
+                                    <!-- Update Status Form -->
+                                    <div class="mt-4">
+                                        <h3>Update Evaluation Status</h3>
+                                        <form action="update_evaluation.php" method="post" onsubmit="return confirmUpdate();">
+                                            <input type="hidden" name="period_id"
+                                                value="<?php echo htmlspecialchars($current_evaluation['period_id']); ?>">
+                                            <div class="form-group">
+                                                <label for="status"><p>Status:</p></label>
+                                                <select class="form-control" id="status" name="status" required>
+                                                    <option value="completed" <?php echo ($status === 'completed') ? 'selected' : ''; ?>>
+                                                        Completed</option>
+                                                    <option value="active" <?php echo ($status === 'active') ? 'selected' : ''; ?>>
+                                                        Active</option>
+                                                    <option value="upcoming" <?php echo ($status === 'upcoming') ? 'selected' : ''; ?>>
+                                                        Upcoming</option>
+                                                </select>
+                                            </div>
+                                            <button class="add-btn" button type="submit" name="update_status">
+                                                <img src="../../../frontend/assets/icons/update.svg">&nbsp;Update Status&nbsp;
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

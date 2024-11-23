@@ -73,6 +73,7 @@
                 bar: { 
                     groupWidth: '50%' 
                 },
+                tooltip: {isHtml: true},
                 animation: {
                     duration: 1000,
                     easing: 'inAndOut'
@@ -114,6 +115,9 @@
                     position: 'bottom',  // Place the legend below the chart
                     alignment: 'center',  // Center the legend horizontally
                     textStyle: { fontSize: 14, color: '#666' }  // Adjust legend text style
+                },
+                tooltip: {
+                    isHtml: true
                 },
                 chartArea: {
                     left: 20,
