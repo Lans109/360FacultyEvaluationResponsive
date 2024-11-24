@@ -4,8 +4,9 @@ include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
 
 // Check if criteria_id is set
-if (isset($_POST['criteria_id'])) {
-    $criteria_id = $_POST['criteria_id'];
+if (isset($_GET['criteria_id'])) {
+    $criteria_id = $_GET['criteria_id'];
+    $survey_id = $_GET['survey_id'];
 
     // Prepare and execute the delete query
     $delete_query = "DELETE FROM questions_criteria WHERE criteria_id = ?";
@@ -17,21 +18,21 @@ if (isset($_POST['criteria_id'])) {
         
         if ($result) {
             // Redirect back to the question management page with success message
-            header("Location: survey.php?message=Criteria+deleted+successfully");
+            header("Location: view_survey.php?survey_id=$survey_id");
         } else {
             // Redirect back with error message
-            header("Location: survey.php?message=Error+deleting+criteria");
+            header("Location: view_survey.php?survey_id=$survey_id");
         }
 
         mysqli_stmt_close($stmt);
     } else {
         // Redirect back with error message
-        header("Location: survey.php?message=Error+preparing+delete+query");
+        header("Location: view_survey.php?survey_id=$survey_id");
     }
 
     mysqli_close($con);
 } else {
-    // Redirect back if criteria_id is not provided
-    header("Location: survey.php?message=No+criteria+id+provided");
+    // Redirect back if survey_id is not provided
+    header("Location: view_survey.php?survey_id=$survey_id");
 }
 ?>

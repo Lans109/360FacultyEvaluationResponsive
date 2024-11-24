@@ -79,20 +79,20 @@ if ($resultFaculty->num_rows > 0) {
                         $evaluationQuestions = [];
 
                         $sqlQuestions = "
-                           SELECT 
-                                q.question_code, 
-                                q.question_id,
-                                q.criteria_id,
-                                qc.description AS criteria_description,
-                                q.question_text
-                            FROM 
-                                questions q
-                            JOIN
-                                questions_criteria qc ON qc.criteria_id = q.criteria_id
-                            WHERE 
-                                q.survey_id = ?
-                            ORDER BY
-                                q.criteria_id;
+                        SELECT 
+                            q.question_code, 
+                            q.question_id,
+                            q.criteria_id,
+                            qc.description AS criteria_description,
+                            q.question_text
+                        FROM 
+                            questions q
+                        JOIN
+                            questions_criteria qc ON qc.criteria_id = q.criteria_id
+                        WHERE 
+                            qc.survey_id = ? -- Change from q.survey_id to qc.survey_id
+                        ORDER BY
+                            q.criteria_id;
                         ";
 
                         $stmtQuestions = $con->prepare($sqlQuestions);

@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Validate inputs
     if (!empty($survey_id) && !empty($question_id)) {
-        // Delete the question from the database
+        // Delete the question from the questions table
         $delete_query = "
             DELETE FROM questions
-            WHERE question_id = '$question_id' AND survey_id = '$survey_id'
+            WHERE question_id = '$question_id'
         ";
 
         if (mysqli_query($con, $delete_query)) {

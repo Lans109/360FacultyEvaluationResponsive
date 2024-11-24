@@ -63,6 +63,7 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
                     <div id="chart_div_chair" style="width: 600px; height: 400px; visibility: hidden; position: absolute;"></div>
                     <div id="chart_div_self" style="width: 600px; height: 400px; visibility: hidden; position: absolute;"></div>
                     <div class="charts">
+                    <div id="chart_div_overall"></div>
                         <div id="rating">
                         <form action="generate_summary.php" method="post">
                         <div class="rating"><?= round($overallTotal, 2) ?></div>
@@ -97,7 +98,7 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
                             
                         </form>
                         </div> 
-                        <div id="chart_div_overall"></div>
+                        
                         <div id="combined_div_overall"></div>
                     </div>
                 

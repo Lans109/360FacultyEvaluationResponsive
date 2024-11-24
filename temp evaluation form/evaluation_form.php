@@ -40,7 +40,17 @@ if ($resultCourses->num_rows > 0) {
 
 // Fetch questions for the selected survey
 $questions = [];
-$sqlQuestions = "SELECT question_id, question_code, question_text FROM questions WHERE survey_id = ?";
+$sqlQuestions = "
+    SELECT 
+        q.question_id, 
+        q.question_code, 
+        q.question_text 
+    FROM 
+        questions q
+    JOIN 
+        questions_criteria qc ON q.criteria_id = qc.criteria_id
+    WHERE 
+        qc.survey_id = ?";  // Update to use qc.survey_id
 $stmt = $con->prepare($sqlQuestions);
 $stmt->bind_param("i", $survey_id);
 $stmt->execute();
