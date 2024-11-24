@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $question_code = mysqli_real_escape_string($con, $_POST['question_code']);
     $question_text = mysqli_real_escape_string($con, $_POST['question_text']);
     
-    // Insert the new question into the database
+    // Insert the new question into the questions table (no survey_id)
     $insert_query = "
-        INSERT INTO questions (survey_id, criteria_id, question_code, question_text)
-        VALUES ('$survey_id', '$criteria_id', '$question_code', '$question_text')
+        INSERT INTO questions (criteria_id, question_code, question_text)
+        VALUES ('$criteria_id', '$question_code', '$question_text')
     ";
     
     if (mysqli_query($con, $insert_query)) {

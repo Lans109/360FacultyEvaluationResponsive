@@ -232,6 +232,7 @@ main {
 .survey-banner {
     margin: 10px;
     border: 1px solid #ddd;
+    border-left: #631111 solid 20px;
     padding: 20px;
     border-radius: 3px;
     display: flex;
@@ -247,12 +248,12 @@ main {
     margin: 0;
     font-size: 20px;
     font-weight: bold;
-    color: #666;
+    color: #2a2723;
 }
 
 .survey-banner .survey-icon{
     width: 50px;
-    opacity: .5;
+    opacity: 1;
 }
 
 .survey-banner button {
@@ -261,10 +262,8 @@ main {
 }
 
 .survey-banner p{
-    font-family: myFont;
+    margin-top: 0;
     color: #666;
-    opacity: .5;
-    font-size: 15px;
 }
 
 .banner-profile {
@@ -615,7 +614,7 @@ main {
 /* admin-pages elements */
 .upperContent {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     /* Aligns elements to the right */
     align-items: center;
     /* Centers vertically */
@@ -1141,6 +1140,12 @@ textarea {
     max-width: calc(60% - 40px);
 }
 
+.survey-box {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 20px;
+    margin-top: 10px;
+}
 .department-box h3 {
     color: #2A2723;
 }
@@ -1236,6 +1241,7 @@ textarea {
     text-align: center;
     font-size: 15px;
     font-family: myFont2;
+    transition-duration: .2s;
 }
 
 
@@ -1299,11 +1305,58 @@ textarea {
     width: 20px; /* Adjust the width of the icon */
     margin-left: 5px; /* Add space between the number and the icon */
 }
-
+.criteria-header {
+    display: flex;
+    justify-content: space-between;
+}
 .criteria-title {
-    margin: 20px;
+    margin-bottom: 20px;
     color: #666;
 }
+
+.add-criteria-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.add-criteria-btn {
+    background-color: #4CAF50; /* Green background */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.add-criteria-btn:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+.legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.rating-legend {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 50px;
+}
+
+.legend p {
+    text-align: center;
+    font-family: myFont;
+    font-size: 15px;
+    opacity: .5;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 @font-face {
     font-family: myFont;
     src: url(../assets/font/Silka-Regular.otf);

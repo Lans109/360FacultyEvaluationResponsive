@@ -1,21 +1,24 @@
 <?php
-// Include database connection
 include_once "../../../config.php";
+include '../../db/dbconnect.php';
 
-include ROOT_PATH . '/backend/db/dbconnect.php';
-
-// Check if the form was submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the form input
-    $description = mysqli_real_escape_string($con, $_POST['description']);
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $survey_id = mysqli_real_escape_string($con, $_POST['survey_id']);
+    $criteria_description = mysqli_real_escape_string($con, $_POST['criteria_description']);
 
     // Insert the new criteria into the database
-    $query = "INSERT INTO questions_criteria (description) VALUES ('$description')";
-    
+    $query = "
+        INSERT INTO questions_criteria (survey_id, description) 
+        VALUES ('$survey_id', '$criteria_description')
+    ";
+
     if (mysqli_query($con, $query)) {
-        // Redirect back to the previous page (or a success page)
-        header("Location: survey.php?success=true");
+        // Redirect back to the survey page with success
+        header("Location: view_survey.php?survey_id=$survey_id");
+        exit;
     } else {
+        // Error handling
         echo "Error: " . mysqli_error($con);
     }
 }

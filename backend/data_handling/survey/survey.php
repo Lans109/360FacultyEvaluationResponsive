@@ -5,10 +5,18 @@ include ROOT_PATH . '/backend/db/dbconnect.php';
 
 // Fetch survey data and count questions
 $query = "
-    SELECT s.survey_id, s.survey_name, COUNT(q.question_id) AS total_questions
-    FROM surveys s
-    LEFT JOIN questions q ON s.survey_id = q.survey_id
-    GROUP BY s.survey_id
+    SELECT 
+        s.survey_id, 
+        s.survey_name, 
+        COUNT(q.question_id) AS total_questions
+    FROM 
+        surveys s
+    LEFT JOIN 
+        questions_criteria qc ON s.survey_id = qc.survey_id
+    LEFT JOIN 
+        questions q ON q.criteria_id = qc.criteria_id
+    GROUP BY 
+        s.survey_id
 ";
 $result = mysqli_query($con, $query);
 
@@ -40,6 +48,7 @@ if (!$result) {
             <div><h1>Survey Management</h1></div>
         </div>
         <div class="content">
+
             <?php while ($survey = mysqli_fetch_assoc($result)): ?>
                 <div class="survey-banner">
                      <?php 

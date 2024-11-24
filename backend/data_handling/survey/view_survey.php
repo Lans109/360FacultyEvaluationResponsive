@@ -20,27 +20,32 @@ $survey = mysqli_fetch_array($survey_result);
 
 // Fetch questions grouped by criteria
 $questions_query = "
-    SELECT 
-        q.question_id,
-        q.question_text,
-        q.question_code,
-        c.criteria_id,
-        c.description
-    FROM 
-        questions q
-    JOIN
-        questions_criteria c ON q.criteria_id = c.criteria_id
-    WHERE 
-        q.survey_id = '$survey_id'
-    ORDER BY c.description
+SELECT 
+    q.question_id,
+    q.question_text,
+    q.question_code,
+    c.criteria_id,
+    c.description
+FROM 
+    questions_criteria c
+LEFT JOIN 
+    questions q ON q.criteria_id = c.criteria_id
+WHERE 
+    c.survey_id = '$survey_id'
+ORDER BY 
+    c.description;
 ";
 $questions_result = mysqli_query($con, $questions_query);
 
+$num_rows = mysqli_num_rows($questions_result);
 // Group questions by criteria
 $questions_by_criteria = [];
 while ($question = mysqli_fetch_assoc($questions_result)) {
     $questions_by_criteria[$question['description']][] = $question;
 }
+
+$num_criteria = count($questions_by_criteria);
+
 ?>
 
 <!DOCTYPE html>
@@ -64,106 +69,181 @@ while ($question = mysqli_fetch_assoc($questions_result)) {
             <div><h1><?= htmlspecialchars($survey['survey_name']); ?></h1></div>
         </div>
         <div class="content">
+                <div class="legend">
+                    <div>
+                        <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Question,' : 'Questions, ' ?><?= $num_criteria ?><?= $num_criteria == 1 ? ' Criteria,' : ' Criterias' ?></p>
+                    </div>
+                        <div class="rating-legend">
+                            <div>
+                                <p>5: Outstanding</p>
+                            </div>
+                            <div>
+                                <p>4: Very Good</p>
+                            </div>
+                            <div>
+                                <p>3: Satisfactory</p>
+                            </div>
+                            <div>
+                                <p>2: Needs Improvement</p>
+                            </div>
+                            <div>
+                                <p>1: Unsatisfactory</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button id="openModalBtn-add-criteria" class="add-btn" data-toggle="modal" data-target="#addCriteriaModal">
+                                <img src="../../../frontend/assets/icons/add.svg">&nbsp;Criteria&nbsp;
+                            </button>
+                        </div>
+                </div>
             <?php foreach ($questions_by_criteria as $criteria_description => $questions): ?>
-                <div class="criteria-title"><?= htmlspecialchars($criteria_description); ?></div>
-                <div class="table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width="100px">Q. Code</th>
-                                <th>Description</th>
-                                <th width="500px"></th>
-                                <th width="100px">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($questions as $question): ?>
+                <div class="survey-box">
+                    <div class="criteria-header">
+                        <div class="criteria-title"><?= htmlspecialchars($criteria_description); ?></div>
+                            <div>
+                                <a href="delete_criteria.php?criteria_id=<?= $questions[0]['criteria_id']; ?>&survey_id=<?= $survey_id; ?>">
+                                    <img src="../../../frontend/assets/icons/close.svg" alt="Delete">
+                                </a>
+                            </div>
+                    </div>
+                    <div class="table">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><?= htmlspecialchars($question['question_code']); ?></td>
-                                    <td><?= htmlspecialchars($question['question_text']); ?></td>
-                                    <td>
-                                        <div class="visual-rating">
-                                            <i class="fa fa-circle-thin" aria-hidden="true"></i>
-                                            <i class="fa fa-circle-thin" aria-hidden="true"></i>
-                                            <i class="fa fa-circle-thin" aria-hidden="true"></i>
-                                            <i class="fa fa-circle-thin" aria-hidden="true"></i>
-                                            <i class="fa fa-circle-thin" aria-hidden="true"></i>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="edit-btn" data-toggle="modal" 
-                                                data-target="#editModal<?= $question['question_id']; ?>" 
-                                                data-question_id="<?= $question['question_id']; ?>" 
-                                                data-question_text="<?= htmlspecialchars($question['question_text']); ?>" 
-                                                data-criteria_id="<?= $question['criteria_id']; ?>" 
-                                                data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
-                                                <img src="../../../frontend/assets/icons/edit.svg">
-                                            </button>
-                                            <a href="delete_question.php?question_id=<?= $question['question_id']; ?>&survey_id=<?= $survey_id; ?>" 
-                                            onclick="openDeleteConfirmationModal(event, this)" class="delete-btn">
-                                                <img src="../../../frontend/assets/icons/delete.svg">
-                                            </a>
-                                        </div>
-                                    </td>
+                                    <th width="100px">Q. Code</th>
+                                    <th>Description</th>
+                                    <th width="500px"></th>
+                                    <th width="100px">Actions</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($questions as $question): ?>
+                                    <?php if (empty($question['question_code']) || empty($question['question_text'])): ?>
+                                        <tr>
+                                            <td colspan="4">No question available on this criteria.</td>
+                                        </tr>
+                                        <?php else: ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($question['question_code']); ?></td>
+                                            <td><?= htmlspecialchars($question['question_text']); ?></td>
+                                            <td>
+                                                <div class="visual-rating">
+                                                    <i class="fa fa-circle-thin" aria-hidden="true"></i>
+                                                    <i class="fa fa-circle-thin" aria-hidden="true"></i>
+                                                    <i class="fa fa-circle-thin" aria-hidden="true"></i>
+                                                    <i class="fa fa-circle-thin" aria-hidden="true"></i>
+                                                    <i class="fa fa-circle-thin" aria-hidden="true"></i>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="action-btns">
+                                                    <button class="edit-btn" data-toggle="modal" 
+                                                        data-target="#editModal<?= $question['question_id']; ?>" 
+                                                        data-question_id="<?= $question['question_id']; ?>" 
+                                                        data-question_text="<?= htmlspecialchars($question['question_text']); ?>" 
+                                                        data-criteria_id="<?= $question['criteria_id']; ?>" 
+                                                        data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
+                                                        <img src="../../../frontend/assets/icons/edit.svg">
+                                                    </button>
+                                                    <a href="delete_question.php?question_id=<?= $question['question_id']; ?>&survey_id=<?= $survey_id; ?>" onclick="openDeleteConfirmationModal(event, this)" class="delete-btn">
+                                                        <img src="../../../frontend/assets/icons/delete.svg">
+                                                    </a>
 
-                                <!-- Modal for editing question -->
-                                <div class="modal fade" id="editModal<?= $question['question_id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Edit Question</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="update_question.php" method="POST">
-                                                    <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
-                                                    <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
 
-                                                    <!-- Edit Question Code -->
-                                                    <div class="form-group">
-                                                        <label>Question Code</label>
-                                                        <input type="text" class="form-control" name="question_code" value="<?= htmlspecialchars($question['question_code']); ?>" required>
-                                                    </div>
+                                    <!-- Modal for editing question -->
+                                    <div class="modal fade" id="editModal<?= $question['question_id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Edit Question</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="update_question.php" method="POST">
+                                                        <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
+                                                        <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
+                                                        <input type="hidden" name="criteria_id" value="<?= $question['criteria_id']; ?>"> <!-- Add this line -->
+                                                        <input type="hidden" name="survey_id" value="<?= $survey_id; ?>"> <!-- Add this line -->
 
-                                                    <!-- Edit Question Text -->
-                                                    <div class="form-group">
-                                                        <label>Question Text</label>
-                                                        <textarea class="form-control" name="question_text" rows="3" required><?= htmlspecialchars($question['question_text']); ?></textarea>
-                                                    </div>
+                                                        <!-- Edit Question Code -->
+                                                        <div class="form-group">
+                                                            <label>Question Code</label>
+                                                            <input type="text" class="form-control" name="question_code" value="<?= htmlspecialchars($question['question_code']); ?>" required>
+                                                        </div>
 
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="save-btn">Save changes</button>
-                                                    </div>
-                                                </form>
+                                                        <!-- Edit Question Text -->
+                                                        <div class="form-group">
+                                                            <label>Question Text</label>
+                                                            <textarea class="form-control" name="question_text" rows="3" required><?= htmlspecialchars($question['question_text']); ?></textarea>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="save-btn">Save changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                            <?php endforeach; ?>
-                            <tr>
-                            <td colspan="4" class="add-question">
-                                <div>
-                                    <button class="insert-btn full-td-btn" data-toggle="modal" data-target="#addQuestionModal" 
-                                        data-criteria_id="<?= $questions[0]['criteria_id']; ?>" 
-                                        data-criteria_description="<?= htmlspecialchars($criteria_description); ?>"
-                                        onclick="setCriteriaData(this)">
-                                        <img src="../../../frontend/assets/icons/add.svg">
-                                    </button>
-                                </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                <?php endforeach; ?>
+                                <tr>
+                                <td colspan="4" class="add-question">
+                                    <div>
+                                        <button class="insert-btn full-td-btn" data-toggle="modal" data-target="#addQuestionModal" 
+                                            data-criteria_id="<?= $questions[0]['criteria_id']; ?>" 
+                                            data-criteria_description="<?= htmlspecialchars($criteria_description); ?>"
+                                            onclick="setCriteriaData(this)">
+                                            <img src="../../../frontend/assets/icons/add.svg">
+                                        </button>
+                                    </div>
+                                </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             <?php endforeach; ?>
+            
         </div>
     </main>
+
+    <!-- Modal for adding new criteria -->
+    <div class="modal fade" id="addCriteriaModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Criteria</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="add_criteria.php" method="POST">
+                        <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
+
+                        <!-- New Criteria Description -->
+                        <div class="form-group">
+                            <label>Criteria Description</label>
+                            <input type="text" class="form-control" name="criteria_description" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                            <button type="submit" class="save-btn">Save Criteria</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal for adding new question -->
     <div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-hidden="true">
