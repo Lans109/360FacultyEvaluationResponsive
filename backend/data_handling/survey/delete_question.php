@@ -1,40 +1,33 @@
 <?php
-// Include the database connection
-include_once "../../../config.php";
+include '../../db/dbconnect.php';
 
-include ROOT_PATH . '/backend/db/dbconnect.php';
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Get question_id and survey_id from the URL
+    $survey_id = isset($_GET['survey_id']) ? mysqli_real_escape_string($con, $_GET['survey_id']) : '';
+    $question_id = isset($_GET['question_id']) ? mysqli_real_escape_string($con, $_GET['question_id']) : '';
 
-// Check if question_id is provided in the URL (through GET)
-if (isset($_POST['question_id'])) {
-    // Get the question ID from the URL
-    $question_id = $_POST['question_id'];
+    // Validate inputs
+    if (!empty($survey_id) && !empty($question_id)) {
+        // Delete the question from the database
+        $delete_query = "
+            DELETE FROM questions
+            WHERE question_id = '$question_id' AND survey_id = '$survey_id'
+        ";
 
-    // Validate the input (ensure it's a number)
-    if (!is_numeric($question_id)) {
-        echo "Invalid question ID.";
-        exit;
-    }
-
-    // Escape the question_id to prevent SQL injection
-    $question_id = mysqli_real_escape_string($con, $question_id);
-
-    // Prepare the SQL query to delete the question
-    $sql = "DELETE FROM questions WHERE question_id = '$question_id'";
-
-    // Execute the query
-    if (mysqli_query($con, $sql)) {
-        // If deletion is successful, redirect to the question management page with a success message
-        header("Location: survey.php?message=Question deleted successfully");
-        exit();
+        if (mysqli_query($con, $delete_query)) {
+            // Redirect to the survey questions page with a success message
+            header("Location: view_survey.php?survey_id=$survey_id&status=success");
+        } else {
+            // Log the error and show a user-friendly message
+            error_log("Error deleting question: " . mysqli_error($con));
+            header("Location: view_survey.php?survey_id=$survey_id&status=error");
+        }
     } else {
-        // If deletion fails, display an error message
-        echo "Error deleting question: " . mysqli_error($con);
+        // Redirect with an error message if required data is missing
+        header("Location: view_survey.php?survey_id=$survey_id&status=invalid");
     }
 } else {
-    // If no question_id is provided, show an error
-    echo "No question ID specified.";
+    // Redirect with an error message if the request method is invalid
+    header("Location: view_survey.php?status=method_error");
 }
-
-// Close the database connection
-mysqli_close($con);
 ?>

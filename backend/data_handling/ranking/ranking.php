@@ -26,7 +26,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
 
     <main>
         <div class="upperMain">
-            <div><h1>Top Faculty</h1></div>
+            <div><h1>Faculty Ranking</h1></div>
         </div>
         <div class="content">
             <div class="departments-wrapper">

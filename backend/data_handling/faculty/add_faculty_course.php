@@ -32,6 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 mysqli_close($con);
 
 // Redirect back to the faculty management page (adjust the URL as needed)
-header("Location: faculty.php");
+header("Location: view_faculty_profile.php?faculty_id=$faculty_id");
 exit;
 ?>
