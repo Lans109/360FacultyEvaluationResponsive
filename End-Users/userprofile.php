@@ -1,4 +1,5 @@
 <?php
+// userprofile.php
 session_start();
 include('databasecon.php');
 
@@ -147,290 +148,260 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="styles.css">
     <script>
-        // Display success or error message in a popup
-        window.onload = function() {
-            <?php if (isset($_SESSION['profile_update_success'])): ?>
-                alert("<?php echo $_SESSION['profile_update_success']; ?>");
-                <?php unset($_SESSION['profile_update_success']); ?>
-            <?php elseif (isset($_SESSION['profile_update_error'])): ?>
-                alert("<?php echo $_SESSION['profile_update_error']; ?>");
-                <?php unset($_SESSION['profile_update_error']); ?>
-            <?php endif; ?>
-        };
-        // Open the modal when the user clicks on the profile image
-        function openModal() {
-            document.getElementById('myModal').style.display = 'block';
-        }
-
-        // Close the modal when the user clicks on "Cancel"
-        function closeModal() {
-            document.getElementById('myModal').style.display = 'none';
-        }
-
-        // Close the modal if the user clicks anywhere outside the modal
-        window.onclick = function(event) {
-            var modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        };
-    </script>  
-        <style>
-/* Reset Styles */
-/* Reset Styles */
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
-
-.header {
-    text-align: center;
-    background: #800000;
-    color: white;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.header h1 {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.header nav {
-    margin-top: 10px;
-}
-
-.header nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 1rem;
-}
-
-.header nav a:hover {
-    text-decoration: underline;
-}
-
-/* Container Styling */
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Profile Card Styling */
-.card {
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    text-align: center;
-    margin-top: 30px;
-}
-
-.card h2 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #800000;
-    margin: 15px 0;
-}
-
-/* Profile Picture Styling */
-.profile-pic {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #800000;
-    margin-bottom: 20px;
-    transition: transform 0.3s ease;
-}
-
-.profile-pic:hover {
-    transform: scale(1.1);
-}
-
-/* User Info Section */
-.user-info {
-    margin-top: 30px;
-    text-align: left;
-}
-
-.user-info h3 {
-    font-size: 1.5rem;
-    color: #800000;
-    margin-bottom: 10px;
-}
-
-.user-info p {
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.user-info strong {
-    color: #800000;
-}
-
-/* Button Styling */
-button {
-    background-color: #800000;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #a00000;
-}
-
-/* Profile Picture Upload Styling */
-.profile-upload {
-    margin-top: 30px;
-}
-
-.profile-upload input[type="file"] {
-    font-size: 1rem;
-    margin-bottom: 20px;
-    padding: 10px;
-}
-
-.profile-upload button {
-    background-color: #800000;
-    padding: 12px 24px;
-    font-size: 1rem;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.profile-upload button:hover {
-    background-color: #a00000;
-}
-/* Modal Styles */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Enable scrolling if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 70%; /* Could be more or less, depending on screen size */
-    max-width: 500px;
-    border-radius: 10px;
-}
-
-.modal-header {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #800000;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.modal-body {
-    font-size: 1rem;
-    text-align: center;
-}
-
-.modal-footer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Profile Picture Styling */
-.profile-pic {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #800000;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.profile-pic:hover {
-    transform: scale(1.05);
-}
-
-/* Button Styling */
-button {
-    background-color: #800000;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #a00000;
-}
-
-/* Responsive Design for Modal */
-@media (max-width: 768px) {
-    .modal-content {
-        width: 90%;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
+    // Display success or error message in a popup
+    window.onload = function() {
+        <?php if (isset($_SESSION['profile_update_success'])): ?>
+        alert("<?php echo $_SESSION['profile_update_success']; ?>");
+        <?php unset($_SESSION['profile_update_success']); ?>
+        <?php elseif (isset($_SESSION['profile_update_error'])): ?>
+        alert("<?php echo $_SESSION['profile_update_error']; ?>");
+        <?php unset($_SESSION['profile_update_error']); ?>
+        <?php endif; ?>
+    };
+    // Open the modal when the user clicks on the profile image
+    function openModal() {
+        document.getElementById('myModal').style.display = 'block';
     }
 
-    .card {
-        padding: 20px;
+    // Close the modal when the user clicks on "Cancel"
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
     }
 
-    .profile-pic {
-        width: 120px;
-        height: 120px;
+    // Close the modal if the user clicks anywhere outside the modal
+    window.onclick = function(event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+    </script>
+    <style>
+    /* Reset Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Poppins", Arial, sans-serif;
+        background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    /* Header Section */
+    .header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        padding: 1.5rem 0;
+        text-align: center;
+        color: var(--white);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow-small);
     }
 
     .header h1 {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        padding: 0.5rem 1rem;
+        background-color: #7D0006;
+        color: var(--white);
+        display: inline-block;
+        border-radius: 8px;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .user-info h3 {
-        font-size: 1.2rem;
+    .header nav {
+        margin-top: 0.5rem;
     }
-}
 
+    .header nav a {
+        color: #000;
+        text-decoration: none;
+        margin: 0 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: var(--transition-speed);
+    }
+
+    .header nav a:hover {
+        color: var(--accent-color);
+        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Container */
+    .container {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: var(--secondary-color);
+        border-radius: 12px;
+        box-shadow: var(--shadow-large);
+    }
+
+    /* Profile Card */
+    .card {
+        background: var(--white);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: center;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+        /* Border shadow for an elevated effect */
+        border: 3px solid rgba(125, 0, 6, 0.1);
+        /* Subtle border color matching the highlight theme */
+        transition: var(--transition-speed);
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        /* Lift the card slightly when hovered */
+        box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
+        /* Stronger shadow on hover */
+        border: 3px solid rgba(125, 0, 6, 0.3);
+        /* Darker border on hover */
+    }
+
+    .card h1 {
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .card hr {
+        border: 0;
+        height: 1px;
+        background: var(--primary-light);
+        margin: 1.5rem 0;
+    }
+
+    /* Profile Picture */
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid var(--primary-light);
+        box-shadow: var(--shadow-small);
+        transition: var(--transition-speed);
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .profile-pic:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Button Styles */
+    button {
+        background: var(--primary-color);
+        color: var(--white);
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition-speed);
+        box-shadow: var(--shadow-small);
+    }
+
+    button:hover {
+        background: var(--primary-light);
+        box-shadow: var(--shadow-large);
+    }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: var(--shadow-large);
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-header {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .modal-footer {
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 1.8rem;
+        }
+
+        .card h1 {
+            font-size: 2rem;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+        }
+
+        button {
+            font-size: 0.9rem;
+            padding: 0.7rem 1.2rem;
+        }
+    }
     </style>
 </head>
+
 <body>
-    <div class="header"> 
+    <div class="header">
         <h1>Profile Information</h1>
         <nav>
             <?php
@@ -457,22 +428,23 @@ button:hover {
             <a href="logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
         </nav>
     </div>
-    
+
     <div class="container">
         <div class="card">
             <h1>About Me</h1>
             <div class="profile">
                 <!-- Display profile image and make it clickable -->
-                <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic" onclick="openModal()">
-                
+                <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic"
+                    onclick="openModal()">
+
                 <!-- Display Full Name -->
                 <h2><?php echo htmlspecialchars($name); ?></h2>
 
-                
+
             </div>
-                <div class="card" style="text-align:left; margin">
-                    <!-- Display user role -->
-                    <?php 
+            <div class="card" style="text-align:left; margin">
+                <!-- Display user role -->
+                <?php 
                         if ($user_type == 'students'){
                             echo "<p><strong>Role: </strong>Student</p>";
                         }
@@ -483,38 +455,38 @@ button:hover {
                             echo "<p><strong>Role: </strong>Program Chair</p>";
                         }
                     ?>
-                    <!-- Display Email as "Username" -->
-                    <p><strong>Email (Username):</strong> <?php echo htmlspecialchars($email); ?></p>
+                <!-- Display Email as "Username" -->
+                <p><strong>Email (Username):</strong> <?php echo htmlspecialchars($email); ?></p>
 
-                    <!-- Display department only for faculty and program chairs -->
-                    <?php if ($user_type == 'faculty' || $user_type == 'program_chair'): ?>
-                            <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>     
-                    <?php endif; ?>
-                    <?php if ($user_type == 'students'): ?>
-                    <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
-                    <?php endif; ?>
-                </div>
+                <!-- Display department only for faculty and program chairs -->
+                <?php if ($user_type == 'faculty' || $user_type == 'program_chair'): ?>
+                <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
+                <?php endif; ?>
+                <?php if ($user_type == 'students'): ?>
+                <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
+                <?php endif; ?>
+            </div>
 
-                <div class="card" style="text-align:left; margin">
-                    <h3>School Information</h3>
-                    <hr>
-                    <p>
-                        <span style="font-weight:bold;">School Name: </span> 
-                        <span>(LPU-C) Lyceum of the Philippines University Cavite.</span>
-                    </p>
-                    <p>
-                        <span style="font-weight:bold;">Time Zone</span> 
-                        <span>Asia/Honkong</span>
-                    </p>
-                    <p>
-                        <span style="font-weight:bold;">Country:</span> 
-                        <span>Philippines</span>
-                    </p>
-                    <p>
-                        <span style="font-weight:bold;">City/Town:</span> 
-                        <span>Cavite City</span>
-                    </p>
-                </div>
+            <div class="card" style="text-align:left; margin">
+                <h3>School Information</h3>
+                <hr>
+                <p>
+                    <span style="font-weight:bold;">School Name: </span>
+                    <span>(LPU-C) Lyceum of the Philippines University Cavite.</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold;">Time Zone</span>
+                    <span>Asia/Honkong</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold;">Country:</span>
+                    <span>Philippines</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold;">City/Town:</span>
+                    <span>Cavite City</span>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -537,4 +509,5 @@ button:hover {
         </div>
     </div>
 </body>
+
 </html>

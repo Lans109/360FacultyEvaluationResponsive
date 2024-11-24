@@ -1,21 +1,18 @@
-/* Core Variables */
+/* Root Variables for Styling */
 :root {
-    --primary: #800000;
-    --primary-dark: #600000;
-    --secondary: #FFD700;
-    --text-primary: #2D3748;
-    --text-secondary: #718096;
-    --bg-primary: #f8f9fa;
+    --primary-color: #7D0006; /* Updated highlight color */
+    --primary-light: #a0000a;
+    --primary-dark: #5c0004;
+    --secondary-color: #f5f5f5;
+    --accent-color: #f39c12;
+    --text-color: #2c3e50;
     --white: #ffffff;
-    --gradient-primary: linear-gradient(135deg, #800000 0%, #b30000 100%);
-    --gradient-hover: linear-gradient(135deg, #b30000 0%, #800000 100%);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
-    --border-radius: 15px;
+    --shadow-small: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-large: 0px 10px 20px rgba(0, 0, 0, 0.15);
+    --transition-speed: 0.3s ease-in-out;
 }
 
-/* Reset & Base Styles */
+/* Reset Styles */
 * {
     margin: 0;
     padding: 0;
@@ -23,318 +20,200 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
+    font-family: "Poppins", Arial, sans-serif;
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
+    color: var(--text-color);
     line-height: 1.6;
 }
 
-/* Header Styling */
+/* Header Section */
 .header {
-    background: var(--gradient-primary);
-    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    padding: 1.5rem 0; /* Increased padding for better emphasis */
+    text-align: center;
     color: var(--white);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-}
-
-.header::before {
-    content: '';
-    position: absolute;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="20" fill="rgba(255,255,255,0.05)"/></svg>');
-    background-size: 100px 100px;
-    opacity: 0.1;
+    z-index: 1000;
+    box-shadow: var(--shadow-small);
 }
 
 .header h1 {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    animation: slideDown 0.5s ease-out;
+    font-weight: 700;
+    margin: 0;
+    padding: 0.5rem 1rem; /* Added padding inside the highlight */
+    background-color: var(--primary-color); /* Highlight background */
+    color: var(--white);
+    display: inline-block; /* Makes the highlight fit the text */
+    border-radius: 8px; /* Rounded corners for the highlight */
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for emphasis */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .header nav {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    margin-top: 0.5rem;
 }
 
 .header nav a {
     color: var(--white);
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    margin: 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: var(--transition-speed);
 }
 
-.header nav a::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+.header nav a:hover {
+    color: var(--accent-color);
+    text-shadow: 0px 2px 4px rgba(255, 255, 255, 0.5);
 }
 
-.header nav a:hover::before {
-    left: 0;
-}
-
-/* Container & Card Styling */
+/* Container */
 .container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 1rem;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-large);
 }
 
+/* Profile Card */
 .card {
     background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
+    border-radius: 15px;
     padding: 2rem;
-    margin-bottom: 2rem;
-    transform: translateY(0);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    margin: 2rem 0;
+    text-align: center;
+    box-shadow: var(--shadow-large);
+    transition: var(--transition-speed);
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-lg), 0 8px 24px rgba(128, 0, 0, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: var(--gradient-primary);
+.card h1 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Profile Section */
-.profile {
-    text-align: center;
-    padding: 2rem 0;
+.card p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
 }
 
+.card hr {
+    border: 0;
+    height: 1px;
+    background: var(--primary-light);
+    margin: 1.5rem 0;
+}
+
+/* Profile Picture */
 .profile-pic {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    border: 5px solid var(--primary);
-    box-shadow: var(--shadow-lg);
-    margin-bottom: 2rem;
+    border: 5px solid var(--primary-light);
+    box-shadow: var(--shadow-small);
+    transition: var(--transition-speed);
+    object-fit: cover;
     cursor: pointer;
-    transition: all 0.3s ease;
-    animation: pulse 2s infinite;
 }
 
 .profile-pic:hover {
-    transform: scale(1.05);
-    border-color: var(--secondary);
+    transform: scale(1.1);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* User Info Styling */
-.user-info {
-    background: var(--bg-primary);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    margin-top: 2rem;
+/* Button Styles */
+button {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-speed);
+    box-shadow: var(--shadow-small);
 }
 
-.user-info h3 {
-    color: var(--primary);
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    position: relative;
-    padding-bottom: 0.5rem;
+button:hover {
+    background: var(--primary-light);
+    box-shadow: var(--shadow-large);
 }
 
-.user-info h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 50px;
-    height: 3px;
-    background: var(--gradient-primary);
-    border-radius: 3px;
-}
-
-.user-info p {
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.user-info strong {
-    color: var(--primary);
-    min-width: 150px;
-}
-
-/* Modal Styling */
+/* Modal */
 .modal {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
     background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
     padding: 2rem;
-    animation: slideUp 0.3s ease-out;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: var(--shadow-large);
+    animation: fadeIn 0.3s ease-out;
 }
 
-.modal-header h3 {
-    color: var(--primary);
-    font-size: 1.8rem;
+.modal-header {
+    font-size: 1.5rem;
+    color: var(--primary-color);
     margin-bottom: 1rem;
+    text-align: center;
 }
 
-.modal-body {
-    margin: 2rem 0;
-}
-
-.modal-body input[type="file"] {
-    width: 100%;
-    padding: 1rem;
-    border: 2px dashed var(--primary);
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-}
-
-/* Button Styling */
-button {
-    background: var(--gradient-primary);
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: var(--shadow-sm);
-}
-
-button:hover {
-    background: var(--gradient-hover);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+.modal-footer {
+    margin-top: 1rem;
+    text-align: center;
 }
 
 /* Animations */
-@keyframes slideDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(128, 0, 0, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(128, 0, 0, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(128, 0, 0, 0); }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .card h1 {
         font-size: 2rem;
     }
 
-    .header nav {
-        gap: 1rem;
-    }
-
-    .header nav a {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
     .profile-pic {
-        width: 150px;
-        height: 150px;
+        width: 120px;
+        height: 120px;
     }
 
-    .card {
-        padding: 1.5rem;
+    button {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.2rem;
     }
-
-    .user-info {
-        padding: 1.5rem;
-    }
-
-    .user-info p {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.2rem;
-    }
-
-    .user-info strong {
-        min-width: auto;
-    }
-}
-
-/* School Info Card */
-.school-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    padding: 1.5rem;
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-}
-
-.school-info h3 {
-    grid-column: 1 / -1;
-    color: var(--primary);
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    position: relative;
-    padding-bottom: 0.5rem;
-}
-
-.school-info h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 50px;
-    height: 3px;
-    background: var(--gradient-primary);
-    border-radius: 3px;
-}
-
-.school-info p {
-    padding: 1rem;
-    background: var(--white);
-    border-radius: 10px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-}
-
-.school-info p:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
 }
