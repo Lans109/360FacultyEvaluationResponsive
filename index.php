@@ -9,7 +9,7 @@
     <title>Login</title>
     <nav class="topnav">
     </nav>
-    <link rel='stylesheet' href="index-style.css">
+    <link rel='stylesheet' href="../End-Users/index-style.css">
     <title>Login - Faculty Evaluation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -53,13 +53,13 @@
 
                     // Check if the 'role' is set and redirect based on it
                     if ($role == 'student') {
-                        header("Location: students_login.php");
+                        header("Location: ../End-Users/students_login.php");
                         exit();
                     } elseif ($role == 'faculty') {
-                        header("Location: faculty_login.php");
+                        header("Location: ../End-Users/faculty_login.php");
                         exit();
                     } elseif ($role == 'program_chair') {
-                        header("Location: program_chair_login.php");
+                        header("Location: ../End-Users/program_chair_login.php");
                         exit();
                     } else {
                         echo "<p class='error-message show'>Invalid role selected!</p>";
