@@ -1,26 +1,26 @@
 <?php
-// Include database connection
-include_once "../../../config.php";
+include '../../db/dbconnect.php';
 
-include ROOT_PATH . '/backend/db/dbconnect.php';
-
-// Check if the form was submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the form inputs
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get the POST data
+    $survey_id = mysqli_real_escape_string($con, $_POST['survey_id']);
+    $criteria_id = mysqli_real_escape_string($con, $_POST['criteria_id']);
     $question_code = mysqli_real_escape_string($con, $_POST['question_code']);
     $question_text = mysqli_real_escape_string($con, $_POST['question_text']);
-    $criteria_id = mysqli_real_escape_string($con, $_POST['criteria']);
-    $survey_id = mysqli_real_escape_string($con, $_POST['survey_id']); // Assuming survey_id is passed in the modal form
-
-    // Insert the new question into the database
-    $query = "INSERT INTO questions (question_code, question_text, criteria_id, survey_id) 
-              VALUES ('$question_code', '$question_text', '$criteria_id', '$survey_id')";
     
-    if (mysqli_query($con, $query)) {
-        // Redirect back to the previous page (or a success page)
-        header("Location: survey.php?success=true");
+    // Insert the new question into the database
+    $insert_query = "
+        INSERT INTO questions (survey_id, criteria_id, question_code, question_text)
+        VALUES ('$survey_id', '$criteria_id', '$question_code', '$question_text')
+    ";
+    
+    if (mysqli_query($con, $insert_query)) {
+        // Redirect to the survey questions page with a success message
+        header("Location: view_survey.php?survey_id=$survey_id&status=success");
     } else {
-        echo "Error: " . mysqli_error($con);
+        // Log the error and show a user-friendly message
+        error_log("Error adding question: " . mysqli_error($con));
+        header("Location: view_survey.php?survey_id=$survey_id&status=error");
     }
 }
 ?>

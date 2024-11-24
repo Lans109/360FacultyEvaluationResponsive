@@ -227,8 +227,44 @@ main {
     border-left: #631111 solid 20px;
     padding: 40px;
     border-radius: 3px;
+}
 
+.survey-banner {
+    margin: 10px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
 
+.survey-info {
+    width: 90%;
+}
+.survey-banner h3{
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #666;
+}
+
+.survey-banner .survey-icon{
+    width: 50px;
+    opacity: .5;
+}
+
+.survey-banner button {
+    margin: 10px;
+    display: flex;
+}
+
+.survey-banner p{
+    font-family: myFont;
+    color: #666;
+    opacity: .5;
+    font-size: 15px;
 }
 
 .banner-profile {
@@ -438,7 +474,6 @@ main {
     }
 }
 
-
 .search-filter .form-group input {
     border-radius: 3px;
     width: 500px;
@@ -588,6 +623,7 @@ main {
     padding: 10px;
     flex-wrap: nowrap;
     /* Ensures all elements stay in one line */
+    margin-bottom: 10px;
 }
 
 .upperContent p {
@@ -634,6 +670,35 @@ main {
 .add-btn:hover {
     transform: scale(1.05);
     /* Scale up smoothly on hover */
+}
+.add-question button {
+    transition-duration: .2s;
+}
+.add-question button {
+    background-color: #D0F0C0; /* Green background */
+    border: none;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-question button:hover {
+    background-color: #abd895; /* Darker green when hovered */
+}
+
+.add-question button img {
+    transition-duration: .2s;
+}
+
+.add-question button:hover img {
+    transform: scale(1.2);
 }
 
 .fitler-btn {
@@ -879,7 +944,6 @@ textarea {
 .table table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
     font-family: myFont2;
 }
 
@@ -928,6 +992,18 @@ textarea {
     width: 35px;
     height: 35px;
     margin: 5px;
+}
+.visual-rating {
+    text-align: center;
+}
+.visual-rating i {
+    opacity: .5;
+    margin: 0 5%;
+    color: #666;
+}
+
+.add-question{
+    text-align: center;
 }
 
 .action-btns {
@@ -1224,6 +1300,10 @@ textarea {
     margin-left: 5px; /* Add space between the number and the icon */
 }
 
+.criteria-title {
+    margin: 20px;
+    color: #666;
+}
 @font-face {
     font-family: myFont;
     src: url(../assets/font/Silka-Regular.otf);
