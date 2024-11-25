@@ -200,7 +200,7 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                             <span class="close" class="close" data-dismiss="modal"
                                                 aria-label="Close">&times;</span>
                                         </div>
-                                        <form id="editForm" method="POST" action="update_faculty.php">
+                                        <form id="editForm<?php echo $faculty['faculty_id']; ?>" method="POST" action="update_faculty.php">
                                             <div class="modal-body">
                                                 <input type="hidden" name="faculty_id"
                                                     value="<?php echo $faculty['faculty_id']; ?>">
