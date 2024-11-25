@@ -214,32 +214,58 @@ $conn->close();
         font-size: 2.5rem;
         font-weight: 700;
         margin: 0;
-        padding: 0.5rem 1rem;
+        padding: 1rem;
+        /* Increased padding for emphasis */
         background-color: #7D0006;
+        /* Full-width background */
         color: var(--white);
-        display: inline-block;
-        border-radius: 8px;
+        /* Contrasting white text */
+        text-align: center;
+        /* Ensure the text is centered */
+        border-radius: 0;
+        /* Remove rounded corners for full-width */
         box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        /* Subtle shadow */
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        /* Text shadow for emphasis */
     }
+
 
     .header nav {
         margin-top: 0.5rem;
     }
 
+    /* Header Navigation Links */
     .header nav a {
-        color: #000;
+        color: var(--white);
         text-decoration: none;
         margin: 0 1rem;
         font-size: 1.1rem;
         font-weight: 500;
+        background-color: #7D0006;
+        /* Background highlight */
+        padding: 0.5rem 1rem;
+        /* Padding for better spacing */
+        border-radius: 8px;
+        /* Rounded corners */
+        display: inline-block;
+        /* Keeps background constrained to text */
         transition: var(--transition-speed);
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        /* Subtle shadow */
     }
 
     .header nav a:hover {
         color: var(--accent-color);
-        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        /* Change text color on hover */
+        background-color: #a0000a;
+        /* Slightly lighter background on hover */
+        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        /* Enhance hover effect */
+        box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+        /* Darker shadow on hover */
     }
+
 
     /* Container */
     .container {
@@ -328,40 +354,100 @@ $conn->close();
         box-shadow: var(--shadow-large);
     }
 
-    /* Modal */
+    /* Modal Container */
     .modal {
         display: none;
+        /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.6);
+        /* Semi-transparent dark overlay */
         z-index: 1000;
         justify-content: center;
         align-items: center;
     }
 
+    /* Modal Content */
     .modal-content {
-        background: var(--white);
+        background: #ffffff;
         padding: 2rem;
-        border-radius: 15px;
+        border-radius: 12px;
         width: 90%;
         max-width: 500px;
-        box-shadow: var(--shadow-large);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
         animation: fadeIn 0.3s ease-out;
     }
 
+    /* Modal Header */
     .modal-header {
-        font-size: 1.5rem;
-        color: var(--primary-color);
-        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        color: #7D0006;
+        /* Highlight color for header */
         text-align: center;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+        /* Subtle divider */
+        padding-bottom: 1rem;
     }
 
-    .modal-footer {
-        margin-top: 1rem;
+    /* Modal Body */
+    .modal-body {
+        font-size: 1.1rem;
         text-align: center;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-body input[type="file"] {
+        display: block;
+        margin: 1rem auto;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 300px;
+    }
+
+    /* Buttons in Modal */
+    .btn-change,
+    .btn-cancel {
+        background: #e0e0e0;
+        /* Gray background for both buttons */
+        color: #333;
+        /* Dark text for contrast */
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+        /* Add spacing between buttons */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-change:hover {
+        background: #7D0006;
+        /* Highlight color on hover */
+        color: #fff;
+        /* White text for better contrast */
+    }
+
+    .btn-cancel:hover {
+        background: #999;
+        /* Darker gray for hover */
+        color: #fff;
+        /* White text for better contrast */
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+        text-align: center;
+        margin-top: 1rem;
     }
 
     /* Animations */
@@ -379,22 +465,23 @@ $conn->close();
 
     /* Responsive Design */
     @media (max-width: 768px) {
-        .header h1 {
-            font-size: 1.8rem;
+        .modal-content {
+            width: 95%;
+            padding: 1.5rem;
         }
 
-        .card h1 {
-            font-size: 2rem;
+        .modal-header {
+            font-size: 1.5rem;
         }
 
-        .profile-pic {
-            width: 120px;
-            height: 120px;
+        .modal-body input[type="file"] {
+            width: 100%;
         }
 
-        button {
+        .btn-change,
+        .btn-cancel {
             font-size: 0.9rem;
-            padding: 0.7rem 1.2rem;
+            padding: 0.6rem 1rem;
         }
     }
     </style>
@@ -405,29 +492,29 @@ $conn->close();
         <h1>Profile Information</h1>
         <nav>
             <?php
-            // Determine the appropriate dashboard URL based on user type
-            if ($user_type == 'students') {
-                echo '<a href="student_dashboard.php">Courses</a>';
-            } elseif ($user_type == 'faculty') {
-                echo '<a href="faculty_dashboard.php">Course Handled</a>';
-            } elseif ($user_type == 'program_chair') {
-                echo '<a href="program_chair_dashboard.php">Department Information</a>';
-            }
-            ?>
-            <a style="text-decoration: underline; font-weight: bold;" href="userprofile.php">Profile</a>
+        // Generate navigation links dynamically based on user type
+        if ($user_type == 'students') {
+            echo '<a href="student_dashboard.php">Courses</a>';
+        } elseif ($user_type == 'faculty') {
+            echo '<a href="faculty_dashboard.php">Courses Handled</a>';
+        } elseif ($user_type == 'program_chair') {
+            echo '<a href="program_chair_dashboard.php">Department Info</a>';
+        }
+        ?>
+            <a href="userprofile.php">Profile</a>
             <?php
-            // Determine the appropriate dashboard URL based on user type
-            if ($user_type == 'students') {
-                echo '<a href="student_evaluation.php">Evaluate</a>';
-            } elseif ($user_type == 'faculty') {
-                echo '<a href="faculty_evaluation.php">Evaluate</a>';
-            } elseif ($user_type == 'program_chair') {
-                echo '<a href="program_chair_evaluation.php">Evaluate</a>';
-            }
-            ?>
+        if ($user_type == 'students') {
+            echo '<a href="student_evaluation.php">Evaluate</a>';
+        } elseif ($user_type == 'faculty') {
+            echo '<a href="faculty_evaluation.php">Evaluate</a>';
+        } elseif ($user_type == 'program_chair') {
+            echo '<a href="program_chair_evaluation.php">Evaluate</a>';
+        }
+        ?>
             <a href="logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
         </nav>
     </div>
+
 
     <div class="container">
         <div class="card">
@@ -500,13 +587,15 @@ $conn->close();
                 <p>Do you want to change your profile image?</p>
                 <form action="userprofile.php" method="post" enctype="multipart/form-data">
                     <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
-                    <button type="submit" name="upload">Change Image</button>
+                    <button class="btn-change" type="submit" name="upload">Change Image</button>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="closeModal()">Cancel</button>
+                <button class="btn-cancel" type="button" onclick="closeModal()">Cancel</button>
             </div>
         </div>
     </div>
+
 </body>
+
 </html>
