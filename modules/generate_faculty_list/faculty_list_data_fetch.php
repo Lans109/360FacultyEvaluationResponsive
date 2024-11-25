@@ -15,35 +15,96 @@ if(mysqli_num_rows($results_department_list) > 0) {
 // Query to get faculty and their average ratings by department
 $sql_faculty_list = 
 "SELECT 
-    IFNULL(
-        AVG(CASE WHEN s.target_role = 'student' THEN r.rating * 0.5 ELSE NULL END), 0
-    ) +
-    IFNULL(
-        AVG(CASE WHEN s.target_role = 'faculty' THEN r.rating * 0.05 ELSE NULL END), 0
-    ) +
-    IFNULL(
-        AVG(CASE WHEN s.target_role = 'program_chair' THEN r.rating * 0.4 ELSE NULL END), 0
-    ) +
-    IFNULL(
-        AVG(CASE WHEN s.target_role = 'self' THEN r.rating * 0.05 ELSE NULL END), 0
-    ) AS weighted_avg,
-    CONCAT(f.first_name, ' ', f.last_name) AS Name, 
-    d.department_code,
-    f.profile_image,
     f.faculty_id,
-    f.email,
-    COUNT(DISTINCT fc.course_section_id) as total_courses
+    f.profile_image,
+    d.department_code,
+    COUNT(DISTINCT fc.course_section_id) AS total_courses,  -- Count distinct course sections
+    CONCAT(f.first_name, ' ', f.last_name) AS faculty_name,
+    IFNULL(AVG(subquery_student.avg_rating_per_question), 0) AS overall_avg_rating_student,
+    IFNULL(AVG(subquery_self.avg_rating_per_question), 0) AS overall_avg_rating_self,
+    IFNULL(AVG(subquery_peer.avg_rating_per_question), 0) AS overall_avg_rating_peer,
+    IFNULL(AVG(subquery_program_chair.avg_rating_per_question), 0) AS overall_avg_rating_program_chair,
+    -- Weighted average calculation: 
+    -- 50% for student, 40% for program chair, 5% for self and peer
+    ROUND(
+        (
+            (IFNULL(AVG(subquery_student.avg_rating_per_question), 0) * 0.5) +
+            (IFNULL(AVG(subquery_program_chair.avg_rating_per_question), 0) * 0.4) +
+            (IFNULL(AVG(subquery_self.avg_rating_per_question), 0) * 0.05) +
+            (IFNULL(AVG(subquery_peer.avg_rating_per_question), 0) * 0.05)
+        ), 2
+    ) AS weighted_avg_rating
 FROM faculty f
+LEFT JOIN (
+    -- Subquery for student evaluations
+    SELECT 
+        cs.course_section_id,   
+        r.question_id,          
+        fc.faculty_id,          
+        AVG(r.rating) AS avg_rating_per_question  
+    FROM responses r
+    LEFT JOIN evaluations e ON r.evaluation_id = e.evaluation_id
+    LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
+    LEFT JOIN surveys s ON e.survey_id = s.survey_id
+    LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
+    WHERE s.target_role = 'student'  
+    GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
+) AS subquery_student ON f.faculty_id = subquery_student.faculty_id
+
+LEFT JOIN (
+    -- Subquery for self-evaluations
+    SELECT 
+        cs.course_section_id,   
+        r.question_id,          
+        fc.faculty_id,          
+        AVG(r.rating) AS avg_rating_per_question  
+    FROM responses r
+    LEFT JOIN evaluations e ON r.evaluation_id = e.evaluation_id
+    LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
+    LEFT JOIN surveys s ON e.survey_id = s.survey_id
+    LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
+    WHERE s.target_role = 'self'  
+    GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
+) AS subquery_self ON f.faculty_id = subquery_self.faculty_id
+
+LEFT JOIN (
+    -- Subquery for peer (faculty) evaluations
+    SELECT 
+        cs.course_section_id,   
+        r.question_id,          
+        fc.faculty_id,          
+        AVG(r.rating) AS avg_rating_per_question  
+    FROM responses r
+    LEFT JOIN evaluations e ON r.evaluation_id = e.evaluation_id
+    LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
+    LEFT JOIN surveys s ON e.survey_id = s.survey_id
+    LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
+    WHERE s.target_role = 'faculty'  
+    GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
+) AS subquery_peer ON f.faculty_id = subquery_peer.faculty_id
+
+LEFT JOIN (
+    -- Subquery for program chair evaluations
+    SELECT 
+        cs.course_section_id,   
+        r.question_id,          
+        fc.faculty_id,          
+        AVG(r.rating) AS avg_rating_per_question  
+    FROM responses r
+    LEFT JOIN evaluations e ON r.evaluation_id = e.evaluation_id
+    LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
+    LEFT JOIN surveys s ON e.survey_id = s.survey_id
+    LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
+    WHERE s.target_role = 'program_chair'  
+    GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
+) AS subquery_program_chair ON f.faculty_id = subquery_program_chair.faculty_id
+
 LEFT JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
-LEFT JOIN course_sections cs ON cs.course_section_id = fc.course_section_id
-LEFT JOIN evaluations e ON e.course_section_id = cs.course_section_id
-LEFT JOIN responses r ON r.evaluation_id = e.evaluation_id
-LEFT JOIN surveys s ON s.survey_id = e.survey_id
-LEFT JOIN departments d ON f.department_id = d.department_id
-GROUP BY f.faculty_id, d.department_code
-ORDER BY weighted_avg DESC;
 
+LEFT JOIN departments d ON d.department_id = f.department_id
 
+GROUP BY f.faculty_id, f.first_name, f.last_name, f.profile_image
+ORDER BY weighted_avg_rating DESC;
 ";
 
 $results_faculty_list = mysqli_query($con, $sql_faculty_list) or die(mysqli_error($con));
@@ -61,8 +122,8 @@ if(mysqli_num_rows($results_faculty_list) > 0) {
         
         // Append each faculty to the correct department
         $faculty_list_by_department[$department_code][] = [
-            'faculty_name' => $row_faculty['Name'],
-            'AVG' => ROUND($row_faculty['weighted_avg'], 2),
+            'faculty_name' => $row_faculty['faculty_name'],
+            'AVG' => ROUND($row_faculty['weighted_avg_rating'], 2),
             'total_courses' => $row_faculty['total_courses'],
             'profile_image' => $row_faculty['profile_image'],
             'faculty_id' => $row_faculty['faculty_id'],

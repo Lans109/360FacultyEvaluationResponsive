@@ -177,20 +177,3 @@ if ($resultFaculty->num_rows > 0) {
 } else {
     echo "No faculty members found.";
 }
-
-$sqlComments = "
-    SELECT 
-        comments
-    FROM 
-        students_evaluations
-";
-
-$resultComments = $con->query($sqlComments);
-$comments = [];
-if ($resultComments->num_rows > 0) {
-    
-    while ($commentsRow = $resultComments->fetch_assoc()) {
-        $comments[] = $commentsRow['comments'];
-    }
-}
-
