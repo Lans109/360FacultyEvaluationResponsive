@@ -30,7 +30,6 @@ $stmt->bind_result($profile_image);
 $stmt->fetch();
 $stmt->close(); // Close the statement
 
-// The profile_image will automatically default to 'uploads/default_profile.jpg' if it's NULL or empty in the database
 
 // Fetch the courses the user is enrolled in
 $sql = "SELECT 
@@ -68,157 +67,281 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="styles.css">
-</head>
-<style>
-            * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <style>
+    /* Reset Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Poppins", Arial, sans-serif;
+        background: linear-gradient(135deg, #7D0006, #D3D3D3);
+        color: #000;
+        line-height: 1.6;
+    }
+
+    /* Header Section */
+    .header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        padding: 1.5rem 0;
+        text-align: center;
+        color: var(--white);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow-small);
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        padding: 1rem;
+        background-color: #7D0006;
+        color: var(--white);
+        text-align: center;
+        border-radius: 0;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .header nav {
+        margin-top: 0.5rem;
+    }
+
+    /* Header Navigation Links */
+    .header nav a {
+        color: var(--white);
+        text-decoration: none;
+        margin: 0 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        background-color: #7D0006;
+        border-radius: 8px;
+        display: inline-block;
+        transition: var(--transition-speed);
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header nav a:hover {
+        color: #000;
+        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Container */
+    .container {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: var(--secondary-color);
+        border-radius: 12px;
+        box-shadow: var(--shadow-large);
+    }
+
+    /* Profile Card */
+    .card {
+        background: var(--white);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: center;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+        border: 3px solid rgba(125, 0, 6, 0.1);
+        transition: var(--transition-speed);
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
+        border: 3px solid rgba(125, 0, 6, 0.3);
+    }
+
+    .card h1 {
+        color: #000;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: #000;
+    }
+
+    .card hr {
+        border: 0;
+        height: 1px;
+        background: var(--primary-light);
+        margin: 1.5rem 0;
+    }
+
+    /* Profile Picture */
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid var(--primary-light);
+        box-shadow: var(--shadow-small);
+        transition: var(--transition-speed);
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .profile-pic:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Button Styles */
+    button {
+        background: var(--primary-color);
+        color: #000;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition-speed);
+        box-shadow: var(--shadow-small);
+    }
+
+    button:hover {
+        background: var(--primary-light);
+        box-shadow: var(--shadow-large);
+    }
+
+    /* Modal Container */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Modal Header */
+    .modal-header {
+        font-size: 1.8rem;
+        color: #7D0006;
+        text-align: center;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 1rem;
+    }
+
+    /* Modal Body */
+    .modal-body {
+        font-size: 1.1rem;
+        text-align: center;
+        color: #000;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-body input[type="file"] {
+        display: block;
+        margin: 1rem auto;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 300px;
+    }
+
+    /* Buttons in Modal */
+    .btn-change,
+    .btn-cancel {
+        background: #e0e0e0;
+        color: #000;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-change:hover {
+        background: #7D0006;
+        color: #fff;
+    }
+
+    .btn-cancel:hover {
+        background: #999;
+        color: #fff;
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 95%;
+            padding: 1.5rem;
         }
 
-        .header {
-            text-align: center;
-            background: #800000;
-            color: white;
-            padding: 20px;
-            margin-bottom: 20px;
+        .modal-header {
+            font-size: 1.5rem;
         }
 
-        .header h1 {
-            font-size: 2rem;
-            font-weight: bold;
+        .modal-body input[type="file"] {
+            width: 100%;
         }
 
-        .header nav {
-            margin-top: 10px;
-        }
-
-        .header nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 1rem;
-        }
-
-        .header nav a:hover {
-            text-decoration: underline;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .welcome-message {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            position: relative;
-        }
-
-        .welcome-message .close-btn {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            background: transparent;
-            border: none;
-            font-size: 1.2rem;
-            color: #800000;
-            cursor: pointer;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-top: 30px;
-        }
-
-        .card h2 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #800000;
-            margin: 15px 0;
-        }
-
-        /* Profile Picture Styling */
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #800000;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .profile-pic:hover {
-            transform: scale(1.1);
-        }
-
-        .course-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .course-card h4 {
-            font-size: 1.2rem;
-            color: #800000;
-            margin-bottom: 5px;
-        }
-
-        .course-info {
+        .btn-change,
+        .btn-cancel {
             font-size: 0.9rem;
-            color: #666;
-            margin-top: 10px;
+            padding: 0.6rem 1rem;
         }
+    }
+    </style>
+</head>
 
-        .course-info span {
-            display: block;
-            margin-top: 5px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .profile {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .profile-pic {
-                margin-bottom: 15px;
-            }
-
-            .header nav {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .course-card {
-                padding: 10px;
-            }
-        }
-</style>
 <body>
 
     <!-- Centered Header -->
@@ -246,30 +369,34 @@ $conn->close();
             <div class="profile">
                 <!-- Display profile image (it will use default if no custom image exists in the database) -->
                 <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic">
-                <h2><?php echo htmlspecialchars($name); ?></h2> <!-- Display the student's full name here -->
+                <h2><?php echo htmlspecialchars($name); ?></h2>
             </div>
 
             <!-- Courses Section -->
-            <h3>Courses Enrolled To</h3>
+            <h3 style="margin-top: 30px; margin-bottom: 20px;">Courses Enrolled To</h3>
             <?php if (!empty($courses)): ?>
             <?php foreach ($courses as $course): ?>
-                <div class="course-card">
-                    <h4><?php echo htmlspecialchars($course['course_name']); ?> (<?php echo htmlspecialchars($course['course_code']); ?>) - Section: <?php echo htmlspecialchars($course['section']); ?></h4>
-                    <div class="course-info">
-                        <p><?php echo htmlspecialchars($course['course_description']); ?></p>
-                    </div>
+            <div class="course-card">
+                <h4><?php echo htmlspecialchars($course['course_name']); ?>
+                    (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
+                    <?php echo htmlspecialchars($course['section']); ?></h4>
+                <div class="course-info">
+                    <p><?php echo htmlspecialchars($course['course_description']); ?></p>
                 </div>
+            </div>
             <?php endforeach; ?>
             <?php else: ?>
             <p>You are not enrolled in any courses yet.</p>
             <?php endif; ?>
         </div>
+
     </div>
 
     <script>
-        function closeWelcomeMessage() {
-            document.getElementById('welcome-message').style.display = 'none';
-        }
+    function closeWelcomeMessage() {
+        document.getElementById('welcome-message').style.display = 'none';
+    }
     </script>
 </body>
+
 </html>

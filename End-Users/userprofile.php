@@ -183,7 +183,7 @@ $conn->close();
         }
     };
     </script>
-    <style>
+<style>
     /* Reset Styles */
     * {
         margin: 0;
@@ -192,11 +192,11 @@ $conn->close();
     }
 
     body {
-        font-family: "Poppins", Arial, sans-serif;
-        background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
-        color: var(--text-color);
-        line-height: 1.6;
-    }
+            font-family: "Poppins", Arial, sans-serif;
+            background: linear-gradient(135deg, #7D0006, #D3D3D3);
+            color: #000;
+            line-height: 1.6;
+        }
 
     /* Header Section */
     .header {
@@ -215,19 +215,12 @@ $conn->close();
         font-weight: 700;
         margin: 0;
         padding: 1rem;
-        /* Increased padding for emphasis */
         background-color: #7D0006;
-        /* Full-width background */
         color: var(--white);
-        /* Contrasting white text */
         text-align: center;
-        /* Ensure the text is centered */
         border-radius: 0;
-        /* Remove rounded corners for full-width */
         box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-        /* Subtle shadow */
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        /* Text shadow for emphasis */
     }
 
 
@@ -242,28 +235,18 @@ $conn->close();
         margin: 0 1rem;
         font-size: 1.1rem;
         font-weight: 500;
-        background-color: #7D0006;
-        /* Background highlight */
         padding: 0.5rem 1rem;
-        /* Padding for better spacing */
+        background-color: #7D0006;
         border-radius: 8px;
-        /* Rounded corners */
         display: inline-block;
-        /* Keeps background constrained to text */
         transition: var(--transition-speed);
         box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-        /* Subtle shadow */
     }
 
     .header nav a:hover {
-        color: var(--accent-color);
-        /* Change text color on hover */
-        background-color: #a0000a;
-        /* Slightly lighter background on hover */
+        color: #000;
         text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-        /* Enhance hover effect */
         box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
-        /* Darker shadow on hover */
     }
 
 
@@ -285,19 +268,14 @@ $conn->close();
         margin: 2rem 0;
         text-align: center;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-        /* Border shadow for an elevated effect */
         border: 3px solid rgba(125, 0, 6, 0.1);
-        /* Subtle border color matching the highlight theme */
         transition: var(--transition-speed);
     }
 
     .card:hover {
         transform: translateY(-5px);
-        /* Lift the card slightly when hovered */
         box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
-        /* Stronger shadow on hover */
         border: 3px solid rgba(125, 0, 6, 0.3);
-        /* Darker border on hover */
     }
 
     .card h1 {
@@ -364,7 +342,6 @@ $conn->close();
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.6);
-        /* Semi-transparent dark overlay */
         z-index: 1000;
         justify-content: center;
         align-items: center;
@@ -385,11 +362,9 @@ $conn->close();
     .modal-header {
         font-size: 1.8rem;
         color: #7D0006;
-        /* Highlight color for header */
         text-align: center;
         margin-bottom: 1rem;
         border-bottom: 1px solid #ddd;
-        /* Subtle divider */
         padding-bottom: 1rem;
     }
 
@@ -416,9 +391,7 @@ $conn->close();
     .btn-change,
     .btn-cancel {
         background: #e0e0e0;
-        /* Gray background for both buttons */
         color: #333;
-        /* Dark text for contrast */
         border: none;
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
@@ -426,22 +399,17 @@ $conn->close();
         cursor: pointer;
         transition: all 0.3s ease;
         margin: 0.5rem;
-        /* Add spacing between buttons */
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .btn-change:hover {
         background: #7D0006;
-        /* Highlight color on hover */
         color: #fff;
-        /* White text for better contrast */
     }
 
     .btn-cancel:hover {
         background: #999;
-        /* Darker gray for hover */
         color: #fff;
-        /* White text for better contrast */
     }
 
     /* Modal Footer */
@@ -597,5 +565,4 @@ $conn->close();
     </div>
 
 </body>
-
 </html>
