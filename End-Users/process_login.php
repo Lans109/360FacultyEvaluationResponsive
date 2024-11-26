@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Fetch user data (email, password, first_name, last_name) from the respective table based on the user type
-    $stmt = $conn->prepare("SELECT email, password, first_name, last_name FROM $tableName WHERE LOWER(email) = LOWER(?)");
+    $stmt = $conn->prepare("SELECT email, password_hash, first_name, last_name FROM $tableName WHERE LOWER(email) = LOWER(?)");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
@@ -45,6 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_type'] = $user_type; // Store user type in session
             $_SESSION['loggedin'] = true;
 
+            // Close resources before redirect
+            $stmt->close();
+            $conn->close();
+
             // Redirect based on the user type
             if ($user_type == 'students') {
                 header("Location: student_dashboard.php");
@@ -56,17 +60,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             // Invalid password
+            $stmt->close();
+            $conn->close();
+
             header("Location: " . $user_type . "_login.php?error=Invalid email or password.");
             exit();
         }
     } else {
         // User not found
+        $stmt->close();
+        $conn->close();
+
         header("Location: " . $user_type . "_login.php?error=User not found.");
         exit();
     }
-
-    // Close the statement and connection
-    $stmt->close();
-    $conn->close();
 }
 ?>
