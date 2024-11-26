@@ -55,7 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const deleteModal = document.getElementById("deleteConfirmationModal");
   const confirmDeleteButton = document.getElementById("confirmDeleteButton");
   const cancelDeleteButton = document.getElementById("cancelDeleteButton");
-
+  const closeDeleteButton = document.getElementById("closeDeleteButton");
+  const closeEditButton = document.getElementById("closeEditButton");
   // Confirm deletion: Navigate to the stored href
   confirmDeleteButton.addEventListener("click", function () {
     window.location.href = deleteHref; // Redirect to the stored href
@@ -72,6 +73,15 @@ document.addEventListener("DOMContentLoaded", function () {
       deleteModal.style.display = "none"; // Hide modal if clicked outside
     }
   });
+
+  closeDeleteButton.addEventListener("click", function () {
+    deleteModal.style.display = "none"; // Hide the delete confirmation modal
+  });
+
+    closeEditButton.addEventListener("click", function () {
+        // Hide the edit confirmation modal
+        editConfirmationModal.style.display = "none";
+    });
 
   // Expose the openDeleteConfirmationModal function for external use
   window.openDeleteConfirmationModal = openDeleteConfirmationModal;

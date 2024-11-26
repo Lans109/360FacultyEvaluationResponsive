@@ -1,13 +1,19 @@
 <?php
+// Start the session
+session_start();
+
+// Include the database connection file
 include '../../db/dbconnect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $course_id = $_POST['course_id'];
-    $course_name = $_POST['course_name'];
-    $course_code = $_POST['course_code'];
-    $course_description = $_POST['course_description'];
-    $department_id = $_POST['department_id'];
+    // Get form data and sanitize it to prevent SQL injection
+    $course_id = mysqli_real_escape_string($con, $_POST['course_id']);
+    $course_name = mysqli_real_escape_string($con, $_POST['course_name']);
+    $course_code = mysqli_real_escape_string($con, $_POST['course_code']);
+    $course_description = mysqli_real_escape_string($con, $_POST['course_description']);
+    $department_id = mysqli_real_escape_string($con, $_POST['department_id']);
 
+    // SQL query to update the course
     $update_query = "UPDATE courses SET 
         course_name = '$course_name', 
         course_code = '$course_code', 
@@ -15,12 +21,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         department_id = '$department_id' 
         WHERE course_id = '$course_id'";
 
+    // Attempt to execute the update query
     if (mysqli_query($con, $update_query)) {
-        echo "Course updated successfully!";
+        // If successful, set session variables for success message
+        $_SESSION['status'] = 'success';
+        $_SESSION['message'] = 'Course updated successfully!';
+        header("Location: courses.php");
+        exit();
     } else {
-        echo "Error updating course: " . mysqli_error($con);
+        // If query fails, log the error and set session variables for error message
+        error_log("Database Error: " . mysqli_error($con)); // Log the error
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Error updating course. Please try again later.';
+        header("Location: courses.php");
+        exit();
     }
+} else {
+    // If no POST request is made, set session variables for error message and redirect
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid request method.';
+    header("Location: courses.php");
+    exit();
 }
-header("Location: courses.php");
-exit();
 ?>

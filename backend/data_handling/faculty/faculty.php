@@ -197,8 +197,9 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="editModalLabel">Edit Faculty</h5>
-                                            <span class="close" class="close" data-dismiss="modal"
-                                                aria-label="Close">&times;</span>
+                                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                            </span>
                                         </div>
                                         <form id="editForm<?php echo $faculty['faculty_id']; ?>" method="POST" action="update_faculty.php">
                                             <div class="modal-body">
@@ -239,47 +240,6 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Assign Course Modal -->
-                            <div class="modal" id="assignCourseModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
-                                role="dialog" aria-labelledby="assignCourseLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="assignCourseLabel">Assign Course to
-                                                <?php echo $faculty['first_name'] . ' ' . $faculty['last_name']; ?>
-                                            </h5>
-                                            <span class="close" class="close" data-dismiss="modal"
-                                                aria-label="Close">&times;</span>
-                                        </div>
-                                        <form method="POST" action="add_course_to_faculty.php">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="faculty_id"
-                                                    value="<?php echo $faculty['faculty_id']; ?>">
-                                                <div class="form-group">
-                                                    <label for="course_section_id">Select Course Section</label>
-                                                    <select name="course_section_id" class="form-control" required>
-                                                        <option value="">Choose a course...</option>
-                                                        <?php foreach ($courses as $department_id => $course_list): ?>
-                                                            <optgroup label="Department <?php echo $department_id; ?>">
-                                                                <?php foreach ($course_list as $course): ?>
-                                                                    <option value="<?php echo $course['course_section_id']; ?>">
-                                                                        <?php echo $course['section'] . " - " . $course['course_name']; ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
-                                                            </optgroup>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Assign Course</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         <?php endwhile; ?>
                         <?php else: ?>
                                 <tr>
@@ -300,7 +260,9 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addFacultyLabel">Add Faculty</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form method="POST" action="add_faculty.php">
                     <div class="modal-body">

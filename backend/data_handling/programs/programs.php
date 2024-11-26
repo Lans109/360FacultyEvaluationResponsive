@@ -8,9 +8,24 @@ $search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search
 $department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
 
 // Fetch all programs with their associated department
-$programs_query = "SELECT p.program_id, p.program_name, p.program_code, p.program_description, d.department_name, p.department_id, d.department_code
-                   FROM programs p
-                   LEFT JOIN departments d ON p.department_id = d.department_id";
+$programs_query = "SELECT 
+    p.program_id, 
+    p.program_name, 
+    p.program_code, 
+    p.program_description, 
+    d.department_name, 
+    p.department_id, 
+    d.department_code, 
+    COUNT(pc.program_id) AS total_courses
+FROM 
+    programs p
+LEFT JOIN 
+    program_courses pc ON p.program_id = pc.program_id
+LEFT JOIN 
+    departments d ON p.department_id = d.department_id
+GROUP BY 
+    p.program_id, p.program_name, p.program_code, p.program_description, d.department_name, p.department_id, d.department_code
+";
 
 // Check if a search term is provided
 if ($search) {
@@ -100,9 +115,10 @@ $num_rows = mysqli_num_rows($programs_result);
                     <thead>
                         <tr>
                             <th width="160px">Program Code</th>
-                            <th width="300px">Program Name</th>
-                            <th>Description</th>
+                            <th width="250px">Program Name</th>
+                            <th width="500px">Description</th>
                             <th width="150px">Department</th>
+                            <th width="150px">No. of courses</th>
                             <th width="100px">Courses</th>
                             <th width="100px">Actions</th>
                         </tr>
@@ -115,82 +131,13 @@ $num_rows = mysqli_num_rows($programs_result);
                                 <td><?php echo $program['program_name']; ?></td>
                                 <td><?php echo $program['program_description']; ?></td>
                                 <td><?php echo $program['department_code'] ?: 'Not Assigned'; ?></td>
+                                <td><?php echo $program['total_courses']; ?></td>
                                 <td>
                                     <!-- Add Course Button -->
-                                    <button class="view-btn" data-toggle="modal"
-                                        data-target="#addCourseModal<?php echo $program['program_id']; ?>">View
-                                        Courses</button>
+                                    <a href="view_program_courses.php?program_id=<?php echo $program['program_id']; ?>" class="view-btn">
+                                            View Courses
+                                        </a>
 
-                                    <!-- Add Course Modal -->
-                                    <div class="modal" id="addCourseModal<?php echo $program['program_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="addCourseModalLabel">Courses of <?php echo $program['program_code']; ?></h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form action="add_course_to_program.php" method="POST">
-                                                    <div class="modal-body">
-                                                        <input type="hidden" name="program_id" value="<?php echo $program['program_id']; ?>">
-
-                                                        <!-- Dropdown for courses -->
-                                                        <div class="form-group">
-                                                            <label for="course_id">Select a Course</label>
-                                                            <div>
-                                                                <select name="course_id" id="course_id" class="form-control" required>
-                                                                    <option value="">-- Choose a Course --</option>
-                                                                    <?php
-                                                                    // Fetch all courses for the dropdown
-                                                                    $all_courses_query = "SELECT course_id, course_name FROM courses";
-                                                                    $all_courses_result = mysqli_query($con, $all_courses_query);
-                                                                    while ($course = mysqli_fetch_assoc($all_courses_result)) {
-                                                                        echo "<option value='" . $course['course_id'] . "'>" . $course['course_name'] . "</option>";
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Display existing courses -->
-                                                        <div class="form-group">
-                                                            <label for="existing_courses" class="form-label">Current Courses</label>
-                                                            <div class="existing-courses-list">
-                                                                <?php
-                                                                $courses_query = "SELECT c.course_id, c.course_name 
-                                                                    FROM courses c
-                                                                    JOIN program_courses pc ON c.course_id = pc.course_id
-                                                                    WHERE pc.program_id = " . $program['program_id'];
-                                                                $courses_result = mysqli_query($con, $courses_query);
-
-                                                                if (mysqli_num_rows($courses_result) > 0) {
-                                                                    echo "<ul class='list-group'>";
-                                                                    while ($course = mysqli_fetch_assoc($courses_result)) {
-                                                                        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
-                                                                        echo $course['course_name'];
-                                                                        echo "<a href='delete_program_course.php?course_id=" . $course['course_id'] . "&program_id=" . $program['program_id'] . "' 
-                                                                                class='btn btn-danger btn-sm ml-3'
-                                                                               onclick='openDeleteConfirmationModal(event, this)'> Remove</a>";
-                                                                        echo "</li>";
-                                                                    }
-                                                                    echo "</ul>";
-                                                                } else {
-                                                                    echo "<p class='text-muted'>No courses assigned to this program.</p>";
-                                                                }
-                                                                ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="save-btn">Add Course</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                                 <td>
                                     <div class="action-btns">
@@ -220,8 +167,9 @@ $num_rows = mysqli_num_rows($programs_result);
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="editModalLabel">Edit Program</h5>
-                                            <span class="close" class="close" data-dismiss="modal"
-                                                aria-label="Close">&times;</span>
+                                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                            </span>
                                         </div>
                                         <form method="POST" action="update_program.php">
                                             <div class="modal-body">
@@ -276,11 +224,6 @@ $num_rows = mysqli_num_rows($programs_result);
                 </table>
             </div>
         </div>
-        <!-- <div class="pagination">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-        </div> -->
         </div>
     </main>
 
@@ -291,7 +234,9 @@ $num_rows = mysqli_num_rows($programs_result);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addProgramModalLabel">Add New Program</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form action="add_program.php" method="POST">
                     <div class="modal-body">

@@ -91,4 +91,11 @@ document.addEventListener("DOMContentLoaded", function () {
       deleteModal.style.display = "none";
     }
   });
+
+  function closeModal() {
+    const modal = document.getElementById("successModal");
+    modal.style.display = "none"; // Hides the modal
+}
 });
+
+

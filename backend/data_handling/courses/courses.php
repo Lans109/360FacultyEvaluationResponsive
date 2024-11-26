@@ -3,9 +3,26 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
+session_start();
+
+// Check if there are any status and message in the session
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    // Display the message
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Display success or error message based on the status
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear the session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
+
 // Initialize search and filter variables
 $search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
 $department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
+
 
 // Base query to fetch courses
 $courses_query = "SELECT c.course_id, c.course_name, c.course_code, c.course_description, d.department_code, d.department_id
@@ -165,20 +182,18 @@ $num_rows = mysqli_num_rows($courses_result);
 
 
                                 <!-- Edit Course Modal -->
-                                <div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog"
-                                    aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalLabel">Edit Course</h5>
-                                                <span class="close" class="close" data-dismiss="modal"
-                                                    aria-label="Close">&times;</span>
+                                                <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                                </span>                                            
                                             </div>
-                                            <form id="editForm<?php echo $course['course_id']; ?>" method="POST"
-                                                action="update_course.php">
+                                            <form id="editForm<?php echo $course['course_id']; ?>" method="POST" action="update_course.php">
                                                 <div class="modal-body">
-                                                    <input type="hidden" name="course_id"
-                                                        value="<?php echo $course['course_id']; ?>">
+                                                    <input type="hidden" name="course_id" value="<?php echo $course['course_id']; ?>">
                                                     <div class="form-group">
                                                         <label for="edit_course_name">Course Name</label>
                                                         <input type="text" name="course_name" class="form-control"
@@ -214,8 +229,7 @@ $num_rows = mysqli_num_rows($courses_result);
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save
-                                                        changes</button>
+                                                    <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -242,43 +256,46 @@ $num_rows = mysqli_num_rows($courses_result);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addCourseModalLabel">Add New Course</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form action="add_course.php" method="POST">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="course_name">Course Name</label>
-                            <input type="text" name="course_name" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="course_code">Course Code</label>
-                            <input type="text" name="course_code" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="course_description">Course Description</label>
-                            <textarea name="course_description" class="form-control" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="department_id">Department</label>
-                            <select name="department_id" class="form-control">
-                                <option value="">Select Department</option>
-                                <?php
-                                // Fetch all departments for new course
-                                $departments_query = "SELECT department_id, department_code FROM departments";
-                                $departments_result = mysqli_query($con, $departments_query);
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="course_name">Course Name</label>
+            <input type="text" name="course_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="course_code">Course Code</label>
+            <input type="text" name="course_code" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="course_description">Course Description</label>
+            <textarea name="course_description" class="form-control" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="department_id">Department</label>
+            <select name="department_id" class="form-control">
+                <option value="">Select Department</option>
+                <?php
+                // Fetch all departments for new course
+                $departments_query = "SELECT department_id, department_code FROM departments";
+                $departments_result = mysqli_query($con, $departments_query);
 
-                                while ($department = mysqli_fetch_assoc($departments_result)) {
-                                    echo "<option value='" . $department['department_id'] . "'>" . $department['department_code'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                        <button type="submit" class="save-btn">Add Course</button>
-                    </div>
-                </form>
+                while ($department = mysqli_fetch_assoc($departments_result)) {
+                    echo "<option value='" . $department['department_id'] . "'>" . $department['department_code'] . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+        <button type="submit" name="submit" class="save-btn">Add Course</button> <!-- Added name="submit" -->
+    </div>
+</form>
+
             </div>
         </div>
     </div>

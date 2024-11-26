@@ -44,6 +44,7 @@ $result_accounts = mysqli_query($con, $query_accounts);
 $num_rows = mysqli_num_rows($result_accounts);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,6 +57,7 @@ $num_rows = mysqli_num_rows($result_accounts);
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
+    
 </head>
 
 <body>
@@ -110,62 +112,67 @@ $num_rows = mysqli_num_rows($result_accounts);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($account = mysqli_fetch_assoc($result_accounts)): ?>
-                            <tr>
-                                <td><?php echo $account['account_id']; ?></td>
-                                <td><?php echo $account['name']; ?></td>
-                                <td><?php echo $account['username']; ?></td>
-                                <td><?php echo $account['email']; ?></td>
-                                <td><?php echo $account['role']; ?></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editAccountModal<?php echo $account['account_id']; ?>">
-                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
-                                    </div>
-                                </td>
-                            </tr>
+                    <?php while ($account = mysqli_fetch_assoc($result_accounts)): ?>
+    <tr>
+        <td><?php echo $account['account_id']; ?></td>
+        <td><?php echo $account['name']; ?></td>
+        <td><?php echo $account['username']; ?></td>
+        <td><?php echo $account['email']; ?></td>
+        <td><?php echo $account['role']; ?></td>
+        <td>
+            <div class="action-btns">
+                <button class="edit-btn" data-toggle="modal"
+                    data-target="#editModal<?php echo $account['account_id']; ?>"
+                    data-id="<?php echo $account['account_id']; ?>"
+                    data-name="<?php echo $account['name']; ?>"
+                    data-username="<?php echo $account['username']; ?>"
+                    data-email="<?php echo $account['email']; ?>"
+                    data-role="<?php echo $account['role']; ?>">
+                    <img src="../../../frontend/assets/icons/edit.svg">
+                </button>
+            </div>
+        </td>
+    </tr>
 
-                            <!-- Edit Account Modal -->
-                            <div class="modal" id="editAccountModal<?php echo $account['account_id']; ?>" tabindex="-1"
-                                role="dialog" aria-labelledby="editAccountModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editAccountModalLabel">Edit Account</h5>
-                                            <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
-                                        </div>
-                                        <form method="POST" action="update_account.php">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="role"
-                                                    value="<?php echo $account['role']; ?>">
-                                                <input type="hidden" name="account_id"
-                                                    value="<?php echo $account['account_id']; ?>">
-                                                <div class="form-group">
-                                                    <label for="username">Username</label>
-                                                    <input type="text" name="username" class="form-control"
-                                                        value="<?php echo $account['username']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="email">Email</label>
-                                                    <input type="email" name="email" class="form-control"
-                                                        value="<?php echo $account['email']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="password">Password</label>
-                                                    <input type="password" name="password" class="form-control"
-                                                        placeholder="Enter new password (leave blank to keep current)">
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endwhile; ?>
+    <!-- Edit Account Modal -->
+    <div class="modal fade" id="editModal<?php echo $account['account_id']; ?>" tabindex="-1" role="dialog"
+        aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Account</h5>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
+                </div>
+                <form id="editForm<?php echo $account['account_id']; ?>" method="POST" action="update_account.php">
+                <input type="hidden" id="role" name="role" value="<?php echo $account['role']; ?>">
+                    <div class="modal-body">
+                        <input type="hidden" name="account_id" value="<?php echo $account['account_id']; ?>">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" class="form-control" value="<?php echo $account['username']; ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" class="form-control" value="<?php echo $account['email']; ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current)">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                        <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endwhile; ?>
+
+
                     </tbody>
                 </table>
             </div>
@@ -176,6 +183,7 @@ $num_rows = mysqli_num_rows($result_accounts);
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
 </body>
 
 </html>
