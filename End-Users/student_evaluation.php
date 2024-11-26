@@ -42,20 +42,18 @@ $evaluations = $result->fetch_all(MYSQLI_ASSOC);
 
 // Handle response submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) {
-    // Get the evaluation_id from the form
     $evaluation_id = $_POST['evaluation_id'];
     $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
 
-    // Insert each response into the responses table
+    // Insert responses into the database
     foreach ($_POST['responses'] as $question_id => $rating) {
-        // Insert response into the database
         $stmt = $conn->prepare("INSERT INTO responses (evaluation_id, question_id, rating) VALUES (?, ?, ?)");
         $stmt->bind_param("iii", $evaluation_id, $question_id, $rating);
         $stmt->execute();
         $stmt->close();
     }
 
-    // Update the evaluation status to "completed" and save the comment
+    // Update evaluation status and comments
     $stmt = $conn->prepare("UPDATE students_evaluations SET is_completed = 1, comments = ? WHERE evaluation_id = ? AND student_id = (SELECT student_id FROM students WHERE email = ?)");
     $stmt->bind_param("sis", $comment, $evaluation_id, $student_email);
     $stmt->execute();
@@ -68,49 +66,165 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
     <title>Student Dashboard</title>
-</head>
-<style>
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000; /* Higher than other page elements */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: auto;
-            margin-top: 10%;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+    <style>
+    /* Reset Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Poppins", Arial, sans-serif;
+        background: linear-gradient(135deg, #7D0006, #D3D3D3);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        color: #000;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Header Section */
+    .header {
+        background: #7D0006;
+        padding: 1.5rem 0;
+        text-align: center;
+        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .header nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        background-color: #7D0006;
+        border-radius: 8px;
+        display: inline-block;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header nav a:hover {
+        color: #000;
+        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Container */
+    .container {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid #f4f4f4;
+    }
+
+    th {
+        background-color: #7D0006;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+
+    td {
+        background-color: #fafafa;
+    }
+
+    tr:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
+
+    td a,
+    td button {
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    td a {
+        background-color: #7D0006;
+        transition: background-color 0.3s;
+    }
+
+    td a:hover {
+        background-color: #D3D3D3;
+        color: #7D0006;
+    }
+
+    td button {
+        background-color: #7D0006;
+        border: none;
+        cursor: not-allowed;
+    }
+
+    td button:disabled {
+        background-color: #999;
+    }
+
+    /* Profile Card */
+    .card {
+        text-align: center;
+        padding: 2rem;
+        background: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Button Styles */
+    button {
+        background: #7D0006;
+        color: #fff;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background: #D3D3D3;
+        color: #7D0006;
+    }
     </style>
+</head>
+
 <body>
     <div class="header">
         <h1>Student Dashboard</h1>
@@ -125,7 +239,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         <div class="card">
             <h2>Evaluation Tasks</h2>
             <?php if (!empty($evaluations)): ?>
-                <table border="1">
+            <table>
+                <thead>
                     <tr>
                         <th>Faculty Name</th>
                         <th>Course Code</th>
@@ -135,27 +250,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         <th>Actions</th>
                     </tr>
                     <?php foreach ($evaluations as $evaluation): ?>
-                        <tr>
-                            <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?></td>
-                            <td><?php echo $evaluation['course_code']; ?></td>
-                            <td><?php echo $evaluation['is_completed'] ? 'Completed' : 'Pending'; ?></td>
-                            <td><?php echo $evaluation['created_at']; ?></td>
-                            <td><?php echo $evaluation['end_date']; ?></td>
-                            <td>
-                                <?php if (!$evaluation['is_completed']): ?>
-                                    <!-- Redirect to evaluation page -->
-                                    <a href="evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start Evaluation</a>
-                                <?php else: ?>
-                                    <button disabled>Completed</button>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?>
+                        </td>
+                        <td><?php echo $evaluation['course_code']; ?></td>
+                        <td>
+                            <?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
+                        </td>
+                        <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?></td>
+                        <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?></td>
+                        <td>
+                            <?php if (!$evaluation['is_completed']): ?>
+                            <a href="evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
+                                Evaluation</a>
+                            <?php else: ?>
+                            <button disabled>Completed</button>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
                     <?php endforeach; ?>
-                </table>
+                    </tbody>
+            </table>
             <?php else: ?>
-                <p>No evaluations available at the moment.</p>
+            <p>No evaluations available at the moment.</p>
             <?php endif; ?>
         </div>
     </div>
 </body>
+
 </html>
