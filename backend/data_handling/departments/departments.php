@@ -145,7 +145,9 @@ if (!$department_result) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addModalLabel">Add New Department</h5>
-                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                                <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                    <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                </span>
                         </div>
                         <form action="add_department.php" method="POST">
                             <div class="modal-body">
@@ -198,7 +200,9 @@ if (!$department_result) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editModalLabel">Edit Department</h5>
-                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                                <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                    <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                </span>
                         </div>
                         <form id="editForm" method="POST" action="update_department.php">
                             <div class="modal-body">

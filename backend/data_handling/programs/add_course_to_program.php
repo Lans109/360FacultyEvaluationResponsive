@@ -13,10 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         // Redirect back to the program management page with success message
-        header("Location: programs.php?success=Course added successfully");
+        header("Location: view_program_courses.php?program_id=$program_id");
     } else {
         // Redirect back with error message
-        header("Location: programs.php?error=Error adding course");
+        header("Location: view_program_courses.php?program_id=$program_id");
     }
 
     $stmt->close();

@@ -57,12 +57,13 @@ $num_criteria = count($questions_by_criteria);
     <title>Survey Questions</title>
     <link rel="stylesheet" href="../../../frontend/templates/admin-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
 </head>
 
 <body>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
-    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
+    
 
     <main>
         <div class="upperMain">
@@ -136,20 +137,21 @@ $num_criteria = count($questions_by_criteria);
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="action-btns">
-                                                    <button class="edit-btn" data-toggle="modal" 
-                                                        data-target="#editModal<?= $question['question_id']; ?>" 
-                                                        data-question_id="<?= $question['question_id']; ?>" 
-                                                        data-question_text="<?= htmlspecialchars($question['question_text']); ?>" 
-                                                        data-criteria_id="<?= $question['criteria_id']; ?>" 
-                                                        data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
-                                                        <img src="../../../frontend/assets/icons/edit.svg">
-                                                    </button>
-                                                    <a href="delete_question.php?question_id=<?= $question['question_id']; ?>&survey_id=<?= $survey_id; ?>" onclick="openDeleteConfirmationModal(event, this)" class="delete-btn">
-                                                        <img src="../../../frontend/assets/icons/delete.svg">
-                                                    </a>
+                                            <div class="action-btns">
+                                                <button class="edit-btn" data-toggle="modal" 
+                                                    data-target="#editModal<?= $question['question_id']; ?>" 
+                                                    data-question_id="<?= $question['question_id']; ?>" 
+                                                    data-question_text="<?= htmlspecialchars($question['question_text']); ?>" 
+                                                    data-criteria_id="<?= $question['criteria_id']; ?>" 
+                                                    data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
+                                                    <img src="../../../frontend/assets/icons/edit.svg">
+                                                </button>
+                                                <a href="delete_question.php?question_id=<?= $question['question_id']; ?>&survey_id=<?= $survey_id; ?>" 
+                                                    onclick="openDeleteConfirmationModal(event, this)" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg">
+                                                </a>
+                                            </div>
 
-                                                </div>
                                             </td>
                                         </tr>
                                     <?php endif; ?>
@@ -160,12 +162,12 @@ $num_criteria = count($questions_by_criteria);
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Edit Question</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                                    </span>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <form action="update_question.php" method="POST">
+                                                <form id="editForm<?php echo $question['question_id']; ?>" action="update_question.php" method="POST">
+                                                    <div class="modal-body">
                                                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
                                                         <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
                                                         <input type="hidden" name="criteria_id" value="<?= $question['criteria_id']; ?>"> <!-- Add this line -->
@@ -183,13 +185,17 @@ $num_criteria = count($questions_by_criteria);
                                                             <textarea class="form-control" name="question_text" rows="3" required><?= htmlspecialchars($question['question_text']); ?></textarea>
                                                         </div>
 
+                                                        
+                                                        </div>
+                                                    
+                                                
                                                         <div class="modal-footer">
                                                             <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="save-btn">Save changes</button>
+                                                            <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                        </form>
                                             </div>
+                                            
                                         </div>
                                     </div>
 
@@ -221,9 +227,9 @@ $num_criteria = count($questions_by_criteria);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add New Criteria</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <div class="modal-body">
                     <form action="add_criteria.php" method="POST">
@@ -235,12 +241,14 @@ $num_criteria = count($questions_by_criteria);
                             <input type="text" class="form-control" name="criteria_description" required>
                         </div>
 
-                        <div class="modal-footer">
+                        
+                    
+                </div>
+                <div class="modal-footer">
                             <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
                             <button type="submit" class="save-btn">Save Criteria</button>
                         </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -251,9 +259,9 @@ $num_criteria = count($questions_by_criteria);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add New Question</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <div class="modal-body">
                     <form action="add_question.php" method="POST">
@@ -273,18 +281,22 @@ $num_criteria = count($questions_by_criteria);
                             <textarea class="form-control" name="question_text" rows="3" required></textarea>
                         </div>
 
-                        <div class="modal-footer">
+                        
+                    
+                </div>
+                <div class="modal-footer">
                             <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
                             <button type="submit" class="save-btn">Save Question</button>
                         </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         // JavaScript to dynamically set criteria data in the modal

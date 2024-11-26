@@ -178,8 +178,9 @@ $num_rows = mysqli_num_rows($sections_result);
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editModalLabel">Edit Course Section</h5>
-                                        <span class="close" class="close" data-dismiss="modal"
-                                            aria-label="Close">&times;</span>
+                                        <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                                     </div>
                                     <form id="editForm<?php echo $section['course_section_id']; ?>" method="POST"
                                         action="update_section.php">
@@ -246,7 +247,9 @@ $num_rows = mysqli_num_rows($sections_result);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addSectionModalLabel">Add New Course Section</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form action="add_section.php" method="POST">
                     <div class="modal-body">

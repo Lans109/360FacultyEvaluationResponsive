@@ -157,7 +157,9 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addCourseLabel">Assign Course</h5>
-                    <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form method="POST" action="add_faculty_course.php">
                     <input type="hidden" name="faculty_id" value="<?= $faculty_id ?>">

@@ -194,8 +194,9 @@ $programs_result = mysqli_query($con, $programs_query);
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editModalLabel">Edit Student</h5>
-                                        <span class="close" class="close" data-dismiss="modal"
-                                            aria-label="Close">&times;</span>
+                                        <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                            <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                        </span>
                                     </div>
                                     <form id="editForm<?php echo $student['student_id']; ?>" method="POST"
                                         action="update_student.php">
@@ -259,7 +260,9 @@ $programs_result = mysqli_query($con, $programs_query);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addStudentLabel">Add Student</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form method="POST" action="add_student.php">
                     <div class="modal-body">
