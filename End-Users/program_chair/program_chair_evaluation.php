@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("databasecon.php");
+include('../db/databasecon.php');
 
 // Ensure the user is logged in and is a program chair
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_type'] != 'program_chair') {

@@ -1,7 +1,7 @@
 <?php
 // process_login.php
-include '../db/databasecon.php';
 session_start();
+include '../db/databasecon.php';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

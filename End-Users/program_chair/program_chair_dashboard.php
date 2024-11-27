@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('databasecon.php');
+include('../db/databasecon.php');
 
 // Check if the user is logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
