@@ -72,15 +72,12 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-    <link rel="stylesheet" href="../Styles/styles.css">
 </head>
-
 <body>
-
     <!-- Centered Header -->
     <div class="header">
         <h1>Student Dashboard</h1>
-       <?php include 'student_navbar.php' ?>
+        <?php include 'student_navbar.php' ?>
     </div>
 
     <div class="container">

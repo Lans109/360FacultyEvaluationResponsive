@@ -1,4 +1,5 @@
 <?php
+// student_evaluation.php
 session_start();
 include('../db/databasecon.php');
 
@@ -73,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
     <title>Student Dashboard</title>
-    <style>
+<style>
     /* Reset Styles */
     * {
         margin: 0;
@@ -109,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
+    /* Header Navigation Links */
     .header nav a {
         color: #fff;
         text-decoration: none;
@@ -168,13 +170,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         cursor: pointer;
     }
 
+    /* Button Styles */
     td a,
     td button {
-        padding: 8px 16px;
+        padding: 10px 20px;
         border-radius: 5px;
         text-decoration: none;
         color: #fff;
         font-weight: 600;
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     td a {
@@ -244,6 +251,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         <th>Deadline</th>
                         <th>Actions</th>
                     </tr>
+                </thead>
+                <tbody>
                     <?php foreach ($evaluations as $evaluation): ?>
                     <tr>
                         <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?>
@@ -264,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         </td>
                     </tr>
                     <?php endforeach; ?>
-                    </tbody>
+                </tbody>
             </table>
             <?php else: ?>
             <p>No evaluations available at the moment.</p>

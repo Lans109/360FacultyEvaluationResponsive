@@ -192,18 +192,18 @@ $conn->close();
     }
 
     body {
-            font-family: "Poppins", Arial, sans-serif;
-            background: linear-gradient(135deg, #7D0006, #D3D3D3);
-            color: #000;
-            line-height: 1.6;
-        }
+        font-family: "Poppins", Arial, sans-serif;
+        background: linear-gradient(135deg, #7D0006, #D3D3D3);
+        color: #000;
+        line-height: 1.6;
+    }
 
     /* Header Section */
     .header {
         background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
         padding: 1.5rem 0;
         text-align: center;
-        color: var(--white);
+        color: #fff;
         position: sticky;
         top: 0;
         z-index: 1000;
@@ -230,7 +230,7 @@ $conn->close();
 
     /* Header Navigation Links */
     .header nav a {
-        color: var(--white);
+        color: #fff;
         text-decoration: none;
         margin: 0 1rem;
         font-size: 1.1rem;
@@ -239,7 +239,6 @@ $conn->close();
         background-color: #7D0006;
         border-radius: 8px;
         display: inline-block;
-        transition: var(--transition-speed);
         box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
@@ -563,6 +562,5 @@ $conn->close();
             </div>
         </div>
     </div>
-
 </body>
 </html>
