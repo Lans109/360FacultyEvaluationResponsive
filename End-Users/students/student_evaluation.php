@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?></td>
                         <td>
                             <?php if (!$evaluation['is_completed']): ?>
-                            <a href="evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
+                            <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
                                 Evaluation</a>
                             <?php else: ?>
                             <button disabled>Completed</button>
