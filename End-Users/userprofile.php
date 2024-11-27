@@ -1,11 +1,11 @@
 <?php
 // userprofile.php
 session_start();
-include('databasecon.php');
+include('db/databasecon.php');
 
 // Ensure the user is logged in and the user_type exists in the session
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['user_type'])) {
-    header("Location: login.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -462,24 +462,24 @@ $conn->close();
             <?php
         // Generate navigation links dynamically based on user type
         if ($user_type == 'students') {
-            echo '<a href="student_dashboard.php">Courses</a>';
+            echo '<a href="students/student_dashboard.php">Courses</a>';
         } elseif ($user_type == 'faculty') {
-            echo '<a href="faculty_dashboard.php">Courses Handled</a>';
+            echo '<a href="faculty/faculty_dashboard.php">Courses Handled</a>';
         } elseif ($user_type == 'program_chair') {
-            echo '<a href="program_chair_dashboard.php">Department Info</a>';
+            echo '<a href="program_chair/program_chair_dashboard.php">Department Info</a>';
         }
         ?>
             <a href="userprofile.php">Profile</a>
             <?php
         if ($user_type == 'students') {
-            echo '<a href="student_evaluation.php">Evaluate</a>';
+            echo '<a href="students/student_evaluation.php">Evaluate</a>';
         } elseif ($user_type == 'faculty') {
-            echo '<a href="faculty_evaluation.php">Evaluate</a>';
+            echo '<a href="faculty/faculty_evaluation.php">Evaluate</a>';
         } elseif ($user_type == 'program_chair') {
-            echo '<a href="program_chair_evaluation.php">Evaluate</a>';
+            echo '<a href="program_chair/program_chair_evaluation.php">Evaluate</a>';
         }
         ?>
-            <a href="/360FacultyEvaluationSystem/logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+            <a href="../logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
         </nav>
     </div>
 

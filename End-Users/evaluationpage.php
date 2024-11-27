@@ -4,13 +4,13 @@ include("databasecon.php");
 
 // Ensure the user is logged in and is either a student, faculty, or program chair
 if (!isset($_SESSION['loggedin']) || !in_array($_SESSION['user_type'], ['students', 'faculty', 'program_chair'])) {
-    header("Location: login_option.php");
+    header("Location: ../index.php");
     exit();
 }
 
 // Get the evaluation ID from the URL
 if (!isset($_GET['evaluation_id'])) {
-    header("Location: student_evaluation.php");
+    header("Location: students/student_evaluation.php");
     exit();
 }
 
@@ -59,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 
     // Redirect based on user type
     if ($user_type == 'students') {
-        header("Location: student_evaluation.php");
+        header("Location: students/student_evaluation.php");
     } elseif ($user_type == 'faculty') {
-        header("Location: faculty_evaluation.php");
+        header("Location: faculty/faculty_evaluation.php");
     } elseif ($user_type == 'program_chair') {
-        header("Location: program_chair_evaluation.php");
+        header("Location: program_chair/program_chair_evaluation.php");
     }
     exit();
 }

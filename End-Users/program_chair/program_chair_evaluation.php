@@ -117,12 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 <body>
     <div class="header">
         <h1>Program Chair Dashboard</h1>
-        <nav>
-            <a href="program_chair_dashboard.php">Dashboard</a>
-            <a href="userprofile.php">Profile</a>
-            <a style="text-decoration: underline; font-weight: bold;" href="program_chair_evaluation.php">Evaluate</a>
-            <a href="logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
-        </nav>
+        <?php include 'program_chair_navbar.php' ?>
     </div>
     <div class="container">
         <div class="card">

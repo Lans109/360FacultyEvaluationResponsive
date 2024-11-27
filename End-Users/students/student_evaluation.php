@@ -4,7 +4,7 @@ include('../db/databasecon.php');
 
 // Ensure the user is logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_type'] != 'students') {
-    header("Location: student_login.php");
+    header("Location: ..login-pages/student_login.php");
     exit();
 }
 
@@ -228,12 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 <body>
     <div class="header">
         <h1>Student Dashboard</h1>
-        <nav>
-            <a href="student_dashboard.php">Courses</a>
-            <a href="userprofile.php">Profile</a>
-            <a style="text-decoration: underline; font-weight: bold;" href="student_evaluation.php">Evaluate</a>
-            <a href="logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
-        </nav>
+        <?php include 'student_navbar.php' ?>
     </div>
     <div class="container">
         <div class="card">
