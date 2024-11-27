@@ -183,7 +183,7 @@ $conn->close();
         }
     };
     </script>
-    <style>
+<style>
     /* Reset Styles */
     * {
         margin: 0;
@@ -203,7 +203,7 @@ $conn->close();
         background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
         padding: 1.5rem 0;
         text-align: center;
-        color: var(--white);
+        color: #fff;
         position: sticky;
         top: 0;
         z-index: 1000;
