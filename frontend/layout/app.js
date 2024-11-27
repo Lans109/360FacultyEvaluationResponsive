@@ -60,42 +60,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// COnfirmation on deletes
-let deleteHref = ""; // Variable to store the delete link dynamically
-
-function openDeleteConfirmationModal(event, element) {
-  event.preventDefault(); // Prevent the default link behavior
-  deleteHref = element.getAttribute("href"); // Store the href of the clicked button
-  const deleteModal = document.getElementById("deleteConfirmationModal");
-  deleteModal.style.display = "block"; // Show the modal
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const deleteModal = document.getElementById("deleteConfirmationModal");
-  const confirmDeleteButton = document.getElementById("confirmDeleteButton");
-  const cancelDeleteButton = document.getElementById("cancelDeleteButton");
-
-  // Confirm deletion: Navigate to the stored href
-  confirmDeleteButton.addEventListener("click", function () {
-    window.location.href = deleteHref; // Redirect to the stored href
-  });
-
-  // Cancel deletion: Hide the modal
-  cancelDeleteButton.addEventListener("click", function () {
-    deleteModal.style.display = "none";
-  });
-
-  // Optional: Close modal when clicking outside the content
-  deleteModal.addEventListener("click", function (event) {
-    if (event.target === deleteModal) {
-      deleteModal.style.display = "none";
-    }
-  });
-
-  function closeModal() {
-    const modal = document.getElementById("successModal");
-    modal.style.display = "none"; // Hides the modal
-}
-});
-
 

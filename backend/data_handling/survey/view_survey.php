@@ -1,10 +1,31 @@
 <?php
 include_once "../../../config.php";
+// Include database connection
 include '../../db/dbconnect.php';
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 header("Expires: 0");
+
+session_start();
+
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display Status Messages if any
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
 
 // Get the survey_id from the URL
 $survey_id = isset($_GET['survey_id']) ? mysqli_real_escape_string($con, $_GET['survey_id']) : '';
@@ -45,7 +66,6 @@ while ($question = mysqli_fetch_assoc($questions_result)) {
 }
 
 $num_criteria = count($questions_by_criteria);
-
 ?>
 
 <!DOCTYPE html>
@@ -100,11 +120,19 @@ $num_criteria = count($questions_by_criteria);
             <?php foreach ($questions_by_criteria as $criteria_description => $questions): ?>
                 <div class="survey-box">
                     <div class="criteria-header">
-                        <div class="criteria-title"><?= htmlspecialchars($criteria_description); ?></div>
+                    <div class="criteria-title"><?= htmlspecialchars($criteria_description); ?></div>
+
                             <div>
-                                <a href="delete_criteria.php?criteria_id=<?= $questions[0]['criteria_id']; ?>&survey_id=<?= $survey_id; ?>">
-                                    <img src="../../../frontend/assets/icons/close.svg" alt="Delete">
-                                </a>
+                                <form name="deleteForm" action="delete_criteria.php" method="POST">
+                                <!-- Hidden input to pass the course_id -->
+                                <input type="hidden" name="criteria_id" value="<?= $questions[0]['criteria_id']; ?>">
+                                <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <!-- Submit button for deleting the course -->
+                                <button type="submit" class="cancel-btn">
+                                <img src="../../../frontend/assets/icons/close.svg" alt="Delete Icon">
+                                </button>
+                                </form>
                             </div>
                     </div>
                     <div class="table">
@@ -146,10 +174,16 @@ $num_criteria = count($questions_by_criteria);
                                                     data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
                                                     <img src="../../../frontend/assets/icons/edit.svg">
                                                 </button>
-                                                <a href="delete_question.php?question_id=<?= $question['question_id']; ?>&survey_id=<?= $survey_id; ?>" 
-                                                    onclick="openDeleteConfirmationModal(event, this)" class="delete-btn">
-                                                    <img src="../../../frontend/assets/icons/delete.svg">
-                                                </a>
+                                                <form name="deleteForm" action="delete_question.php" method="POST">
+                                                <!-- Hidden input to pass the course_id -->
+                                                <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
+                                                <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
+                                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                                </form>
                                             </div>
 
                                             </td>
@@ -167,6 +201,7 @@ $num_criteria = count($questions_by_criteria);
                                                     </span>
                                                 </div>
                                                 <form id="editForm<?php echo $question['question_id']; ?>" action="update_question.php" method="POST">
+                                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                                     <div class="modal-body">
                                                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
                                                         <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
@@ -233,6 +268,7 @@ $num_criteria = count($questions_by_criteria);
                 </div>
                 <div class="modal-body">
                     <form action="add_criteria.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
 
                         <!-- New Criteria Description -->
@@ -265,6 +301,7 @@ $num_criteria = count($questions_by_criteria);
                 </div>
                 <div class="modal-body">
                     <form action="add_question.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
                         <input type="hidden" name="criteria_id" id="criteria_id" value="">
                         <input type="hidden" name="criteria_description" id="criteria_description" value="">

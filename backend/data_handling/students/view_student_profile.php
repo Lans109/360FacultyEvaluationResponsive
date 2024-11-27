@@ -3,11 +3,28 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Pragma: no-cache");
-header("Expires: 0");
 // Get the student_id from the URL
 $student_id = isset($_GET['student_id']) ? mysqli_real_escape_string($con, $_GET['student_id']) : '';
+
+session_start();
+
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display Status Messages if any
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
 
 // Fetch student details
 $student_query = "
@@ -142,11 +159,16 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                         <td><?php echo $course['faculty']; ?></td>
                         <td>
                             <div class="action-btns">
-                                <a href="delete_student_course.php?student_id=<?php echo $student_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>" 
-                                onclick="openDeleteConfirmationModal(event, this)"
-                                class="delete-btn">
-                                    <img src="../../../frontend/assets/icons/delete.svg">
-                                </a>
+                                <form name="deleteForm" action="delete_student_course.php" method="POST">
+                                <!-- Hidden input to pass the course_id -->
+                                <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
+                                <input type="hidden" name="course_section_id" value="<?php echo $course['course_section_id']; ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <!-- Submit button for deleting the course -->
+                                <button type="submit" class="delete-btn">
+                                <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -170,6 +192,7 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                     </span>
             </div>
             <form method="POST" action="add_student_coruse.php">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="hidden" name="student_id" value="<?= $student_id ?>">
                 <div class="modal-body">
                     <div class="form-group">
@@ -188,7 +211,7 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                    <button type="submit" class="save-btn">Enroll Course</button>
+                    <button type="submit" name="submit" class="save-btn">Enroll Course</button>
                 </div>
             </form>
         </div>

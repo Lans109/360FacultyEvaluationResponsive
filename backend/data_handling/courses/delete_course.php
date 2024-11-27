@@ -1,13 +1,14 @@
 <?php
+
 // Start the session
 session_start();
 
 // Include the database connection file
 include '../../db/dbconnect.php';
 
-// Check if the request method is GET and if 'course_id' is set
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['course_id'])) {
-    $course_id = $_GET['course_id'];
+// Check if the request method is POST and if 'course_id' is set
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
+    $course_id = $_POST['course_id'];
 
     // Sanitize the course_id to prevent SQL injection
     $course_id = mysqli_real_escape_string($con, $course_id);
@@ -37,4 +38,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['course_id'])) {
     header("Location: courses.php");
     exit();
 }
-?>
