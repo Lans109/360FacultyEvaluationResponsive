@@ -1232,12 +1232,6 @@ input[type=password] {
 .department-box a {
     color: #666;
 }
-
-.department-box .table th {
-    background-color: #923534;
-    color: white;
-}
-
 /* css for account.php page */
 .account-roles-faculty,
 .account-roles-student {
