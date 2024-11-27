@@ -1,7 +1,8 @@
 <?php
 // process_login.php
+include '../db/databasecon.php';
 session_start();
-include('databasecon.php'); // Include the database connection
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form input data
@@ -51,11 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Redirect based on the user type
             if ($user_type == 'students') {
-                header("Location: student_dashboard.php");
+                header("Location: /360FacultyEvaluationSystem/End-Users/students/student_dashboard.php");
             } elseif ($user_type == 'faculty') {
-                header("Location: faculty_dashboard.php");
+                header("Location: /360FacultyEvaluationSystem/End-Users/faculty/faculty_dashboard.php");
             } elseif ($user_type == 'program_chair') {
-                header("Location: program_chair_dashboard.php");
+                header("Location: /360FacultyEvaluationSystem/End-Users/program_chair/program_chair_dashboard.php");
             }
             exit();
         } else {

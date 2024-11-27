@@ -5,7 +5,7 @@
 <html>
 
 <head>
-    <link rel='stylesheet' href="index-style.css">
+    <link rel='stylesheet' href="/360FacultyEvaluationSystem/End-Users/Styles/index-style.css">
     <title>Login - Faculty Evaluation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -32,10 +32,10 @@
         <div class="wrapper">
             <div class="login-box">
                 <div class="logo">
-                    <img src="LPU-LOGO.png" alt="LPU Logo">
+                    <img src="/360FacultyEvaluationSystem/End-Users/LPU-LOGO.png" alt="LPU Logo">
                 </div>
                 <div class="title-area">
-                        <h1>Faculty Login</h1>
+                        <h1>Program Chair Login</h1>
                     </div>
                 <!-- Display error messages -->
                 <?php if (isset($_GET['error'])): ?>
@@ -43,7 +43,7 @@
                 <?php endif; ?>
 
                 <form method="POST" action="process_login.php">
-                    <input type="hidden" name="user_type" value="faculty"> <!-- Hidden field to specify user type -->
+                    <input type="hidden" name="user_type" value="program_chair"> <!-- Hidden field to specify user type -->
                     
                     <div class="user-box">
                         <input type="email" name="email" class="form-control" required>
