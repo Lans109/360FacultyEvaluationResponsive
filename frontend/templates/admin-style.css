@@ -1378,10 +1378,15 @@ input[type=password] {
 .criteria-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .criteria-title {
     margin-bottom: 20px;
     color: #666;
+}
+
+.criteria-header button {
+    padding: 5px;
 }
 
 .add-criteria-section {

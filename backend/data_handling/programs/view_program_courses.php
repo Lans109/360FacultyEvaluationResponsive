@@ -10,6 +10,27 @@ header("Expires: 0");
 // Get the program_id from the URL
 $program_id = isset($_GET['program_id']) ? mysqli_real_escape_string($con, $_GET['program_id']) : '';
 
+// Start session for CSRF token
+session_start();
+
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display Status Messages if any
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
+
 // Fetch program details
 $program_query = "
     SELECT 
@@ -52,8 +73,8 @@ $available_courses_query = "
         c.course_name
     FROM 
         courses c
-    WHERE 
-   c.course_id NOT IN (SELECT course_id FROM program_courses WHERE program_id = $program_id)
+    WHERE
+        c.course_id NOT IN (SELECT course_id FROM program_courses WHERE program_id = '$program_id')
 ";
 $available_courses_result = mysqli_query($con, $available_courses_query);
 
@@ -65,7 +86,6 @@ if (isset($_GET['delete_course_id'])) {
     header("Location: program_courses.php?program_id=$program_id");
     exit();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -84,28 +104,32 @@ if (isset($_GET['delete_course_id'])) {
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
-    
+
     <main>
         <div class="upperMain">
-            <div><h1>Program Courses</h1></div>
+            <div>
+                <h1>Program Courses</h1>
+            </div>
         </div>
         <div class="content">
             <div class="program-profile">
                 <div class="profile-info">
                     <div class="program-info">
-                        <h3><?php echo $program['program_name'] . ' - ' .  $program['program_code']; ?></p></h3>
-                        <div><img class="icon" src="../../../frontend/assets/icons/survey.svg"><p><?php echo $program['program_description']; ?></p></div>
-                        <div><img class="icon" src="../../../frontend/assets/icons/department.svg"><p><?php echo $program['department_name'] . ' - ' . $program['department_code']; ?></p></div>
-                        <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                        <h3><?php echo $program['program_name'] . ' - ' . $program['program_code']; ?></h3>
+                        <div><img class="icon" src="../../../frontend/assets/icons/survey.svg">
+                            <p><?php echo $program['program_description']; ?></p>
+                        </div>
+                        <div><img class="icon" src="../../../frontend/assets/icons/department.svg">
+                            <p><?php echo $program['department_name'] . ' - ' . $program['department_code']; ?></p>
+                        </div>
+                        <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal"
+                            data-target="#addModal">
                             <img src="../../../frontend/assets/icons/add.svg">&nbsp;Add Course&nbsp;
-                        </button>  
-                        <div>
-                         
+                        </button>
                     </div>
                 </div>
             </div>
-            </div>
-            
+
             <div class="table">
                 <table>
                     <thead>
@@ -123,10 +147,19 @@ if (isset($_GET['delete_course_id'])) {
                                     <td><?php echo $course['course_name']; ?></td>
                                     <td>
                                         <div class="action-btns">
-                                            <a href="delete_program_course.php?course_id=<?php echo $course['course_id']; ?>&program_id=<?php echo $program_id ?>"
-                                            class="delete-btn"
-                                            onclick="openDeleteConfirmationModal(event, this)">
-                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
+
+                                            <form name="deleteForm" action="delete_program_course.php" method="POST">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <!-- Hidden input to pass the course_id -->
+                                                <input type="hidden" name="course_id"
+                                                    value="<?php echo $course['course_id']; ?>">
+                                                <input type="hidden" name="program_id" value="<?php echo $program_id ?>">
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -139,8 +172,6 @@ if (isset($_GET['delete_course_id'])) {
                     </tbody>
                 </table>
             </div>
-
-            
 
         </div>
     </main>
@@ -155,6 +186,7 @@ if (isset($_GET['delete_course_id'])) {
                     </span>
                 </div>
                 <form method="POST" action="add_course_to_program.php">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="program_id" value="<?= $program_id ?>">
                     <div class="modal-body">
                         <div class="form-group">
@@ -178,10 +210,10 @@ if (isset($_GET['delete_course_id'])) {
         </div>
     </div>
 
-<script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -107,7 +107,9 @@ if (isset($_GET['reset_filters'])) {
 
     <main>
         <div class="upperMain">
-            <div><h1>Program Management</h1></div>
+            <div>
+                <h1>Program Management</h1>
+            </div>
         </div>
         <div class="content">
 
@@ -119,9 +121,10 @@ if (isset($_GET['reset_filters'])) {
                     <form method="GET" action="">
                         <div class="form-group">
                             <div class="search-container">
-                                <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                                <input type="text" placeholder="Search..." id="search" name="search"
+                                    class="search-input">
                                 <button type="submit" class="search-button">
-                                    <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                                    <i class="fa fa-search"></i> <!-- Magnifying Glass Icon -->
                                 </button>
                             </div>
                             <div class="select-container">
@@ -140,11 +143,13 @@ if (isset($_GET['reset_filters'])) {
                                         }
                                         ?>
                                     </select>
-                                    <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                                    <i class="fa fa-chevron-down select-icon"></i> <!-- Icon for dropdown -->
                                 </div>
                             </div>
-                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
-                            <a href="programs.php?reset_filters=1" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>             
+                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i>
+                                Filter</button>
+                            <a href="programs.php?reset_filters=1" class="fitler-btn"><i class="fa fa-eraser"></i>
+                                Clear</a>
                         </div>
                     </form>
                 </div>
@@ -170,106 +175,113 @@ if (isset($_GET['reset_filters'])) {
                         </tr>
                     </thead>
                     <tbody>
-                    <?php if (mysqli_num_rows($programs_result) > 0): ?>
-                        <?php while ($program = mysqli_fetch_assoc($programs_result)): ?>
-                            <tr>
-                                <td><?php echo $program['program_code']; ?></td>
-                                <td><?php echo $program['program_name']; ?></td>
-                                <td><?php echo $program['program_description']; ?></td>
-                                <td><?php echo $program['department_code'] ?: 'Not Assigned'; ?></td>
-                                <td><?php echo $program['total_courses']; ?></td>
-                                <td>
-                                    <!-- Add Course Button -->
-                                    <a href="view_program_courses.php?program_id=<?php echo $program['program_id']; ?>" class="view-btn">
+                        <?php if (mysqli_num_rows($programs_result) > 0): ?>
+                            <?php while ($program = mysqli_fetch_assoc($programs_result)): ?>
+                                <tr>
+                                    <td><?php echo $program['program_code']; ?></td>
+                                    <td><?php echo $program['program_name']; ?></td>
+                                    <td><?php echo $program['program_description']; ?></td>
+                                    <td><?php echo $program['department_code'] ?: 'Not Assigned'; ?></td>
+                                    <td><?php echo $program['total_courses']; ?></td>
+                                    <td>
+                                        <!-- Add Course Button -->
+                                        <a href="view_program_courses.php?program_id=<?php echo $program['program_id']; ?>"
+                                            class="view-btn">
                                             View Courses
                                         </a>
 
-                                </td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editModal<?php echo $program['program_id']; ?>"
-                                            data-id="<?php echo $program['program_id']; ?>"
-                                            data-name="<?php echo $program['program_name']; ?>"
-                                            data-code="<?php echo $program['program_code']; ?>"
-                                            data-description="<?php echo $program['program_description']; ?>"
-                                            data-department-id="<?php echo $program['department_id']; ?>">
-                                        
-                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
+                                    </td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="edit-btn" data-toggle="modal"
+                                                data-target="#editModal<?php echo $program['program_id']; ?>"
+                                                data-id="<?php echo $program['program_id']; ?>"
+                                                data-name="<?php echo $program['program_name']; ?>"
+                                                data-code="<?php echo $program['program_code']; ?>"
+                                                data-description="<?php echo $program['program_description']; ?>"
+                                                data-department-id="<?php echo $program['department_id']; ?>">
+
+                                                <img src="../../../frontend/assets/icons/edit.svg"></button>
 
                                             <form name="deleteForm" action="delete_program.php" method="POST">
-                                            <!-- Hidden input to pass the course_id -->
-                                            <input type="hidden" name="program_id" value="<?php echo $program['program_id'];?>">
-                                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                            <!-- Submit button for deleting the course -->
-                                            <button type="submit" class="delete-btn">
-                                            <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
-                                            </button>
-                                            </form>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Edit Program Modal -->
-                            <div class="modal fade" id="editModal<?php echo $program['program_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Program</h5>
-                                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">
-                                                <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
-                                            </span>
-                                        </div>
-                                        <form method="POST" action="update_program.php">
-                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                            <div class="modal-body">
+                                                <!-- Hidden input to pass the course_id -->
                                                 <input type="hidden" name="program_id"
                                                     value="<?php echo $program['program_id']; ?>">
-                                                <div class="form-group">
-                                                    <label for="program_name">Program Name</label>
-                                                    <input type="text" name="program_name" class="form-control"
-                                                        value="<?php echo $program['program_name']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="program_code">Program Code</label>
-                                                    <input type="text" name="program_code" class="form-control"
-                                                        value="<?php echo $program['program_code']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="program_description">Program Description</label>
-                                                    <textarea name="program_description" class="form-control"
-                                                        required><?php echo $program['program_description']; ?></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="department_id">Department</label>
-                                                    <select name="department_id" class="form-control" required>
-                                                        <option value="">Select Department</option>
-                                                        <?php
-                                                        // Fetch all departments for the dropdown
-                                                        $departments_query = "SELECT department_id, department_name FROM departments";
-                                                        $departments_result = mysqli_query($con, $departments_query);
-                                                        while ($department = mysqli_fetch_assoc($departments_result)) {
-                                                            $selected = ($department['department_id'] == $program['department_id']) ? 'selected' : '';
-                                                            echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_name'] . "</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Edit Program Modal -->
+                                <div class="modal" id="editModal<?php echo $program['program_id']; ?>" tabindex="-1"
+                                    role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Edit Program</h5>
+                                                <span class="close" data-dismiss="modal" aria-label="Close">
+                                                    <img src="../../../frontend/assets/icons/close2.svg" alt="Close">
+                                                </span>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Update Program</button>
-                                            </div>
-                                        </form>
+                                            <form id="editForm<?php echo $program['program_id']; ?>" method="POST"
+                                                action="update_program.php">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="program_id"
+                                                        value="<?php echo $program['program_id']; ?>">
+                                                    <div class="form-group">
+                                                        <label for="program_name">Program Name</label>
+                                                        <input type="text" name="program_name" class="form-control"
+                                                            value="<?php echo $program['program_name']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="program_code">Program Code</label>
+                                                        <input type="text" name="program_code" class="form-control"
+                                                            value="<?php echo $program['program_code']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="program_description">Program Description</label>
+                                                        <textarea name="program_description" class="form-control"
+                                                            required><?php echo $program['program_description']; ?></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="department_id">Department</label>
+                                                        <select name="department_id" class="form-control" required>
+                                                            <option value="">Select Department</option>
+                                                            <?php
+                                                            // Fetch all departments for the dropdown
+                                                            $departments_query = "SELECT department_id, department_name FROM departments";
+                                                            $departments_result = mysqli_query($con, $departments_query);
+                                                            while ($department = mysqli_fetch_assoc($departments_result)) {
+                                                                $selected = ($department['department_id'] == $program['department_id']) ? 'selected' : '';
+                                                                echo "<option value='" . $department['department_id'] . "' $selected>" . $department['department_name'] . "</option>";
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="save-btn">Update Program</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php endwhile; ?>
+
+                            <?php endwhile; ?>
                         <?php else: ?>
-                                <tr>
-                                    <td colspan="4">No Programs found.</td>
-                                </tr>
-                            <?php endif; ?>
+                            <tr>
+                                <td colspan="4">No Programs found.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -289,7 +301,7 @@ if (isset($_GET['reset_filters'])) {
                     </span>
                 </div>
                 <form action="add_program.php" method="POST">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="program_name">Program Name</label>
