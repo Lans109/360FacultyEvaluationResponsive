@@ -1,47 +1,93 @@
 <?php
+// Include configuration and database connection
 include_once "../../../config.php";
-// Include database connection
 include '../../db/dbconnect.php';
 
-// Initialize search and filter variables
-$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
-$department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
+session_start();
 
-// Fetch all programs with their associated department
-$programs_query = "SELECT 
-    p.program_id, 
-    p.program_name, 
-    p.program_code, 
-    p.program_description, 
-    d.department_name, 
-    p.department_id, 
-    d.department_code, 
-    COUNT(pc.program_id) AS total_courses
-FROM 
-    programs p
-LEFT JOIN 
-    program_courses pc ON p.program_id = pc.program_id
-LEFT JOIN 
-    departments d ON p.department_id = d.department_id
-GROUP BY 
-    p.program_id, p.program_name, p.program_code, p.program_description, d.department_name, p.department_id, d.department_code
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Display status messages if available
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include a status handling layout for displaying messages
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status'], $_SESSION['message']);
+}
+
+// Handle search and department filter inputs
+if (isset($_GET['search'])) {
+    $_SESSION['search'] = mysqli_real_escape_string($con, $_GET['search']);
+}
+if (isset($_GET['department_filter'])) {
+    $_SESSION['department_filter'] = $_GET['department_filter'];
+}
+
+// Use session values for search and filter or default to empty
+$search = $_SESSION['search'] ?? '';
+$department_filter = $_SESSION['department_filter'] ?? '';
+
+// Base query to fetch programs and associated departments
+$programs_query = "
+    SELECT 
+        p.program_id, 
+        p.program_name, 
+        p.program_code, 
+        p.program_description, 
+        d.department_name, 
+        p.department_id, 
+        d.department_code, 
+        COUNT(pc.program_id) AS total_courses
+    FROM 
+        programs p
+    LEFT JOIN 
+        program_courses pc ON p.program_id = pc.program_id
+    LEFT JOIN 
+        departments d ON p.department_id = d.department_id
 ";
 
-// Check if a search term is provided
-if ($search) {
-    $programs_query .= " WHERE (p.program_name LIKE '%$search%' OR p.program_code LIKE '%$search%')";
+// Apply search filter
+if (!empty($search)) {
+    $programs_query .= " WHERE (
+        p.program_name LIKE '%$search%' OR 
+        p.program_code LIKE '%$search%' OR 
+        d.department_name LIKE '%$search%'
+    )";
 }
 
-// Add department filter condition if a department is selected
-if ($department_filter) {
-    $programs_query .= $search ? " AND p.department_id = '$department_filter'" : " WHERE p.department_id = '$department_filter'";
+// Apply department filter
+if (!empty($department_filter)) {
+    $programs_query .= !empty($search)
+        ? " AND p.department_id = '$department_filter'"
+        : " WHERE p.department_id = '$department_filter'";
 }
+
+// Group the query results
+$programs_query .= "
+    GROUP BY 
+        p.program_id, p.program_name, p.program_code, 
+        p.program_description, d.department_name, 
+        p.department_id, d.department_code";
 
 // Execute the query
 $programs_result = mysqli_query($con, $programs_query);
-
 $num_rows = mysqli_num_rows($programs_result);
+
+// Reset filters if needed
+if (isset($_GET['reset_filters'])) {
+    unset($_SESSION['search'], $_SESSION['department_filter']);
+    header("Location: programs.php"); // Adjust to the appropriate redirection URL
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +144,7 @@ $num_rows = mysqli_num_rows($programs_result);
                                 </div>
                             </div>
                             <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
-                            <a href="programs.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>                
+                            <a href="programs.php?reset_filters=1" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>             
                         </div>
                     </form>
                 </div>
@@ -151,12 +197,15 @@ $num_rows = mysqli_num_rows($programs_result);
                                         
                                             <img src="../../../frontend/assets/icons/edit.svg"></button>
 
-                                        <a href="delete_program.php?program_id=<?php echo $program['program_id']; ?>"
-                                            class="delete-btn"
-                                            onclick="openDeleteConfirmationModal(event, this)">
-                                        
-                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
-
+                                            <form name="deleteForm" action="delete_program.php" method="POST">
+                                            <!-- Hidden input to pass the course_id -->
+                                            <input type="hidden" name="program_id" value="<?php echo $program['program_id'];?>">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                            <!-- Submit button for deleting the course -->
+                                            <button type="submit" class="delete-btn">
+                                            <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                            </button>
+                                            </form>
                                     </div>
                                 </td>
                             </tr>
@@ -172,6 +221,7 @@ $num_rows = mysqli_num_rows($programs_result);
                                             </span>
                                         </div>
                                         <form method="POST" action="update_program.php">
+                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                             <div class="modal-body">
                                                 <input type="hidden" name="program_id"
                                                     value="<?php echo $program['program_id']; ?>">
@@ -239,6 +289,7 @@ $num_rows = mysqli_num_rows($programs_result);
                     </span>
                 </div>
                 <form action="add_program.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="program_name">Program Name</label>

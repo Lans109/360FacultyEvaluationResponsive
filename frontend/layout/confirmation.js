@@ -1,37 +1,36 @@
-// Confirmation on Edits
 document.addEventListener("DOMContentLoaded", function () {
-  // Select all forms with name="editForm"
-  const forms = document.querySelectorAll('form[name="editForm"]'); // Select all forms with the name "editForm"
+  // Select all forms with the name "editForm"
+  const forms = document.querySelectorAll('form[name="editForm"]'); 
 
   forms.forEach((form) => {
-    // Extract the unique ID from the form's name (e.g., form name: editForm{faculty_id})
-    const formName = form.getAttribute('name');  // Get the form's name
-    const modalId = `editModal${formName.replace('editForm', '')}`; // Construct the modal ID (assumes form name is "editForm{ID}")
-    const editModal = document.getElementById(modalId); // Get the corresponding modal by ID
+    // Get the unique form ID from its name (e.g., "editForm{faculty_id}")
+    const formName = form.getAttribute('name');  
+    const modalId = `editModal${formName.replace('editForm', '')}`; // Create the modal ID using the form's name
+    const editModal = document.getElementById(modalId); // Get the modal element by ID
     const editConfirmationModal = document.getElementById("editConfirmationModal");
     const confirmEditButton = document.getElementById("confirmEditButton");
     const cancelEditButton = document.getElementById("cancelEditButton");
 
-    // Add submit event listener to the form
+    // When the form is submitted
     form.addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent default form submission
-      editModal.style.display = "none"; // Hide the edit modal
+      event.preventDefault(); // Stop the form from submitting right away
+      editModal.style.display = "none"; // Hide the edit form
       editConfirmationModal.style.display = "block"; // Show the confirmation modal
 
-      // Handle confirmation (submit the form when confirmed)
+      // If the user confirms, submit the form
       confirmEditButton.onclick = function () {
         editConfirmationModal.style.display = "none"; // Hide the confirmation modal
-        form.submit(); // Submit the form programmatically
+        form.submit(); // Submit the form
       };
 
-      // Handle cancel (bring back the edit modal)
+      // If the user cancels, go back to the edit form
       cancelEditButton.onclick = function () {
         editConfirmationModal.style.display = "none"; // Hide the confirmation modal
-        editModal.style.display = "block"; // Show the edit modal
+        editModal.style.display = "block"; // Show the edit form again
       };
     });
 
-    // Close modal when clicking outside or on cancel button
+    // Close the confirmation modal if the cancel button or close icon is clicked
     const cancelButtons = editConfirmationModal.querySelectorAll(".cancel-btn, .close");
     cancelButtons.forEach((btn) => {
       btn.addEventListener("click", function () {
@@ -40,48 +39,56 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Confirmation on Deletes
-  let deleteHref = ""; // Variable to store the delete link dynamically
+  // Attach the click event listener to delete forms
+  const deleteForms = document.querySelectorAll('form[name="deleteForm"]');
 
-  // Function to open the delete confirmation modal
-  function openDeleteConfirmationModal(event, element) {
-    event.preventDefault(); // Prevent the default link behavior
-    deleteHref = element.getAttribute("href"); // Store the href of the clicked button
-    const deleteModal = document.getElementById("deleteConfirmationModal");
-    deleteModal.style.display = "block"; // Show the delete confirmation modal
-  }
-
-  // Add event listener for delete modal interactions
-  const deleteModal = document.getElementById("deleteConfirmationModal");
-  const confirmDeleteButton = document.getElementById("confirmDeleteButton");
-  const cancelDeleteButton = document.getElementById("cancelDeleteButton");
-  const closeDeleteButton = document.getElementById("closeDeleteButton");
-  const closeEditButton = document.getElementById("closeEditButton");
-  // Confirm deletion: Navigate to the stored href
-  confirmDeleteButton.addEventListener("click", function () {
-    window.location.href = deleteHref; // Redirect to the stored href
+  deleteForms.forEach((form) => {
+    const deleteConfirmationModal = document.getElementById("deleteConfirmationModal"); // Get the delete confirmation modal
+    const confirmDeleteButton = document.getElementById("confirmDeleteButton"); // Get the "confirm delete" button
+    const cancelDeleteButton = document.getElementById("cancelDeleteButton"); // Get the "cancel delete" button
+  
+    // When the form is submitted
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();  // Stop the form from submitting immediately
+      deleteConfirmationModal.style.display = "block";  // Show the delete confirmation modal
+  
+      // If the user confirms, submit the form
+      confirmDeleteButton.onclick = function () {
+        deleteConfirmationModal.style.display = "none"; // Hide the delete confirmation modal
+        form.submit();  // Submit the form
+      };
+  
+      // If the user cancels, hide the modal without submitting
+      cancelDeleteButton.onclick = function () {
+        deleteConfirmationModal.style.display = "none";  // Hide the delete confirmation modal
+      };
+    });
+  
+    // Close the delete confirmation modal if the cancel button or close icon is clicked
+    const cancelButtons = deleteConfirmationModal.querySelectorAll(".cancel-btn, .close");
+    cancelButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        deleteConfirmationModal.style.display = "none"; // Hide the delete confirmation modal
+      });
+    });
   });
+  
 
-  // Cancel deletion: Hide the modal
-  cancelDeleteButton.addEventListener("click", function () {
-    deleteModal.style.display = "none"; // Hide the delete confirmation modal
-  });
+  // Close modals if the user clicks outside of them or on the cancel button
+  window.addEventListener("click", function (event) {
+    const deleteConfirmationModal = document.getElementById("deleteConfirmationModal");
+    const editConfirmationModal = document.getElementById("editConfirmationModal");
+    const successModal = document.getElementById("successModal");
 
-  // Optional: Close modal when clicking outside the content
-  deleteModal.addEventListener("click", function (event) {
-    if (event.target === deleteModal) {
-      deleteModal.style.display = "none"; // Hide modal if clicked outside
+    // Check if the click happened outside any of the modals
+    if (event.target === deleteConfirmationModal) {
+      deleteConfirmationModal.style.display = "none"; // Hide the delete confirmation modal
+    } else if (event.target === editConfirmationModal) {
+      editConfirmationModal.style.display = "none"; // Hide the edit confirmation modal
+    } else if (event.target === successModal) {
+      successModal.style.display = "none"; // Hide the success modal
     }
   });
-
-  closeDeleteButton.addEventListener("click", function () {
-    deleteModal.style.display = "none"; // Hide the delete confirmation modal
-  });
-
-    closeEditButton.addEventListener("click", function () {
-        // Hide the edit confirmation modal
-        editConfirmationModal.style.display = "none";
-    });
 
   // Expose the openDeleteConfirmationModal function for external use
   window.openDeleteConfirmationModal = openDeleteConfirmationModal;

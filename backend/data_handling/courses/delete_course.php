@@ -1,40 +1,61 @@
 <?php
-// Start the session
-session_start();
-
 // Include the database connection file
 include '../../db/dbconnect.php';
 
-// Check if the request method is GET and if 'course_id' is set
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['course_id'])) {
-    $course_id = $_GET['course_id'];
+// Start the session
+session_start();
 
-    // Sanitize the course_id to prevent SQL injection
-    $course_id = mysqli_real_escape_string($con, $course_id);
+// Check if the form is submitted via POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // SQL query to delete the course from the database
-    $delete_course_query = "DELETE FROM courses WHERE course_id = '$course_id'";
+    // CSRF token validation
+    if (isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
 
-    // Attempt to execute the query
-    if (mysqli_query($con, $delete_course_query)) {
-        // If successful, set session variables for success message
-        $_SESSION['status'] = 'success';
-        $_SESSION['message'] = 'Course deleted successfully!';
-        header("Location: courses.php");
-        exit();
+        // Unset the CSRF token after validation and use
+        unset($_SESSION['csrf_token']);
+
+        // Check if the 'faculty_id' and 'course_section_id' are set and not empty
+        if (isset($_SESSION['faculty_id'])) {
+            $faculty_id = $_SESSION['faculty_id']; // Use the faculty_id stored in the session
+            $course_section_id = mysqli_real_escape_string($con, $_POST['course_section_id']); // Sanitize the course section ID
+
+            // Proceed to delete the record from the faculty_courses table
+            $delete_query = "
+                DELETE FROM faculty_courses 
+                WHERE faculty_id = '$faculty_id' AND course_section_id = '$course_section_id'";
+
+            // Execute the query and check if it was successful
+            if (mysqli_query($con, $delete_query)) {
+                // If successful, set a success message in the session
+                $_SESSION['status'] = 'success';
+                $_SESSION['message'] = 'Course removed successfully!';
+
+                // Redirect to the faculty profile page, passing the faculty_id to the URL
+                header("Location: view_faculty_profile.php?faculty_id=" . $faculty_id);
+                exit();
+            } else {
+                // If query fails, log the error and set an error message in the session
+                error_log("Database Error: " . mysqli_error($con)); // Log the error for debugging
+                $_SESSION['status'] = 'error';
+                $_SESSION['message'] = 'Error: Unable to remove course. Please try again later.';
+                header("Location: view_faculty_profile.php?faculty_id=" . $faculty_id);
+                exit();
+            }
+
+        } else {
+            // If 'faculty_id' or 'course_section_id' is missing, set an error message
+            $_SESSION['status'] = 'error';
+            $_SESSION['message'] = 'Error: Faculty ID or Course Section ID is missing.';
+            header("Location: view_faculty_profile.php?faculty_id=" . $faculty_id); // Redirect to a fallback page
+            exit();
+        }
+
     } else {
-        // If query fails, log the error and set session variables for error message
-        error_log("Database Error: " . mysqli_error($con)); // Log the error
+        // If CSRF token is invalid, set an error message and redirect
         $_SESSION['status'] = 'error';
-        $_SESSION['message'] = 'Error deleting course. Please try again later.';
-        header("Location: courses.php");
+        $_SESSION['message'] = 'Error: Invalid CSRF token. Please try again.';
+        header("Location: view_faculty_profile.php?faculty_id=" . $faculty_id);
         exit();
     }
-} else {
-    // If no course_id is passed or incorrect request method, set session variables for error message and redirect
-    $_SESSION['status'] = 'error';
-    $_SESSION['message'] = 'Invalid course ID or request method.';
-    header("Location: courses.php");
-    exit();
 }
 ?>

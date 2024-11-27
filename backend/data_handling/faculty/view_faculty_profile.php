@@ -3,11 +3,28 @@ include_once "../../../config.php";
 // Include database connection
 include '../../db/dbconnect.php';
 
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Pragma: no-cache");
-header("Expires: 0");
 // Get the faculty_id from the URL
 $faculty_id = isset($_GET['faculty_id']) ? mysqli_real_escape_string($con, $_GET['faculty_id']) : '';
+
+session_start();
+
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display Status Messages if any
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
 
 // Fetch faculty details
 $faculty_query = "
@@ -89,10 +106,12 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
-    
+
     <main>
         <div class="upperMain">
-            <div><h1>Faculty Profile</h1></div>
+            <div>
+                <h1>Faculty Profile</h1>
+            </div>
         </div>
         <div class="content">
             <div class="faculty-profile">
@@ -100,19 +119,27 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                     <img class="profile-image" src="../../../<?= $faculty['profile_image'] ?>">
                     <div class="faculty-info">
                         <h3><?php echo $faculty['first_name'] . " " . $faculty['last_name']; ?></h3>
-                        <div><img class="icon" src="../../../frontend/assets/icons/message.svg"><p><?php echo $faculty['email']; ?></p></div>
-                        <div><img class="icon" src="../../../frontend/assets/icons/call.svg"><p><?php echo $faculty['phone_number']; ?></p></div>
-                        <div><img class="icon" src="../../../frontend/assets/icons/department.svg"><p><?php echo $faculty['department_name']; ?> - <?php echo $faculty['department_code']; ?></p></div>
-                        <div>
-                            <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
-                                <img src="../../../frontend/assets/icons/add.svg">&nbsp;Assign Course&nbsp;
-                            </button>   
+                        <div><img class="icon" src="../../../frontend/assets/icons/message.svg">
+                            <p><?php echo $faculty['email']; ?></p>
                         </div>
-                    </div>       
+                        <div><img class="icon" src="../../../frontend/assets/icons/call.svg">
+                            <p><?php echo $faculty['phone_number']; ?></p>
+                        </div>
+                        <div><img class="icon" src="../../../frontend/assets/icons/department.svg">
+                            <p><?php echo $faculty['department_name']; ?> - <?php echo $faculty['department_code']; ?>
+                            </p>
+                        </div>
+                        <div>
+                            <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal"
+                                data-target="#addModal">
+                                <img src="../../../frontend/assets/icons/add.svg">&nbsp;Assign Course&nbsp;
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="table">  
+
+            <div class="table">
                 <table>
                     <thead>
                         <tr>
@@ -131,11 +158,19 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                                     <td><?php echo $course['course_name']; ?></td>
                                     <td>
                                         <div class="action-btns">
-                                            <a href="delete_faculty_course.php?faculty_id=<?php echo $faculty_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>" 
-                                            onclick="openDeleteConfirmationModal(event, this)"
-                                            class="delete-btn">
-                                                <img src="../../../frontend/assets/icons/delete.svg">
-                                            </a>
+                                            <form name="deleteForm" action="delete_faculty_course.php" method="GET">
+                                                <!-- Hidden inputs to pass the faculty_id, course_section_id, and CSRF token -->
+                                                <input type="hidden" name="faculty_id" value="<?php echo $faculty_id; ?>">
+                                                <input type="hidden" name="course_section_id"
+                                                    value="<?php echo $course['course_section_id']; ?>">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -152,16 +187,19 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
         </div>
     </main>
 
-    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addCourseLabel" aria-hidden="true">
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addCourseLabel">Assign Course</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
-                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    <h5 class="modal-title" id="addCourseModalLabel">Assign Course to Faculty</h5>
+                    <span class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Close">
                     </span>
                 </div>
-                <form method="POST" action="add_faculty_course.php">
+                <!-- Assign Course Form -->
+                <form action="add_faculty_course.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="faculty_id" value="<?= $faculty_id ?>">
                     <div class="modal-body">
                         <div class="form-group">
@@ -180,17 +218,18 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                        <button type="submit" class="save-btn">Assign Course</button>
+                        <button type="submit" name="submit" class="save-btn">Assign Course</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-<script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

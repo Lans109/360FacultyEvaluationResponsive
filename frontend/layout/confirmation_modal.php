@@ -31,7 +31,7 @@
         <div class="modal-content"> 
             <div class="text-content">
                 <div class="modal-header">
-                    <span class="close" class="cancel-btn" id="closeDeleteButton" data-dismiss="modal">
+                    <span class="close" class="cancel-btn" id="closeEditButton">
                         <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
                     </span>                                            
                 </div>
