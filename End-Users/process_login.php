@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Fetch user data (email, password, first_name, last_name) from the respective table based on the user type
-    $stmt = $conn->prepare("SELECT email, password_hash, first_name, last_name FROM $tableName WHERE LOWER(email) = LOWER(?)");
+    $stmt = $conn->prepare("SELECT email, password, first_name, last_name FROM $tableName WHERE LOWER(email) = LOWER(?)");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();

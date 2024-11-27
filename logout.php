@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in, if not, redirect to the login page
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: login_option.php');
+    header('Location: index.php');
     exit();
 }
 
@@ -19,6 +19,6 @@ if (isset($_COOKIE[session_name()])) {
 session_destroy();
 
 // Redirect to the login page (or other pages as necessary)
-header('Location: login_option.php');
+header('Location: index.php');
 exit();
 ?>
