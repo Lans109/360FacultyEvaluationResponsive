@@ -2,9 +2,21 @@
 // Include the database connection
 include_once "../../db/dbconnect.php";
 
-// Check if the form was submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
+// Start the session for CSRF token validation and status messages
+session_start();
+
+// Check if the form was submitted via POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // CSRF token is missing or invalid
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Invalid CSRF token.';
+        header("Location: accounts.php");
+        exit;
+    }
+
+    // Retrieve form data with escaping to prevent SQL injection
     $account_id = mysqli_real_escape_string($con, $_POST['account_id']);
     $username = mysqli_real_escape_string($con, $_POST['username']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
@@ -13,7 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate required fields
     if (empty($account_id) || empty($username) || empty($email) || empty($role)) {
-        echo "Error: All fields except password are required.";
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Error: All fields except password are required.';
+        header("Location: accounts.php");
         exit;
     }
 
@@ -32,28 +46,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id_column = 'chair_id';
             break;
         default:
-            echo "Error: Invalid role.";
+            $_SESSION['status'] = 'error';
+            $_SESSION['message'] = 'Error: Invalid role.';
+            header("Location: accounts.php");
             exit;
     }
 
     // Build the update query
     $update_query = "UPDATE $table SET username = '$username', email = '$email'";
+
+    // If password is provided, hash it and include in the update query
     if (!empty($password)) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $update_query .= ", password_hash = '$password_hash'";
     }
+
     $update_query .= " WHERE $id_column = '$account_id'";
 
-    // Execute the query
+    // Execute the update query
     if (mysqli_query($con, $update_query)) {
-        echo "Account updated successfully.";
-        // Redirect to the accounts page or display a success message
+        // Unset CSRF token after the update
+        unset($_SESSION['csrf_token']);
+
+        // Optionally, regenerate the CSRF token if you plan to use it again
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+        $_SESSION['status'] = 'success';
+        $_SESSION['message'] = 'Account updated successfully.';
         header("Location: accounts.php?status=success");
         exit;
     } else {
-        echo "Error updating account: " . mysqli_error($con);
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Error updating account: ' . mysqli_error($con);
+        header("Location: accounts.php");
+        exit;
     }
 } else {
-    echo "Invalid request.";
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid request method.';
+    header("Location: accounts.php");
+    exit;
 }
+
 ?>

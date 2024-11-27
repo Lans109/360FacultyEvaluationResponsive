@@ -1,10 +1,40 @@
 <?php
+// Include necessary configuration and database connection files
 include_once "../../../config.php";
-// Connect to your database
 include '../../db/dbconnect.php';
 
-$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
-$role_filter = isset($_GET['role_filter']) ? $_GET['role_filter'] : '';
+// Start the session for CSRF token and session management
+session_start();
+
+// Generate a CSRF token if one doesn't exist in the session
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display status messages if set
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
+
+// Handle search and role filter inputs, store them in session for persistence across pages
+if (isset($_GET['search'])) {
+    $_SESSION['search'] = mysqli_real_escape_string($con, $_GET['search']);
+}
+if (isset($_GET['role_filter'])) {
+    $_SESSION['role_filter'] = mysqli_real_escape_string($con, $_GET['role_filter']);
+}
+
+// Use session values if set, otherwise default to empty
+$search = $_SESSION['search'] ?? '';
+$role_filter = $_SESSION['role_filter'] ?? '';
 
 $query_accounts = "
     SELECT chair_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Program Chair' AS role 
@@ -42,6 +72,14 @@ if (!empty($filters)) {
 $result_accounts = mysqli_query($con, $query_accounts);
 
 $num_rows = mysqli_num_rows($result_accounts);
+
+// Reset filters if the reset request is made
+if (isset($_GET['reset_filters'])) {
+    unset($_SESSION['search']);
+    unset($_SESSION['role_filter']);
+    header("Location: accounts.php");
+    exit;
+}
 ?>
 
 
@@ -94,7 +132,9 @@ $num_rows = mysqli_num_rows($result_accounts);
                             </div>
                         </div>
                             <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
-                            <a href="accounts.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
+							<a href="accounts.php?reset_filters=1" class="fitler-btn">
+								<i class="fa fa-eraser"></i> Clear
+							</a>
                         </div>
                     </form>
                 </div>
@@ -146,6 +186,8 @@ $num_rows = mysqli_num_rows($result_accounts);
                     </span>
                 </div>
                 <form id="editForm<?php echo $account['account_id']; ?>" method="POST" action="update_account.php">
+                <input type="hidden" name="csrf_token"
+                value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="hidden" id="role" name="role" value="<?php echo $account['role']; ?>">
                     <div class="modal-body">
                         <input type="hidden" name="account_id" value="<?php echo $account['account_id']; ?>">
