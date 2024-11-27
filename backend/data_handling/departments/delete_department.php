@@ -11,6 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate CSRF token
     if (isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
         
+        // Unset CSRF token after validation
+        unset($_SESSION['csrf_token']);
+        
         // Sanitize the department_id to prevent SQL injection
         $department_id = intval($_POST['department_id']);
 
