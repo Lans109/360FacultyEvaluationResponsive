@@ -74,154 +74,160 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     <link rel="stylesheet" href="dashboard.css">
     <title>Student Dashboard</title>
     <style>
-    /* Reset Styles */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+        /* Reset Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-        font-family: "Poppins", Arial, sans-serif;
-        background: linear-gradient(135deg, #7D0006, #D3D3D3);
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-        color: #000;
-        line-height: 1.6;
-        margin: 0;
-    }
+        body {
+            font-family: "Poppins", Arial, sans-serif;
+            background: linear-gradient(135deg, #7D0006, #D3D3D3);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: #000;
+            line-height: 1.6;
+            margin: 0;
+        }
 
-    /* Header Section */
-    .header {
-        background: #7D0006;
-        padding: 1.5rem 0;
-        text-align: center;
-        color: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        /* Header Section */
+        .header {
+            background: #7D0006;
+            padding: 1.5rem 0;
+            text-align: center;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-    .header h1 {
-        font-size: 2.5rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+        .header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-    .header nav a {
-        color: #fff;
-        text-decoration: none;
-        margin: 0 1rem;
-        font-size: 1.1rem;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        background-color: #7D0006;
-        border-radius: 8px;
-        display: inline-block;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        /* Header Navigation Links */
+        .header nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background-color: #7D0006;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-    .header nav a:hover {
-        color: #000;
-        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-        box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
-    }
+        .header nav a:hover {
+            color: #000;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+        }
 
-    /* Container */
-    .container {
-        max-width: 1100px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    }
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Table Styling */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-    }
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+        }
 
-    th,
-    td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 2px solid #f4f4f4;
-    }
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #f4f4f4;
+        }
 
-    th {
-        background-color: #7D0006;
-        color: #fff;
-        font-size: 1.1rem;
-    }
+        th {
+            background-color: #7D0006;
+            color: #fff;
+            font-size: 1.1rem;
+        }
 
-    td {
-        background-color: #fafafa;
-    }
+        td {
+            background-color: #fafafa;
+        }
 
-    tr:hover {
-        background-color: #f0f0f0;
-        cursor: pointer;
-    }
+        tr:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
 
-    td a,
-    td button {
-        padding: 8px 16px;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
-        font-weight: 600;
-    }
+        /* Button Styles */
+        td a,
+        td button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-    td a {
-        background-color: #7D0006;
-        transition: background-color 0.3s;
-    }
+        td a {
+            background-color: #7D0006;
+            transition: background-color 0.3s;
+        }
 
-    td a:hover {
-        background-color: #D3D3D3;
-        color: #7D0006;
-    }
+        td a:hover {
+            background-color: #D3D3D3;
+            color: #7D0006;
+        }
 
-    td button {
-        background-color: #7D0006;
-        border: none;
-        cursor: not-allowed;
-    }
+        td button {
+            background-color: #7D0006;
+            border: none;
+            cursor: not-allowed;
+        }
 
-    td button:disabled {
-        background-color: #999;
-    }
+        td button:disabled {
+            background-color: #999;
+        }
 
-    /* Profile Card */
-    .card {
-        text-align: center;
-        padding: 2rem;
-        background: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    }
+        /* Profile Card */
+        .card {
+            text-align: center;
+            padding: 2rem;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+        }
 
-    /* Button Styles */
-    button {
-        background: #7D0006;
-        color: #fff;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        /* Button Styles */
+        button {
+            background: #7D0006;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    button:hover {
-        background: #D3D3D3;
-        color: #7D0006;
-    }
+        button:hover {
+            background: #D3D3D3;
+            color: #7D0006;
+        }
     </style>
 </head>
 
@@ -244,6 +250,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         <th>Deadline</th>
                         <th>Actions</th>
                     </tr>
+                </thead>
+                <tbody>
                     <?php foreach ($evaluations as $evaluation): ?>
                     <tr>
                         <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?>
@@ -264,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         </td>
                     </tr>
                     <?php endforeach; ?>
-                    </tbody>
+                </tbody>
             </table>
             <?php else: ?>
             <p>No evaluations available at the moment.</p>
