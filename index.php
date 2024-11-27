@@ -9,7 +9,7 @@
     <title>Login</title>
     <nav class="topnav">
     </nav>
-    <link rel='stylesheet' href="../End-Users/index-style.css">
+    <link rel='stylesheet' href="/360FacultyEvaluationSystem/End-Users/Styles/index-style.css">
     <title>Login - Faculty Evaluation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -53,13 +53,13 @@
 
                     // Check if the 'role' is set and redirect based on it
                     if ($role == 'student') {
-                        header("Location: /360FacultyEvaluationSystem/End-Users/students_login.php");
+                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/students_login.php");
                         exit();
                     } elseif ($role == 'faculty') {
-                        header("Location: /360FacultyEvaluationSystem/End-Users/faculty_login.php");
+                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/faculty_login.php");
                         exit();
                     } elseif ($role == 'program_chair') {
-                        header("Location: /360FacultyEvaluationSystem/End-Users/program_chair_login.php");
+                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/program_chair_login.php");
                         exit();
                     } else {
                         echo "<p class='error-message show'>Invalid role selected!</p>";

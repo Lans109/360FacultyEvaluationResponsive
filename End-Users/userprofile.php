@@ -479,7 +479,7 @@ $conn->close();
             echo '<a href="program_chair_evaluation.php">Evaluate</a>';
         }
         ?>
-            <a href="logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+            <a href="/360FacultyEvaluationSystem/logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
         </nav>
     </div>
 

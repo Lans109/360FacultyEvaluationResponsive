@@ -5,7 +5,7 @@
 <html>
 
 <head>
-    <link rel='stylesheet' href="index-style.css">
+    <link rel='stylesheet' href="/360FacultyEvaluationSystem/End-Users/Styles/index-style.css">
     <title>Login - Faculty Evaluation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -32,7 +32,7 @@
         <div class="wrapper">
             <div class="login-box">
                 <div class="logo">
-                    <img src="LPU-LOGO.png" alt="LPU Logo">
+                    <img src="/360FacultyEvaluationSystem/End-Users/LPU-LOGO.png" alt="LPU Logo">
                 </div>
                 <div class="title-area">
                         <h1>Student Login</h1>
