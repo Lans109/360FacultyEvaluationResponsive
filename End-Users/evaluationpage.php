@@ -1,7 +1,7 @@
 <?php
 // evaluationpage.php
 session_start();
-include("databasecon.php");
+include("db/databasecon.php");
 
 // Ensure the user is logged in and is either a student, faculty, or program chair
 if (!isset($_SESSION['loggedin']) || !in_array($_SESSION['user_type'], ['students', 'faculty', 'program_chair'])) {
@@ -77,9 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluation</title>
-    <style>
-        /* Your existing styles here */
-    </style>
+    <link rel="stylesheet" href="Styles/styles.css">
 </head>
 
 <body>

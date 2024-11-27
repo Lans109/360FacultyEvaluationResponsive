@@ -234,7 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 
 <body>
     <div class="header">
-        <h1>Student Dashboard</h1>
         <?php include 'student_navbar.php' ?>
     </div>
     <div class="container">
