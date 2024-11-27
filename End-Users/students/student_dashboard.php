@@ -342,9 +342,7 @@ $conn->close();
     }
     </style>
 </head>
-
 <body>
-
     <!-- Centered Header -->
     <div class="header">
         <h1>Student Dashboard</h1>

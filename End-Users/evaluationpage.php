@@ -1,4 +1,5 @@
 <?php
+// evaluationpage.php
 session_start();
 include("databasecon.php");
 
@@ -77,142 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluation</title>
     <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: "Poppins", Arial, sans-serif;
-        background: linear-gradient(135deg, #7D0006, #D3D3D3);
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-        color: #000;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    .header {
-        background: #7D0006;
-        padding: 1.5rem 0;
-        text-align: center;
-        color: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .header h1 {
-        font-size: 2.5rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .container {
-        max-width: 1100px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .card {
-        text-align: center;
-        padding: 2rem;
-        background: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    }
-
-    .question-container {
-        margin: 2rem 0;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .options-container {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-
-    .option-button {
-        padding: 1rem 2rem;
-        border: 2px solid #7D0006;
-        background: #fff;
-        color: #7D0006;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .option-button:hover {
-        background: #f0f0f0;
-    }
-
-    .option-button.selected {
-        background: #7D0006;
-        color: #fff;
-    }
-
-    .navigation-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-
-    button {
-        background: #7D0006;
-        color: #fff;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    button:hover {
-        background: #D3D3D3;
-        color: #7D0006;
-    }
-
-    button:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-    }
-
-    textarea {
-        width: 100%;
-        padding: 1rem;
-        margin-top: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    .progress-bar {
-        width: 100%;
-        height: 10px;
-        background: #f0f0f0;
-        border-radius: 5px;
-        margin: 1rem 0;
-        overflow: hidden;
-    }
-
-    .progress {
-        height: 100%;
-        background: #7D0006;
-        transition: width 0.3s ease;
-    }
+        /* Your existing styles here */
     </style>
 </head>
 
@@ -242,34 +108,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     </div>
 
     <script>
-    let currentQuestionIndex = 0;
-    let questions = <?php echo json_encode($questions); ?>;
-    let responses = {};
+        let currentQuestionIndex = 0;
+        let questions = <?php echo json_encode($questions); ?>;
+        let responses = {};
 
-    function initializeResponses() {
-        questions.forEach(question => {
-            responses[question.question_id] = null;
-        });
-        updateProgress();
-    }
+        function initializeResponses() {
+            questions.forEach(question => {
+                responses[question.question_id] = null;
+            });
+            updateProgress();
+        }
 
-    function updateProgress() {
-        const progress = (currentQuestionIndex / questions.length) * 100;
-        document.getElementById('progressBar').style.width = `${progress}%`;
-    }
+        function updateProgress() {
+            const progress = (currentQuestionIndex / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
 
-    function displayQuestion() {
-        const questionContainer = document.getElementById('evaluationQuestions');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const commentSection = document.getElementById('commentSection');
+        function displayQuestion() {
+            const questionContainer = document.getElementById('evaluationQuestions');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const commentSection = document.getElementById('commentSection');
 
-        questionContainer.innerHTML = '';
+            questionContainer.innerHTML = '';
 
-        if (currentQuestionIndex < questions.length) {
-            const question = questions[currentQuestionIndex];
-            const optionsHtml = `
+            if (currentQuestionIndex < questions.length) {
+                const question = questions[currentQuestionIndex];
+                const optionsHtml = `
                     <div class="question-text">
                         <h3>Question ${currentQuestionIndex + 1} of ${questions.length}</h3>
                         <p>${question.question_text}</p>
@@ -282,69 +148,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         `).join('')}
                     </div>
                 `;
-            questionContainer.innerHTML = optionsHtml;
+                questionContainer.innerHTML = optionsHtml;
 
-            prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
-            nextBtn.style.display = currentQuestionIndex === questions.length - 1 ? 'none' : 'inline-block';
-            submitBtn.style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
-            commentSection.style.display = currentQuestionIndex === questions.length - 1 ? 'block' : 'none';
+                prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
+                nextBtn.style.display = currentQuestionIndex === questions.length - 1 ? 'none' : 'inline-block';
+                submitBtn.style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+                commentSection.style.display = currentQuestionIndex === questions.length - 1 ? 'block' : 'none';
+            }
+
+            updateProgress();
         }
 
-        updateProgress();
-    }
+        function selectOption(questionId, rating) {
+            responses[questionId] = rating;
 
-    function selectOption(questionId, rating) {
-        responses[questionId] = rating;
-
-        // Update visual selection
-        const options = document.querySelectorAll('.option-button');
-        options.forEach(option => option.classList.remove('selected'));
-        event.target.classList.add('selected');
-
-        // Auto-advance to next question after a short delay
-        if (currentQuestionIndex < questions.length - 1) {
-            setTimeout(() => nextQuestion(), 500);
+            // Update visual selection
+            const options = document.querySelectorAll('.option-button');
+            options.forEach(option => option.classList.remove('selected'));
+            event.target.classList.add('selected');
         }
-    }
 
-    function nextQuestion() {
-        if (currentQuestionIndex < questions.length - 1) {
-            currentQuestionIndex++;
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function validateForm() {
+            const unansweredQuestions = questions.filter(q => responses[q.question_id] === null);
+            if (unansweredQuestions.length > 0) {
+                alert('Please answer all questions before submitting.');
+                return false;
+            }
+
+            // Add responses to hidden form fields
+            const form = document.getElementById('evaluationForm');
+            Object.entries(responses).forEach(([questionId, rating]) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `responses[${questionId}]`;
+                input.value = rating;
+                form.appendChild(input);
+            });
+
+            return true;
+        }
+
+        window.onload = function() {
+            initializeResponses();
             displayQuestion();
-        }
-    }
-
-    function prevQuestion() {
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            displayQuestion();
-        }
-    }
-
-    function validateForm() {
-        const unansweredQuestions = questions.filter(q => responses[q.question_id] === null);
-        if (unansweredQuestions.length > 0) {
-            alert('Please answer all questions before submitting.');
-            return false;
-        }
-
-        // Add responses to hidden form fields
-        const form = document.getElementById('evaluationForm');
-        Object.entries(responses).forEach(([questionId, rating]) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = `responses[${questionId}]`;
-            input.value = rating;
-            form.appendChild(input);
-        });
-
-        return true;
-    }
-
-    window.onload = function() {
-        initializeResponses();
-        displayQuestion();
-    };
+        };
     </script>
 </body>
 </html>
