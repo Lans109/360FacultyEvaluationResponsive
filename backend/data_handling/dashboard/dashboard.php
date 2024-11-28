@@ -98,8 +98,10 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                     <h3 class="card-title">Academic Year:
                         <?php echo $current_evaluation_data['academic_year']; ?>
                     </h3>
-                    <p class="card-text">Semester: <?php echo $current_evaluation_data['semester']; ?></p>
-                    <p class="card-text">Status: <?php echo $current_evaluation_data['status']; ?></p>
+                    <div class="evaluation-details">
+                        <p class="card-text">Semester: <?php echo $current_evaluation_data['semester']; ?></p>
+                        <p class="card-text">Status: <?php echo $current_evaluation_data['status']; ?></p>
+                    </div>
                 <?php else: ?>
                     <div class="card-header">No Active Evaluation</div>
                 <?php endif; ?>

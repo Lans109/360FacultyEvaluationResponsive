@@ -18,6 +18,10 @@ if ($resultPeriod->num_rows > 0) {
     while ($row = $resultPeriod->fetch_assoc()) {
         $academicYear = $row['academic_year'];
         $semester = $row['semester'];
+        $student_scoring = $row['student_scoring'];
+        $chair_scoring = $row['chair_scoring'];
+        $peer_scoring = $row['peer_scoring'];
+        $self_scoring = $row['self_scoring'];
     }
 }
 
@@ -183,7 +187,6 @@ $finalResultsSelf = $evaluationDataSelf['finalResults'];
 $avgResultsSelf = $evaluationDataSelf['avgResults'];
 $legendSelf = $evaluationDataSelf['legend'];
 
-//Arrays for graph generation ----------------------------------------------------------------------------------------------------
 $array_graph_overall = [
     ['Student', $finalResultsStudent === '-' ? 0 : $finalResultsStudent],
     ['Faculty', $finalResultsFaculty === '-' ? 0 : $finalResultsFaculty],
@@ -228,10 +231,7 @@ array_unshift($array_graph_overall, $header);
 array_unshift($array_graph_combined, $header_combined);
 
 
-//---------------------------------------------------------------------------------------------------------------------------------
 
-
-//Final Result Generation --------------------------------------------------------------------------------------------------------
 $overallResult = [
     'Student' => $finalResultsStudent,
     'Faculty' => $finalResultsFaculty,
@@ -243,10 +243,10 @@ $finalOverall = '';
 $overallTotal = 0;
 
 $weights = [
-    'Student' => 0.5,
-    'Faculty' => 0.05,
-    'Self' => 0.05,
-    'Chair/Dean' => 0.4,
+    'Student' => ($student_scoring/100),
+    'Faculty' => ($peer_scoring/100),
+    'Self' => ($self_scoring/100),
+    'Chair/Dean' => ($chair_scoring/100),
 ];
 
 foreach ($overallResult as $evaluator => $average) {
@@ -270,7 +270,6 @@ foreach ($overallResult as $evaluator => $average) {
                     </tr>";
 }
 
-//------------------------------------------------------------------------------------------------------------------------------
 $sql_comment = "SELECT 
             se.comments
         FROM 
