@@ -1,7 +1,10 @@
 <?php
-// Include database connection
+// Include the database connection file
 include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Fetch survey data and count questions
 $query = "

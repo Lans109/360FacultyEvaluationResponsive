@@ -1,6 +1,10 @@
 <?php
-// Connect to your database
-include '../../db/dbconnect.php';
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
@@ -13,14 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     
     if (mysqli_query($con, $update_query)) {
         // Redirect back to evaluation page after successful update
-        header("Location: evaluation.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']); 
         exit;
     } else {
         echo '<div class="alert alert-danger">Error updating status: ' . mysqli_error($con) . '</div>';
     }
 } else {
     // Redirect back to evaluation page if accessed directly
-    header("Location: evaluation.php");
+    header("Location: " . $_SERVER['HTTP_REFERER']); 
     exit;
 }
 ?>

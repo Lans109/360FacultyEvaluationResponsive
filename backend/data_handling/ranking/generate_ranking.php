@@ -1,6 +1,11 @@
 <?php 
+// Include configuration and database connection
 include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
+
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_result.php';

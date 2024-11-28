@@ -1,9 +1,10 @@
 <?php
 // Include the database connection file
-include '../../db/dbconnect.php';
+include_once "../../../config.php";
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-// Start the session
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Check if the request method is POST and the necessary parameters are set
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['program_id']) && isset($_POST['course_id'])) {

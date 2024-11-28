@@ -1,9 +1,10 @@
 <?php
 // Include configuration and database connection
 include_once "../../../config.php";
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Generate a CSRF token if one doesn't exist
 if (empty($_SESSION['csrf_token'])) {

@@ -1,6 +1,10 @@
 <?php
-// Connect to your database
-include '../../db/dbconnect.php';
+// Include configuration and database connection
+include_once "../../../config.php";
+include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Get the current date
 $current_date = date('Y-m-d');

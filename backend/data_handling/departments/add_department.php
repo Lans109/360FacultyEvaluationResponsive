@@ -1,10 +1,12 @@
 <?php
-// Start the session
-session_start();
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Include the database connection file
-include '../../db/dbconnect.php';
+// Authentication check
+include '../authentication.php';
 
+// Check if the form is submitted via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // CSRF Token validation (ensure the token matches the session one)
@@ -24,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Set error message in session and redirect back
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'All fields are required!';
-            header("Location: departments.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
 
@@ -45,28 +47,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Set success message in session and redirect back
             $_SESSION['status'] = 'success';
             $_SESSION['message'] = 'Department added successfully!';
-            header("Location: departments.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         } else {
             // Log the error and set an error message in session
             error_log("Database Error: " . mysqli_error($con)); // Log the error
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Error: Unable to add department. Please try again later.';
-            header("Location: departments.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
     } else {
         // If CSRF token is invalid, set error message and redirect back
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
-        header("Location: departments.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
 } else {
     // If no POST request is made, set session variables for error message and redirect
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
-    header("Location: departments.php");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>

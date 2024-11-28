@@ -1,9 +1,10 @@
 <?php
-// Start the session
-session_start();
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Include the database connection file
-include '../../db/dbconnect.php';
+// Authentication check
+include '../authentication.php';
 
 // Check if the form is submitted via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -54,14 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Set success message in session and redirect
             $_SESSION['status'] = 'success';
             $_SESSION['message'] = 'Department updated successfully!';
-            header("Location: departments.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         } else {
             // Log the error and set error message in session
             error_log("Database Error: " . mysqli_error($con));
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Error updating department. Please try again later.';
-            header("Location: departments.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
 
@@ -69,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // If CSRF token doesn't match, set error message and redirect
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
-        header("Location: departments.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
 
@@ -77,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // If no POST request is made, set session variables for error message and redirect
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
-    header("Location: departments.php");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>

@@ -1,9 +1,10 @@
 <?php
-// Start the session
-session_start();
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Include the database connection file
-include '../../db/dbconnect.php';
+// Authentication check
+include '../authentication.php';
 
 // Check if the request method is POST and if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
@@ -25,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             // Set error message in session and redirect back
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'All fields are required!';
-            header("Location: courses.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
 
@@ -38,28 +39,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             // If successful, set success message in session and redirect back
             $_SESSION['status'] = 'success';
             $_SESSION['message'] = 'Course added successfully!';
-            header("Location: courses.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         } else {
             // If query fails, log the error and set error message in session
             error_log("Database Error: " . mysqli_error($con)); // Log the error
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Error: Unable to add course. Please try again later.';
-            header("Location: courses.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
     } else {
         // If CSRF token is invalid, set error message and redirect back
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
-        header("Location: courses.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
 } else {
     // If no POST request is made, set session variables for error message and redirect
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
-    header("Location: courses.php");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>

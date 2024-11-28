@@ -1,9 +1,10 @@
 <?php
-// Start the session
-session_start();
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Include the database connection file
-include '../../db/dbconnect.php';
+// Authentication check
+include '../authentication.php';
 
 // Check if the request method is POST and the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {

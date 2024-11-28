@@ -1,10 +1,10 @@
 <?php
-// Include necessary configuration and database connection files
+// Include configuration and database connection
 include_once "../../../config.php";
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-// Start the session for CSRF token and session management
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Generate a CSRF token if one doesn't exist in the session
 if (empty($_SESSION['csrf_token'])) {
@@ -47,6 +47,10 @@ $query_accounts = "
     UNION
     SELECT faculty_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Faculty' AS role 
     FROM faculty 
+    WHERE 1=1
+    UNION
+    SELECT admin_id AS account_id, username AS name, username, email, 'Admin' AS role 
+    FROM admins 
     WHERE 1=1";
 
 // Initialize filters
@@ -127,6 +131,7 @@ if (isset($_GET['reset_filters'])) {
                                     <option value="Student" <?= $role_filter == 'Student' ? 'selected' : '' ?>>Student</option>
                                     <option value="Faculty" <?= $role_filter == 'Faculty' ? 'selected' : '' ?>>Faculty</option>
                                     <option value="Program Chair" <?= $role_filter == 'Program Chair' ? 'selected' : '' ?>>Program Chair</option>
+                                    <option value="Admin" <?= $role_filter == 'Admin' ? 'selected' : '' ?>>Admin</option>
                                 </select>
                                 <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
                             </div>

@@ -1,9 +1,10 @@
 <?php
-// Include the database connection file
-include '../../db/dbconnect.php';
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Start the session
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Check if the request method is GET and the necessary parameters are set
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['faculty_id']) && isset($_GET['course_section_id'])) {

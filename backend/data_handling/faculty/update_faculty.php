@@ -1,9 +1,10 @@
 <?php
-// Start the session for CSRF protection
-session_start();
-
 // Include the database connection
-include '../../db/dbconnect.php';
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Check if the form is submitted via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
