@@ -292,6 +292,7 @@ $sql_comment = "SELECT
 
 $result_comment = mysqli_query($con, $sql_comment);
 
+
 $comments = [];
 if (mysqli_num_rows($result_comment) > 0) {
     while ($row = mysqli_fetch_assoc($result_comment)) {
