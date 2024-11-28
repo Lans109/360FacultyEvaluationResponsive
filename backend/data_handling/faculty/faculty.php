@@ -125,6 +125,7 @@ if (isset($_GET['reset_filters'])) {
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
@@ -211,7 +212,8 @@ if (isset($_GET['reset_filters'])) {
                                     <td>
                                         <!-- View Profile Button -->
                                         <form action="view_faculty_profile.php" method="GET">
-                                            <input type="hidden" name="faculty_id" value="<?php echo $faculty['faculty_id']; ?>">
+                                            <input type="hidden" name="faculty_id"
+                                                value="<?php echo $faculty['faculty_id']; ?>">
                                             <button type="submit" class="view-btn">View Profile</button>
                                         </form>
                                     </td>

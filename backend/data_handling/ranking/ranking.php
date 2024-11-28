@@ -27,11 +27,14 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include ROOT_PATH . '/frontend/layout/sidebar.php'; ?>
 
     <main>
         <div class="upperMain">
-            <div><h1>Faculty Ranking</h1></div>
+            <div>
+                <h1>Faculty Ranking</h1>
+            </div>
         </div>
         <div class="content">
             <div class="departments-wrapper">
@@ -57,12 +60,12 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
 
                     // Check if faculty list is not empty
                     if (!empty($faculty_list)) {
-                            
+
                         // Initialize rank counter
                         $rank = 1;
                         foreach ($faculty_list as $faculty) {
                             $ranking .= '<tr>';
-                            
+
                             // Check for top 3 ranks and add icon
                             if ($rank == 1) {
                                 $ranking .= '<td><img src="../../../frontend/assets/icons/gold.svg"></td>';
@@ -77,8 +80,8 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                                 $ranking .= '<td>' . $rank++ . '</td>'; // No icon for others
                             }
                             $ranking .= '<td><img class="profile-icon" src="../../../' . htmlspecialchars($faculty['profile_image']) . '" alt="Profile Image"></td>';
-           
-                            $ranking .= '<td><a href="../results/faculty_summary.php?facultyId=' . htmlspecialchars($faculty['faculty_id'])-1 . '&period=1">' . htmlspecialchars($faculty['faculty_name']) . '</a></td>';
+
+                            $ranking .= '<td><a href="../results/faculty_summary.php?facultyId=' . htmlspecialchars($faculty['faculty_id']) - 1 . '&period=1">' . htmlspecialchars($faculty['faculty_name']) . '</a></td>';
                             $ranking .= '<td>' . htmlspecialchars($faculty['faculty_id']) . '</td>';
                             $ranking .= '<td>' . htmlspecialchars($faculty['total_courses']) . '</td>';
                             $ranking .= '<td><b>' . htmlspecialchars($faculty['AVG']) . '</b></td>';
@@ -99,15 +102,16 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
 
                 <!-- You can print $ranking here for visual rendering in the browser -->
                 <?php echo $ranking; ?>
-                
-                </div>
-                <form action="generate_ranking.php" method="post">  
-                    <button type="submit" class="add-btn"><img src="../../../frontend/assets/icons/pdf.svg">&nbsp;Generate PDF&nbsp;</button>
-                </form>
+
             </div>
+            <form action="generate_ranking.php" method="post">
+                <button type="submit" class="add-btn"><img src="../../../frontend/assets/icons/pdf.svg">&nbsp;Generate
+                    PDF&nbsp;</button>
+            </form>
+        </div>
         </div>
     </main>
-    
+
     <!-- jQuery, Popper.js, and Bootstrap JS -->
     <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

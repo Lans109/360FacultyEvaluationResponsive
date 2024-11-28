@@ -97,6 +97,7 @@ if (isset($_GET['reset_filters'])) {
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">

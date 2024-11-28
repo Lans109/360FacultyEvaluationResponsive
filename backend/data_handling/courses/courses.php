@@ -85,6 +85,7 @@ if (isset($_GET['reset_filters'])) {
 </head>
 
 <body>
+	<div id="loader" class="loader"></div>
 	<?php include '../../../frontend/layout/sidebar.php'; ?>
 
 	<main>
@@ -355,6 +356,7 @@ if (isset($_GET['reset_filters'])) {
 			</div>
 		</div>
 	</div>
+
 	<script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

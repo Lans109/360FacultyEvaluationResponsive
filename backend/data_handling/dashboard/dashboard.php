@@ -9,6 +9,7 @@ include '../authentication.php';
 
 // Fetch current evaluation status for the current date
 $current_date = date('Y-m-d'); // Current date in YYYY-MM-DD format
+
 $current_evaluation_query = "
     SELECT academic_year, semester, status 
     FROM evaluation_periods 
@@ -24,6 +25,28 @@ if (mysqli_num_rows($current_evaluation_result) > 0) {
 } else {
     $current_evaluation_data = null; // No active evaluation
 }
+
+// Query to fetch the ID of the active evaluation period
+$period_query = "
+    SELECT academic_year, semester, status, period_id
+    FROM evaluation_periods 
+    WHERE 
+    start_date <= '$current_date' AND end_date >= '$current_date' 
+    LIMIT 1"; // Fetch the active evaluation for today
+
+$period_result = mysqli_query($con, $period_query);
+
+// Check if any evaluation exists for the current date
+if ($period_result && mysqli_num_rows($period_result) > 0) {
+    $period_data = mysqli_fetch_assoc($period_result);
+
+    // Store the period ID in the session
+    $_SESSION['period_id'] = $period_data['period_id'];
+} else {
+    // No active evaluation period, clear session or set default value
+    $_SESSION['period_id'] = null; // Or use a fallback like 0 if needed
+}
+
 
 // Fetch totals
 $total_programs_query = "SELECT COUNT(*) AS total_programs FROM programs"; // Query for total programs
@@ -60,10 +83,13 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <div><h1>Dashboard</h1></div>
+            <div>
+                <h1>Dashboard</h1>
+            </div>
         </div>
         <div class="content">
             <h2> Current Evaluation </h2>
@@ -80,57 +106,57 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
             </div>
             <div class="dashboard-content">
                 <div class="dashboard-cards">
-                        <div class="card">
-                            <div class="card-info">
-                                <h3><?php echo $total_programs; ?></h3>
-                                <p> Total Programs</p>
-                            </div>
-                            <div class="card-icon">
-                                <img src="../../../frontend/assets/icons/program.svg">
-                            </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_programs; ?></h3>
+                            <p> Total Programs</p>
                         </div>
-                        <div class="card">
-                            <div class="card-info">
-                                <h3><?php echo $total_courses; ?></h3>
-                                <p> Total Course</p>
-                            </div>
-                            <div class="card-icon">
-                                <img src="../../../frontend/assets/icons/course.svg">
-                            </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/icons/program.svg">
                         </div>
-                        <div class="card">
-                            <div class="card-info">
-                                <h3><?php echo $total_students; ?></h3>
-                                <p> Total Students</p>
-                            </div>
-                            <div class="card-icon">
-                                <img src="../../../frontend/assets/icons/student.svg">
-                            </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_courses; ?></h3>
+                            <p> Total Course</p>
                         </div>
-                        <div class="card">
-                            <div class="card-info">
-                                <h3><?php echo $total_sections; ?></h3>
-                                <p> Total Sections</p>
-                            </div>
-                            <div class="card-icon">
-                                <img src="../../../frontend/assets/icons/section.svg">
-                            </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/icons/course.svg">
                         </div>
-                        <div class="card">
-                            <div class="card-info">
-                                <h3><?php echo $total_faculty; ?></h3>
-                                <p> Total Faculty</p>
-                            </div>
-                            <div class="card-icon">
-                                <img src="../../../frontend/assets/icons/faculty.svg">
-                            </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_students; ?></h3>
+                            <p> Total Students</p>
                         </div>
-                        
-                        
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/icons/student.svg">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_sections; ?></h3>
+                            <p> Total Sections</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/icons/section.svg">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-info">
+                            <h3><?php echo $total_faculty; ?></h3>
+                            <p> Total Faculty</p>
+                        </div>
+                        <div class="card-icon">
+                            <img src="../../../frontend/assets/icons/faculty.svg">
+                        </div>
+                    </div>
+
+
                 </div>
                 <div class="charts">
-                            <?php include 'monitor.php'; ?>
-                        </div>
+                    <?php include 'monitor.php'; ?>
+                </div>
             </div>
         </div>
     </main>
