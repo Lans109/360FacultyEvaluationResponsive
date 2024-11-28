@@ -286,6 +286,7 @@ $sql_comment = "SELECT
             f.faculty_id = ($facultyId+1)
             AND comments IS NOT NULL 
             AND TRIM(comments) != ''
+            AND e.period_id = $period
         ORDER BY 
             se.date_evaluated ASC";
 
