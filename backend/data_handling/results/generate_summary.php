@@ -9,7 +9,7 @@ include '../authentication.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 $facultyId = $_POST['facultyId'];
-$period = $_SESSION['period_id'];
+$period = $_POST['period_id'];
 
 include ROOT_PATH . '/modules/generate_report/report_data_fetch.php';
 include ROOT_PATH . '/modules/generate_report/report_data_results.php';

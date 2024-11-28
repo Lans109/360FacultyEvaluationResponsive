@@ -839,7 +839,26 @@ input[type=date] {
     accent-color: #631111;
 }
 
+input[type=date] {
+    font-family: myFont2;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #f8f8f8;
+}
 
+input[type=range] {
+    height: 6px; /* Height of the slider bar */
+    background: #ddd; /* Light gray background for the track */
+    border-radius: 5px; /* Rounded corners for the track */
+    outline: none; /* Remove outline */
+    transition: background 0.2s ease;
+    width: 100%; /* This makes the slider stretch to full width of its container */
+    max-width: 800px; /* Optional: Limit the maximum width of the slider */
+}
+
+.evaluation-details {
+    margin: 10px;
+}
 .close {
     cursor: pointer;
     font-size: 28px;
@@ -1324,8 +1343,8 @@ input[type=date] {
 }
 
 .profile-info .profile-image {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     border-radius: 100%;
 }
 
@@ -1357,8 +1376,8 @@ input[type=date] {
 
 .evaluation-status {
     display: flex;
-    justify-content: flex-start;
-    gap: 100px;
+    justify-content: space-between;
+    gap: 50px;
 }
 
 .rank-container {
@@ -1622,4 +1641,23 @@ input[type=date] {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+.scorings p {
+    width: 70%;
+}
+.scorings .score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.scorings .score input {
+    width: 80px;
+    border: 1px solid #ddd;
+    height: 30px;
+    padding: 10;
+}
+
+.scorings span {
+    color: #666;
+    font-family: myFont2;
 }
