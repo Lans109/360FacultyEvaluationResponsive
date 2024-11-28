@@ -44,29 +44,32 @@ if (!$result) {
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
 
     <main>
         <div class="upperMain">
-            <div><h1>Survey Management</h1></div>
+            <div>
+                <h1>Survey Management</h1>
+            </div>
         </div>
         <div class="content">
 
             <?php while ($survey = mysqli_fetch_assoc($result)): ?>
                 <div class="survey-banner">
-                     <?php 
-                        // Conditional statement to choose icon based on survey title
-                        if (strpos($survey['survey_name'], 'Student') !== false) {
-                            $icon = "student.svg";
-                        } elseif (strpos($survey['survey_name'], 'Faculty') !== false) {
-                            $icon = "faculty.svg";
-                        } elseif (strpos($survey['survey_name'], 'Self') !== false) {
-                            $icon = "faculty.svg";
-                        } elseif (strpos($survey['survey_name'], 'Chair') !== false || strpos($survey['survey_name'], 'Dean') !== false) {
-                            $icon = "department.svg";
-                        } else {
-                            $icon = "survey.svg"; // Default icon if no match
-                        }
+                    <?php
+                    // Conditional statement to choose icon based on survey title
+                    if (strpos($survey['survey_name'], 'Student') !== false) {
+                        $icon = "student.svg";
+                    } elseif (strpos($survey['survey_name'], 'Faculty') !== false) {
+                        $icon = "faculty.svg";
+                    } elseif (strpos($survey['survey_name'], 'Self') !== false) {
+                        $icon = "faculty.svg";
+                    } elseif (strpos($survey['survey_name'], 'Chair') !== false || strpos($survey['survey_name'], 'Dean') !== false) {
+                        $icon = "department.svg";
+                    } else {
+                        $icon = "survey.svg"; // Default icon if no match
+                    }
                     ?>
                     <img class="survey-icon" src="../../../frontend/assets/icons/<?php echo htmlspecialchars($icon); ?>">
                     <div class="survey-info">
@@ -74,11 +77,12 @@ if (!$result) {
                         <p>Total Questions: <?php echo htmlspecialchars($survey['total_questions']); ?></p>
                         <div>
                             <!-- Edit Survey button with survey_id passed to the view_survey.php page -->
-                            <button id="openModalBtn-add-course" class="view-btn" onclick="window.location.href='view_survey.php?survey_id=<?php echo $survey['survey_id']; ?>'">
+                            <button id="openModalBtn-add-course" class="view-btn"
+                                onclick="window.location.href='view_survey.php?survey_id=<?php echo $survey['survey_id']; ?>'">
                                 <img src="../../../frontend/assets/icons/edit.svg">&nbsp;Edit Survey&nbsp;
                             </button>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             <?php endwhile; ?>
         </div>

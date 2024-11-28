@@ -78,59 +78,65 @@ $num_criteria = count($questions_by_criteria);
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
-    
+
 
     <main>
         <div class="upperMain">
-            <div><h1><?= htmlspecialchars($survey['survey_name']); ?></h1></div>
+            <div>
+                <h1><?= htmlspecialchars($survey['survey_name']); ?></h1>
+            </div>
         </div>
         <div class="content">
-                <div class="legend">
-                    <div>
-                        <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Question,' : 'Questions, ' ?><?= $num_criteria ?><?= $num_criteria == 1 ? ' Criteria,' : ' Criterias' ?></p>
-                    </div>
-                        <div class="rating-legend">
-                            <div>
-                                <p>5: Outstanding</p>
-                            </div>
-                            <div>
-                                <p>4: Very Good</p>
-                            </div>
-                            <div>
-                                <p>3: Satisfactory</p>
-                            </div>
-                            <div>
-                                <p>2: Needs Improvement</p>
-                            </div>
-                            <div>
-                                <p>1: Unsatisfactory</p>
-                            </div>
-                        </div>
-                        <div>
-                            <button id="openModalBtn-add-criteria" class="add-btn" data-toggle="modal" data-target="#addCriteriaModal">
-                                <img src="../../../frontend/assets/icons/add.svg">&nbsp;Criteria&nbsp;
-                            </button>
-                        </div>
+            <div class="legend">
+                <div>
+                    <p>Showing <?= $num_rows ?>
+                        <?= $num_rows == 1 ? 'Question,' : 'Questions, ' ?><?= $num_criteria ?><?= $num_criteria == 1 ? ' Criteria,' : ' Criterias' ?>
+                    </p>
                 </div>
+                <div class="rating-legend">
+                    <div>
+                        <p>5: Outstanding</p>
+                    </div>
+                    <div>
+                        <p>4: Very Good</p>
+                    </div>
+                    <div>
+                        <p>3: Satisfactory</p>
+                    </div>
+                    <div>
+                        <p>2: Needs Improvement</p>
+                    </div>
+                    <div>
+                        <p>1: Unsatisfactory</p>
+                    </div>
+                </div>
+                <div>
+                    <button id="openModalBtn-add-criteria" class="add-btn" data-toggle="modal"
+                        data-target="#addCriteriaModal">
+                        <img src="../../../frontend/assets/icons/add.svg">&nbsp;Criteria&nbsp;
+                    </button>
+                </div>
+            </div>
             <?php foreach ($questions_by_criteria as $criteria_description => $questions): ?>
                 <div class="survey-box">
                     <div class="criteria-header">
-                    <div class="criteria-title"><?= htmlspecialchars($criteria_description); ?></div>
+                        <div class="criteria-title"><?= htmlspecialchars($criteria_description); ?></div>
 
-                            <div>
-                                <form name="deleteForm" action="delete_criteria.php" method="POST">
+                        <div>
+                            <form name="deleteForm" action="delete_criteria.php" method="POST">
                                 <!-- Hidden input to pass the course_id -->
                                 <input type="hidden" name="criteria_id" value="<?= $questions[0]['criteria_id']; ?>">
                                 <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <!-- Submit button for deleting the course -->
                                 <button type="submit" class="cancel-btn">
-                                <img src="../../../frontend/assets/icons/close.svg" alt="Delete Icon">
+                                    <img src="../../../frontend/assets/icons/close.svg" alt="Delete Icon">
                                 </button>
-                                </form>
-                            </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="table">
                         <table>
@@ -148,7 +154,7 @@ $num_criteria = count($questions_by_criteria);
                                         <tr>
                                             <td colspan="4">No question available on this criteria.</td>
                                         </tr>
-                                        <?php else: ?>
+                                    <?php else: ?>
                                         <tr>
                                             <td><?= htmlspecialchars($question['question_code']); ?></td>
                                             <td><?= htmlspecialchars($question['question_text']); ?></td>
@@ -162,33 +168,36 @@ $num_criteria = count($questions_by_criteria);
                                                 </div>
                                             </td>
                                             <td>
-                                            <div class="action-btns">
-                                                <button class="edit-btn" data-toggle="modal" 
-                                                    data-target="#editModal<?= $question['question_id']; ?>" 
-                                                    data-question_id="<?= $question['question_id']; ?>" 
-                                                    data-question_text="<?= htmlspecialchars($question['question_text']); ?>" 
-                                                    data-criteria_id="<?= $question['criteria_id']; ?>" 
-                                                    data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
-                                                    <img src="../../../frontend/assets/icons/edit.svg">
-                                                </button>
-                                                <form name="deleteForm" action="delete_question.php" method="POST">
-                                                <!-- Hidden input to pass the course_id -->
-                                                <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
-                                                <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
-                                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                                <!-- Submit button for deleting the course -->
-                                                <button type="submit" class="delete-btn">
-                                                <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
-                                                </button>
-                                                </form>
-                                            </div>
+                                                <div class="action-btns">
+                                                    <button class="edit-btn" data-toggle="modal"
+                                                        data-target="#editModal<?= $question['question_id']; ?>"
+                                                        data-question_id="<?= $question['question_id']; ?>"
+                                                        data-question_text="<?= htmlspecialchars($question['question_text']); ?>"
+                                                        data-criteria_id="<?= $question['criteria_id']; ?>"
+                                                        data-criteria_description="<?= htmlspecialchars($criteria_description); ?>">
+                                                        <img src="../../../frontend/assets/icons/edit.svg">
+                                                    </button>
+                                                    <form name="deleteForm" action="delete_question.php" method="POST">
+                                                        <!-- Hidden input to pass the course_id -->
+                                                        <input type="hidden" name="question_id"
+                                                            value="<?= $question['question_id']; ?>">
+                                                        <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
+                                                        <input type="hidden" name="csrf_token"
+                                                            value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                        <!-- Submit button for deleting the course -->
+                                                        <button type="submit" class="delete-btn">
+                                                            <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                        </button>
+                                                    </form>
+                                                </div>
 
                                             </td>
                                         </tr>
                                     <?php endif; ?>
 
                                     <!-- Modal for editing question -->
-                                    <div class="modal fade" id="editModal<?= $question['question_id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal fade" id="editModal<?= $question['question_id']; ?>" tabindex="-1"
+                                        role="dialog" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -197,59 +206,70 @@ $num_criteria = count($questions_by_criteria);
                                                         <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
                                                     </span>
                                                 </div>
-                                                <form id="editForm<?php echo $question['question_id']; ?>" action="update_question.php" method="POST">
-                                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <form id="editForm<?php echo $question['question_id']; ?>"
+                                                    action="update_question.php" method="POST">
+                                                    <input type="hidden" name="csrf_token"
+                                                        value="<?php echo $_SESSION['csrf_token']; ?>">
                                                     <div class="modal-body">
                                                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
-                                                        <input type="hidden" name="question_id" value="<?= $question['question_id']; ?>">
-                                                        <input type="hidden" name="criteria_id" value="<?= $question['criteria_id']; ?>"> <!-- Add this line -->
-                                                        <input type="hidden" name="survey_id" value="<?= $survey_id; ?>"> <!-- Add this line -->
+                                                        <input type="hidden" name="question_id"
+                                                            value="<?= $question['question_id']; ?>">
+                                                        <input type="hidden" name="criteria_id"
+                                                            value="<?= $question['criteria_id']; ?>"> <!-- Add this line -->
+                                                        <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
+                                                        <!-- Add this line -->
 
                                                         <!-- Edit Question Code -->
                                                         <div class="form-group">
                                                             <label>Question Code</label>
-                                                            <input type="text" class="form-control" name="question_code" value="<?= htmlspecialchars($question['question_code']); ?>" required>
+                                                            <input type="text" class="form-control" name="question_code"
+                                                                value="<?= htmlspecialchars($question['question_code']); ?>"
+                                                                required>
                                                         </div>
 
                                                         <!-- Edit Question Text -->
                                                         <div class="form-group">
                                                             <label>Question Text</label>
-                                                            <textarea class="form-control" name="question_text" rows="3" required><?= htmlspecialchars($question['question_text']); ?></textarea>
+                                                            <textarea class="form-control" name="question_text" rows="3"
+                                                                required><?= htmlspecialchars($question['question_text']); ?></textarea>
                                                         </div>
 
-                                                        
-                                                        </div>
-                                                    
-                                                
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
-                                                        </div>
-                                                        </form>
+
+                                                    </div>
+
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="cancel-btn"
+                                                            data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="save-btn"
+                                                            id="openConfirmationModalBtn">Save changes</button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
 
                                 <?php endforeach; ?>
                                 <tr>
-                                <td colspan="4" class="add-question">
-                                    <div>
-                                        <button class="insert-btn full-td-btn" data-toggle="modal" data-target="#addQuestionModal" 
-                                            data-criteria_id="<?= $questions[0]['criteria_id']; ?>" 
-                                            data-criteria_description="<?= htmlspecialchars($criteria_description); ?>"
-                                            onclick="setCriteriaData(this)">
-                                            <img src="../../../frontend/assets/icons/add.svg">
-                                        </button>
-                                    </div>
-                                </td>
+                                    <td colspan="4" class="add-question">
+                                        <div>
+                                            <button class="insert-btn full-td-btn" data-toggle="modal"
+                                                data-target="#addQuestionModal"
+                                                data-criteria_id="<?= $questions[0]['criteria_id']; ?>"
+                                                data-criteria_description="<?= htmlspecialchars($criteria_description); ?>"
+                                                onclick="setCriteriaData(this)">
+                                                <img src="../../../frontend/assets/icons/add.svg">
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             <?php endforeach; ?>
-            
+
         </div>
     </main>
 
@@ -265,7 +285,7 @@ $num_criteria = count($questions_by_criteria);
                 </div>
                 <div class="modal-body">
                     <form action="add_criteria.php" method="POST">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
 
                         <!-- New Criteria Description -->
@@ -274,13 +294,13 @@ $num_criteria = count($questions_by_criteria);
                             <input type="text" class="form-control" name="criteria_description" required>
                         </div>
 
-                        
-                    
+
+
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                            <button type="submit" class="save-btn">Save Criteria</button>
-                        </div>
+                    <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="save-btn">Save Criteria</button>
+                </div>
                 </form>
             </div>
         </div>
@@ -298,7 +318,7 @@ $num_criteria = count($questions_by_criteria);
                 </div>
                 <div class="modal-body">
                     <form action="add_question.php" method="POST">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="survey_id" value="<?= $survey_id; ?>">
                         <input type="hidden" name="criteria_id" id="criteria_id" value="">
                         <input type="hidden" name="criteria_description" id="criteria_description" value="">
@@ -315,13 +335,13 @@ $num_criteria = count($questions_by_criteria);
                             <textarea class="form-control" name="question_text" rows="3" required></textarea>
                         </div>
 
-                        
-                    
+
+
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                            <button type="submit" class="save-btn">Save Question</button>
-                        </div>
+                    <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="save-btn">Save Question</button>
+                </div>
                 </form>
             </div>
         </div>

@@ -100,7 +100,7 @@ if (isset($_GET['delete_course_id'])) {
 </head>
 
 <body>
-
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>

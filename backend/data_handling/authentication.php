@@ -3,9 +3,9 @@
 session_start();
 
 // Check if the session is empty (session expired) or the user is not an admin (access denied)
-if (!isset($_SESSION['acc_id']) || !isset($_SESSION['acc_key']) || $_SESSION['acc_type'] !== 'admin') {
+if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_key']) || $_SESSION['account_type'] !== 'admin') {
     // Check if session is empty
-    if (!isset($_SESSION['acc_id']) || !isset($_SESSION['acc_key']) || !isset($_SESSION['acc_type'])) {
+    if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_key']) || !isset($_SESSION['account_type'])) {
         // Session expired, set the status and message
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Session expired. Please log in again.';

@@ -34,8 +34,8 @@ if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
     <h2>Login</h2>
     <form action="backend/validation.php" method="POST">
         <div>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+            <label for="username_or_email">Username or Email</label>
+            <input type="text" id="username_or_email" name="username_or_email" required>
         </div>
         <div>
             <label for="password">Password</label>

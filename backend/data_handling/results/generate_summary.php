@@ -9,13 +9,13 @@ include '../authentication.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 $facultyId = $_POST['facultyId'];
-$period = $_POST['period'];
+$period = $_SESSION['period_id'];
 
 include ROOT_PATH . '/modules/generate_report/report_data_fetch.php';
 include ROOT_PATH . '/modules/generate_report/report_data_results.php';
 
 $logo = "data:image/png;base64,".base64_encode(file_get_contents( ROOT_PATH . '/frontend/assets/logo.png'));
-$user = '2023-2-03361';
+$user = $_SESSION['admin_name'] . " (ID: " . $_SESSION['admin_id'] . ")";
 $imgStudent = $_POST['studentImageData'];
 $imgFaculty = $_POST['facultyImageData'];
 $imgChair = $_POST['chairImageData'];

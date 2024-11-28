@@ -49,7 +49,7 @@ $query_accounts = "
     FROM faculty 
     WHERE 1=1
     UNION
-    SELECT admin_id AS account_id, username AS name, username, email, 'Admin' AS role 
+    SELECT admin_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Admin' AS role 
     FROM admins 
     WHERE 1=1";
 
@@ -99,47 +99,55 @@ if (isset($_GET['reset_filters'])) {
 
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
-    
+
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
 
     <main>
         <div class="upperMain">
-            <div><h1>Accounts Management</h1></div>
+            <div>
+                <h1>Accounts Management</h1>
+            </div>
         </div>
         <div class="content">
-        <div class="upperContent">
-            <div>
+            <div class="upperContent">
+                <div>
                     <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Account' : 'Accounts' ?></p>
                 </div>
                 <!-- Search and Filter Form -->
                 <div class="search-filter">
                     <form method="GET" action="">
-                        <div class="form-group">            
-                        <div class="search-container">
-                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
-                            <button type="submit" class="search-button">
-                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
-                            </button>
-                        </div>
-                        <div class="select-container">
-                            <div class="select-wrapper">
-                                <select id="role_filter" name="role_filter" class="custom-select">
-                                    <option value="" <?= $role_filter == '' ? 'selected' : '' ?>>All Roles</option>
-                                    <option value="Student" <?= $role_filter == 'Student' ? 'selected' : '' ?>>Student</option>
-                                    <option value="Faculty" <?= $role_filter == 'Faculty' ? 'selected' : '' ?>>Faculty</option>
-                                    <option value="Program Chair" <?= $role_filter == 'Program Chair' ? 'selected' : '' ?>>Program Chair</option>
-                                    <option value="Admin" <?= $role_filter == 'Admin' ? 'selected' : '' ?>>Admin</option>
-                                </select>
-                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                        <div class="form-group">
+                            <div class="search-container">
+                                <input type="text" placeholder="Search..." id="search" name="search"
+                                    class="search-input">
+                                <button type="submit" class="search-button">
+                                    <i class="fa fa-search"></i> <!-- Magnifying Glass Icon -->
+                                </button>
                             </div>
-                        </div>
-                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
-							<a href="accounts.php?reset_filters=1" class="fitler-btn">
-								<i class="fa fa-eraser"></i> Clear
-							</a>
+                            <div class="select-container">
+                                <div class="select-wrapper">
+                                    <select id="role_filter" name="role_filter" class="custom-select">
+                                        <option value="" <?= $role_filter == '' ? 'selected' : '' ?>>All Roles</option>
+                                        <option value="Student" <?= $role_filter == 'Student' ? 'selected' : '' ?>>Student
+                                        </option>
+                                        <option value="Faculty" <?= $role_filter == 'Faculty' ? 'selected' : '' ?>>Faculty
+                                        </option>
+                                        <option value="Program Chair" <?= $role_filter == 'Program Chair' ? 'selected' : '' ?>>Program Chair</option>
+                                        <option value="Admin" <?= $role_filter == 'Admin' ? 'selected' : '' ?>>Admin
+                                        </option>
+                                    </select>
+                                    <i class="fa fa-chevron-down select-icon"></i> <!-- Icon for dropdown -->
+                                </div>
+                            </div>
+                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i>
+                                Filter</button>
+                            <a href="accounts.php?reset_filters=1" class="fitler-btn">
+                                <i class="fa fa-eraser"></i> Clear
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -157,67 +165,74 @@ if (isset($_GET['reset_filters'])) {
                         </tr>
                     </thead>
                     <tbody>
-                    <?php while ($account = mysqli_fetch_assoc($result_accounts)): ?>
-    <tr>
-        <td><?php echo $account['account_id']; ?></td>
-        <td><?php echo $account['name']; ?></td>
-        <td><?php echo $account['username']; ?></td>
-        <td><?php echo $account['email']; ?></td>
-        <td><?php echo $account['role']; ?></td>
-        <td>
-            <div class="action-btns">
-                <button class="edit-btn" data-toggle="modal"
-                    data-target="#editModal<?php echo $account['account_id']; ?>"
-                    data-id="<?php echo $account['account_id']; ?>"
-                    data-name="<?php echo $account['name']; ?>"
-                    data-username="<?php echo $account['username']; ?>"
-                    data-email="<?php echo $account['email']; ?>"
-                    data-role="<?php echo $account['role']; ?>">
-                    <img src="../../../frontend/assets/icons/edit.svg">
-                </button>
-            </div>
-        </td>
-    </tr>
+                        <?php while ($account = mysqli_fetch_assoc($result_accounts)): ?>
+                            <tr>
+                                <td><?php echo $account['account_id']; ?></td>
+                                <td><?php echo $account['name']; ?></td>
+                                <td><?php echo $account['username']; ?></td>
+                                <td><?php echo $account['email']; ?></td>
+                                <td><?php echo $account['role']; ?></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn" data-toggle="modal"
+                                            data-target="#editModal<?php echo $account['account_id']; ?>"
+                                            data-id="<?php echo $account['account_id']; ?>"
+                                            data-name="<?php echo $account['name']; ?>"
+                                            data-username="<?php echo $account['username']; ?>"
+                                            data-email="<?php echo $account['email']; ?>"
+                                            data-role="<?php echo $account['role']; ?>">
+                                            <img src="../../../frontend/assets/icons/edit.svg">
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
 
-    <!-- Edit Account Modal -->
-    <div class="modal fade" id="editModal<?php echo $account['account_id']; ?>" tabindex="-1" role="dialog"
-        aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Account</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
-                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
-                    </span>
-                </div>
-                <form id="editForm<?php echo $account['account_id']; ?>" method="POST" action="update_account.php">
-                <input type="hidden" name="csrf_token"
-                value="<?php echo $_SESSION['csrf_token']; ?>">
-                <input type="hidden" id="role" name="role" value="<?php echo $account['role']; ?>">
-                    <div class="modal-body">
-                        <input type="hidden" name="account_id" value="<?php echo $account['account_id']; ?>">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $account['username']; ?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" value="<?php echo $account['email']; ?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current)">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                        <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-<?php endwhile; ?>
+                            <!-- Edit Account Modal -->
+                            <div class="modal fade" id="editModal<?php echo $account['account_id']; ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Edit Account</h5>
+                                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                            </span>
+                                        </div>
+                                        <form id="editForm<?php echo $account['account_id']; ?>" method="POST"
+                                            action="update_account.php">
+                                            <input type="hidden" name="csrf_token"
+                                                value="<?php echo $_SESSION['csrf_token']; ?>">
+                                            <input type="hidden" id="role" name="role"
+                                                value="<?php echo $account['role']; ?>">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="account_id"
+                                                    value="<?php echo $account['account_id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="username">Username</label>
+                                                    <input type="text" name="username" class="form-control"
+                                                        value="<?php echo $account['username']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" name="email" class="form-control"
+                                                        value="<?php echo $account['email']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="password">Password</label>
+                                                    <input type="password" name="password" class="form-control"
+                                                        placeholder="Enter new password (leave blank to keep current)">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save
+                                                    changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
 
 
                     </tbody>
@@ -230,7 +245,7 @@ if (isset($_GET['reset_filters'])) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
 </body>
 
 </html>

@@ -103,7 +103,7 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
 </head>
 
 <body>
-
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
@@ -200,7 +200,7 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
                 </div>
                 <!-- Assign Course Form -->
                 <form action="add_faculty_course.php" method="POST">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="faculty_id" value="<?= $faculty_id ?>">
                     <div class="modal-body">
                         <div class="form-group">
