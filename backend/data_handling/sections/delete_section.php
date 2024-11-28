@@ -1,9 +1,10 @@
 <?php
 // Include the database connection file
-include '../../db/dbconnect.php';
+include_once "../../../config.php";
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-// Start the session
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Check if the course_section_id is set in the URL
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_section_id'])) {

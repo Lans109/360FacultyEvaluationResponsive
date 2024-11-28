@@ -3,8 +3,8 @@
 include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
 
-// Start the session
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Check if the form is submitted via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

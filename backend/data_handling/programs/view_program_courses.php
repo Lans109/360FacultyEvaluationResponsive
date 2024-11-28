@@ -1,7 +1,10 @@
 <?php
+// Include configuration and database connection
 include_once "../../../config.php";
-// Include database connection
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
@@ -9,9 +12,6 @@ header("Expires: 0");
 
 // Get the program_id from the URL
 $program_id = isset($_GET['program_id']) ? mysqli_real_escape_string($con, $_GET['program_id']) : '';
-
-// Start session for CSRF token
-session_start();
 
 // Generate a CSRF token if one doesn't exist
 if (empty($_SESSION['csrf_token'])) {

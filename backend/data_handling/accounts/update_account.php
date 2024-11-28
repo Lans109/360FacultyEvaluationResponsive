@@ -1,9 +1,10 @@
 <?php
 // Include the database connection
-include_once "../../db/dbconnect.php";
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Start the session for CSRF token validation and status messages
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Check if the form was submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // CSRF token is missing or invalid
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token.';
-        header("Location: accounts.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;
     }
 
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($account_id) || empty($username) || empty($email) || empty($role)) {
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Error: All fields except password are required.';
-        header("Location: accounts.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;
     }
 
@@ -45,10 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $table = 'program_chairs';
             $id_column = 'chair_id';
             break;
+        case 'Admin':
+            $table = 'admins';
+            $id_column = 'admin_id';
+            break;
         default:
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Error: Invalid role.';
-            header("Location: accounts.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit;
     }
 
@@ -58,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // If password is provided, hash it and include in the update query
     if (!empty($password)) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
-        $update_query .= ", password_hash = '$password_hash'";
+        $update_query .= ", password = '$password_hash'";
     }
 
     $update_query .= " WHERE $id_column = '$account_id'";
@@ -78,13 +83,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Error updating account: ' . mysqli_error($con);
-        header("Location: accounts.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;
     }
 } else {
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
-    header("Location: accounts.php");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
     exit;
 }
 

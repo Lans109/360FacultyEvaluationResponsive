@@ -1,7 +1,11 @@
 <?php
-include_once "../../../config.php";
 
+// Include configuration and database connection
+include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Fetch current evaluation status for the current date
 $current_date = date('Y-m-d'); // Current date in YYYY-MM-DD format

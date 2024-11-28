@@ -1,7 +1,10 @@
 <?php
-// Include database connection
+// Include configuration and database connection
 include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 $facultyId = isset($_GET['facultyId']) ? $_GET['facultyId'] : 0;
 $period = isset($_GET['period']) ? $_GET['period'] : 1;

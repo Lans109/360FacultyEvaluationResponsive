@@ -1,12 +1,13 @@
 <?php
+// Include configuration and database connection
 include_once "../../../config.php";
-// Include database connection
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Get the student_id from the URL
 $student_id = isset($_GET['student_id']) ? mysqli_real_escape_string($con, $_GET['student_id']) : '';
-
-session_start();
 
 // Generate a CSRF token if one doesn't exist
 if (empty($_SESSION['csrf_token'])) {

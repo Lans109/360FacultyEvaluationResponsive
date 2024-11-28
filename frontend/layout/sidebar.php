@@ -112,7 +112,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="../../../backend/data_handling/sign_out.php">
                         <img src="../../../frontend/assets/icons/logout.svg">
                         <h3>Sign Out</h3>
                     </a>

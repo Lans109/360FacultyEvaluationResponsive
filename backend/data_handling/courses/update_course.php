@@ -1,10 +1,10 @@
 <?php
+// Include the database connection
+include_once "../../../config.php";
+include BACKEND_PATH . '/db/dbconnect.php';
 
-// Include the database connection file
-include '../../db/dbconnect.php';
-
-// Start the session
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Check if the form is submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,14 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // If successful, set session variables for success message
             $_SESSION['status'] = 'success';
             $_SESSION['message'] = 'Course updated successfully!';
-            header("Location: courses.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         } else {
             // If query fails, log the error and set session variables for error message
             error_log("Database Error: " . mysqli_error($con)); // Log the error
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Error updating course. Please try again later.';
-            header("Location: courses.php");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
 
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // If CSRF token doesn't match, set error message
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
-        header("Location: courses.php");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
 
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // If no POST request is made, set session variables for error message and redirect
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
-    header("Location: courses.php");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>

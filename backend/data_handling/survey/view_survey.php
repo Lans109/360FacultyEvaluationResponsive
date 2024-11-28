@@ -1,13 +1,10 @@
 <?php
+// Include the database connection file
 include_once "../../../config.php";
-// Include database connection
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Pragma: no-cache");
-header("Expires: 0");
-
-session_start();
+// Authentication check
+include '../authentication.php';
 
 // Generate a CSRF token if one doesn't exist
 if (empty($_SESSION['csrf_token'])) {

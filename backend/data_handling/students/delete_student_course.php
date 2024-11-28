@@ -1,9 +1,10 @@
 <?php
-// Start the session
-session_start();
-
 // Include the database connection file
-include '../../db/dbconnect.php';
+include_once "../../../config.php";
+include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Check if the request method is POST and the necessary parameters are set
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'], $_POST['course_section_id'], $_POST['csrf_token'])) {
