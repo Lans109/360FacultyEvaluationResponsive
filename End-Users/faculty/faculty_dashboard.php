@@ -75,7 +75,6 @@ $conn->close();
 </head>
 
 <body>
-
     <!-- Centered Header -->
     <div class="header">
         <div class="nav-title">
