@@ -15,12 +15,12 @@
     --success: #48bb78;
     --error: #f56565;
 
-    /* Enhanced Shadows */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.18);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.25);
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
 
-    /* Enhanced Gradients */
+    /* Gradients */
     --gradient-primary: linear-gradient(135deg, #800000 0%, #b30000 100%);
     --gradient-light: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
     --gradient-overlay: rgba(0, 0, 0, 0.4);
@@ -33,12 +33,10 @@
     box-sizing: border-box;
 }
 
-/* Enhanced Body Background */
 body {
     font-family: "Poppins", Arial, sans-serif;
-    background: 
-        linear-gradient(135deg, rgba(125, 0, 6, 0.95), rgba(211, 211, 211, 0.9)),
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.1) 10px, rgba(255, 255, 255, 0.1) 20px);
+    background: linear-gradient(135deg, #7D0006, #D3D3D3);
+    background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     color: #000;
@@ -47,45 +45,21 @@ body {
     height: 100vh;
 }
 
-/* Enhanced Header */
+/* Header Section */
 .header {
-    background: linear-gradient(135deg, #7D0006 0%, #990008 100%);
+    background: #7D0006;
     padding: 1.5rem 0;
     text-align: center;
     color: #fff;
     position: relative;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .header h1 {
     font-size: 2.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    position: relative;
-    display: inline-block;
-}
-
-.header h1::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #fff, transparent);
 }
 
 /* Center the navbar */
@@ -194,171 +168,66 @@ nav {
     border-radius: 8px;
     margin-bottom: 20px;
     font-size: 1.2rem;
+    position: relative;
 }
 
-.header nav a::before {
-    content: '';
+.welcome-message .close-btn {
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
+    top: 5px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: #800000;
+    cursor: pointer;
 }
 
-.header nav a:hover::before {
-    left: 100%;
+/* Student Dashboard */
+/* Container */
+.container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-large);
 }
 
-/* Enhanced Cards */
+/* Profile Card */
 .card {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--white);
     border-radius: 15px;
     padding: 2rem;
     margin: 2rem 0;
     text-align: center;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+    border: 3px solid rgba(125, 0, 6, 0.1);
+    transition: var(--transition-speed);
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #7D0006, #990008);
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
+    border: 3px solid rgba(125, 0, 6, 0.3);
 }
 
-/* Table Styling */
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 1rem;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.95);
+.card h1 {
+    color: #000;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
-th {
-    background: linear-gradient(135deg, #7D0006, #990008);
-    color: #fff;
+.card p {
     font-size: 1.1rem;
-    padding: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+    color: #000;
 }
 
-td {
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.8);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-}
-
-tr:hover td {
-    background: rgba(125, 0, 6, 0.05);
-    transform: scale(1.01);
-}
-
-/* Evaluation Page */
-.option-button {
-    margin: 0 10px;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #7D0006, #990008);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.option-button::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: rotate(45deg);
-    transition: 0.5s;
-    opacity: 0;
-}
-
-.option-button:hover::after {
-    opacity: 1;
-}
-
-.option-button.selected {
-    background: linear-gradient(135deg, #8d8d8d, #666);
-    transform: translateY(-2px);
-}
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: rgba(240, 240, 240, 0.3);
-    border-radius: 10px;
-    margin: 20px 0;
-    overflow: hidden;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.progress {
-    height: 100%;
-    background: linear-gradient(90deg, #7D0006, #990008);
-    border-radius: 10px;
-    transition: width 0.5s ease;
-    position: relative;
-}
-
-.progress::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-/* Enhanced Form Elements */
-#comment {
-    width: 100%;
-    min-height: 120px;
-    margin-top: 15px;
-    padding: 15px;
-    border: 2px solid rgba(125, 0, 6, 0.2);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-#comment:focus {
-    border-color: #7D0006;
-    box-shadow: 0 0 0 3px rgba(125, 0, 6, 0.1);
-    outline: none;
+.card hr {
+    border: 0;
+    height: 1px;
+    background: var(--primary-light);
+    margin: 1.5rem 0;
 }
 
 /* Profile Picture */
@@ -378,7 +247,25 @@ tr:hover td {
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Modal */
+/* Button Styles */
+button {
+    background: var(--primary-color);
+    color: #000;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-speed);
+    box-shadow: var(--shadow-small);
+}
+
+button:hover {
+    background: var(--primary-light);
+    box-shadow: var(--shadow-large);
+}
+
+/* Modal Container */
 .modal {
     display: none;
     position: fixed;
@@ -392,143 +279,290 @@ tr:hover td {
     align-items: center;
 }
 
+/* Modal Content */
 .modal-content {
-    background: var(--white);
+    background: #ffffff;
     padding: 2rem;
-    border-radius: 15px;
+    border-radius: 12px;
     width: 90%;
     max-width: 500px;
-    box-shadow: var(--shadow-large);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.3s ease-out;
 }
 
+/* Modal Header */
 .modal-header {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #7D0006;
     text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
 }
 
-.modal-footer {
-    margin-top: 1rem;
+/* Modal Body */
+.modal-body {
+    font-size: 1.1rem;
     text-align: center;
+    color: #000;
+    margin-bottom: 1.5rem;
+}
+
+.modal-body input[type="file"] {
+    display: block;
+    margin: 1rem auto;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 90%;
+    max-width: 300px;
+}
+
+/* Buttons in Modal */
+.btn-change,
+.btn-cancel {
+    background: #e0e0e0;
+    color: #000;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-change:hover {
+    background: #7D0006;
+    color: #fff;
+}
+
+.btn-cancel:hover {
+    background: #999;
+    color: #fff;
+}
+
+/* Modal Footer */
+.modal-footer {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .header h1 {
-        font-size: 1.8rem;
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
     }
 
-    .card h1 {
-        font-size: 2rem;
+    .modal-header {
+        font-size: 1.5rem;
     }
 
-    .profile-pic {
-        width: 120px;
-        height: 120px;
+    .modal-body input[type="file"] {
+        width: 100%;
     }
 
-    button {
+    .btn-change,
+    .btn-cancel {
         font-size: 0.9rem;
-        padding: 0.7rem 1.2rem;
+        padding: 0.6rem 1rem;
     }
 }
 
-/* Navigation Buttons */
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;  /* Default to space-between */
-    margin-top: 2rem;
+/* Floating Animations */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
-.navigation-buttons.first-question {
-    justify-content: center;  /* Center buttons for the first question */
+.dashboard::before,
+.dashboard::after,
+.course-card::before {
+    animation: float 6s ease-in-out infinite;
 }
 
-.navigation-buttons.first-question button:first-child {
-    margin: 0 auto;  /* Center only the first button */
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
-button {
-    padding: 12px 12px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    background: linear-gradient(135deg, #7D0006, #990008);
-    color: white;
-    border: none;
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Eval page */
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #f4f4f4;
+}
+
+th {
+    background-color: #7D0006;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+td {
+    background-color: #fafafa;
+}
+
+tr:hover {
+    background-color: #f0f0f0;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
 }
 
-button:hover {
-    background: linear-gradient(135deg, #990008, #7D0006);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+/* Button Styles */
+td a,
+td button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-button:disabled {
-    background: rgba(125, 0, 6, 0.3);
+td a {
+    background-color: #7D0006;
+    transition: background-color 0.3s;
+}
+
+td a:hover {
+    background-color: #D3D3D3;
+    color: #7D0006;
+}
+
+td button {
+    background-color: #7D0006;
+    border: none;
     cursor: not-allowed;
 }
 
-button:focus {
-    outline: none;
+td button:disabled {
+    background-color: #999;
 }
 
-/* Hover Effects */
-button::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: rotate(45deg);
-    transition: 0.5s;
-    opacity: 0;
+/* Profile Card */
+.card {
+    text-align: center;
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-button:hover::before {
-    opacity: 1;
+/* Button Styles */
+button {
+    background: #7D0006;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Hide Submit button until the last question */
-#submitBtn {
-    background: linear-gradient(135deg, #264653, #7d0006);
-    display: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+button:hover {
+    background: #D3D3D3;
+    color: #7D0006;
 }
 
-#submitBtn:hover {
-    background: linear-gradient(135deg, #264653, #2a9d8f);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+
+/* Evaluation Page Specific Styles */
+.option-button {
+    margin: 0 10px;
+    padding: 10px 15px;
+    background-color: #7D0006;
+    border: 2px solid #f0f0f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Styles for "Previous" button */
-#prevBtn {
-    background: linear-gradient(135deg, #264653, #7d0006);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+.option-button.selected {
+    background-color: #8d8d8d;
+    color: white;
 }
 
-#prevBtn:hover {
-    background-color: rgba(125, 0, 6, 0.8);
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 20px;
 }
 
-/* Styles for "Next" button */
-#nextBtn {
-    background: linear-gradient(135deg, #264653, #7d0006);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+.progress {
+    height: 100%;
+    background-color: #7D0006;
+    border-radius: 5px;
+    transition: width 0.5s ease;
 }
 
-#nextBtn:hover {
-    background-color: rgba(38, 70, 53, 0.8);
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
-/* Display navigation buttons in row */
-.navigation-buttons button {
-    width: 18%;
+#comment {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }
