@@ -68,62 +68,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
 
     <title>Program Chair Dashboard</title>
-    <script>
-    </script>
-    <style>
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000; /* Higher than other page elements */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: auto;
-            margin-top: 10%;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+
 </head>
+
 <body>
     <div class="header">
-        <h1>Program Chair Dashboard</h1>
+        <div class="nav-title">
+            <h1>Evaluation</h1>
+        </div>
         <?php include 'program_chair_navbar.php' ?>
     </div>
     <div class="container">
         <div class="card">
             <h2>Evaluation Tasks</h2>
             <?php if (!empty($evaluations)): ?>
-                <table border="1">
+                <table>
                     <tr>
                         <th>Faculty Name</th>
                         <th>Created At</th>
@@ -131,14 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         <th>Actions</th>
                     </tr>
                     <?php foreach ($evaluations as $evaluation): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?></td>
-                        <td><?php echo htmlspecialchars($evaluation['created_at']); ?></td>
-                        <td><?php echo htmlspecialchars($evaluation['end_date']); ?></td>
-                        <td>
-                            <?php if (!$evaluation['is_completed']): ?>
-                                <!-- Redirect to evaluation page -->
-                                <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start Evaluation</a>
+                        <tr>
+                            <td><?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($evaluation['created_at']); ?></td>
+                            <td><?php echo htmlspecialchars($evaluation['end_date']); ?></td>
+                            <td>
+                                <?php if (!$evaluation['is_completed']): ?>
+                                    <!-- Redirect to evaluation page -->
+                                    <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
+                                        Evaluation</a>
                                 <?php else: ?>
                                     <button disabled>Completed</button>
                                 <?php endif; ?>
@@ -151,8 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
             <?php endif; ?>
         </div>
     </div>
-        </div>
+    </div>
     </div>
 
 </body>
+
 </html>
