@@ -154,6 +154,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="Styles/styles.css">
+
     <script>
         // Display success or error message in a popup
         window.onload = function () {
@@ -193,29 +194,40 @@ $conn->close();
             </h1>
         </div>
         <nav>
-            <div class="nav-items">
-                <?php
-                // Generate navigation links dynamically based on user type
-                if ($user_type == 'students') {
-                    echo '<a href="students/student_dashboard.php">Courses</a>';
-                } elseif ($user_type == 'faculty') {
-                    echo '<a href="faculty/faculty_dashboard.php">Courses Handled</a>';
-                } elseif ($user_type == 'program_chair') {
-                    echo '<a href="program_chair/program_chair_dashboard.php">Department Info</a>';
-                }
-                ?>
-                <a href="userprofile.php">Profile</a>
-                <?php
-                if ($user_type == 'students') {
-                    echo '<a href="students/student_evaluation.php">Evaluate</a>';
-                } elseif ($user_type == 'faculty') {
-                    echo '<a href="faculty/faculty_evaluation.php">Evaluate</a>';
-                } elseif ($user_type == 'program_chair') {
-                    echo '<a href="program_chair/program_chair_evaluation.php">Evaluate</a>';
-                }
-                ?>
-                <a href="../logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
-            </div>
+            <nav>
+                <div class="nav-items">
+                    <?php
+                    // Get the current script name
+                    $current_page = basename($_SERVER['PHP_SELF']);
+
+                    // Dynamically generate navigation links based on user type
+                    if ($user_type == 'students') {
+                        echo '<a href="students/student_dashboard.php" class="' . ($current_page == 'student_dashboard.php' ? 'active' : '') . '">Courses</a>';
+                    } elseif ($user_type == 'faculty') {
+                        echo '<a href="faculty/faculty_dashboard.php" class="' . ($current_page == 'faculty_dashboard.php' ? 'active' : '') . '">Courses Handled</a>';
+                    } elseif ($user_type == 'program_chair') {
+                        echo '<a href="program_chair/program_chair_dashboard.php" class="' . ($current_page == 'program_chair_dashboard.php' ? 'active' : '') . '">Department Info</a>';
+                    }
+
+                    // Highlight "Profile" link
+                    echo '<a href="userprofile.php" class="' . ($current_page == 'userprofile.php' ? 'active' : '') . '">Profile</a>';
+
+                    // Highlight "Evaluate" link
+                    if ($user_type == 'students') {
+                        echo '<a href="students/student_evaluation.php" class="' . ($current_page == 'student_evaluation.php' ? 'active' : '') . '">Evaluate</a>';
+                    } elseif ($user_type == 'faculty') {
+                        echo '<a href="faculty/faculty_evaluation.php" class="' . ($current_page == 'faculty_evaluation.php' ? 'active' : '') . '">Evaluate</a>';
+                    } elseif ($user_type == 'program_chair') {
+                        echo '<a href="program_chair/program_chair_evaluation.php" class="' . ($current_page == 'program_chair_evaluation.php' ? 'active' : '') . '">Evaluate</a>';
+                    }
+
+                    // Logout link
+                    echo '<a href="../logout.php" onclick="return confirm(\'Are you sure you want to logout?\')">Logout</a>';
+                    ?>
+                    <span class="active-indicator"></span>
+                </div>
+            </nav>
+
         </nav>
     </div>
 

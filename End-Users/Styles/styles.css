@@ -44,23 +44,7 @@ body {
     color: #000;
     line-height: 1.6;
     margin: 0;
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* Decorative Elements */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(125, 0, 6, 0.15) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
+    height: 100vh;
 }
 
 /* Enhanced Header */
@@ -69,7 +53,7 @@ body::before {
     padding: 1.5rem 0;
     text-align: center;
     color: #fff;
-    position: sticky;
+    position: relative;
     top: 0;
     z-index: 1000;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -104,21 +88,112 @@ body::before {
     background: linear-gradient(90deg, transparent, #fff, transparent);
 }
 
-/* Navigation Links */
-.header nav a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 1rem;
-    font-size: 1.1rem;
-    font-weight: 500;
-    padding: 0.5rem 1.5rem;
-    background: linear-gradient(135deg, rgba(83, 0, 4, 0.9), rgba(83, 0, 4, 0.9));
-    border-radius: 8px;
-    display: inline-block;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+/* Center the navbar */
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Center the items and style the nav links */
+.nav-items {
     position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
+    display: flex;
+}
+
+.nav-items a {
+    text-decoration: none;
+    color: #000;
+    padding: 10px 20px;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-items a:hover {
+    color: white;
+}
+
+/* Active state */
+.nav-items a:active {
+    color: white;
+    font-weight: bold;
+}
+
+.nav-items a.active {
+    color: white;
+    font-weight: bold;
+}
+
+/* Create the sliding indicator */
+.nav-items a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+/* Show the indicator when the link is active */
+.nav-items a.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Animation for the indicator to slide from left to right */
+.nav-items a.active::after {
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
+/* Animation for the indicator to slide right to left */
+.nav-items a.inactive::after {
+    transform-origin: right;
+    transform: scaleX(0);
+}
+
+/* navbar for mobile view */
+@media (max-width: 500px) {
+    .header {
+        position: fixed; 
+        /* Fix the navbar to the bottom */
+        bottom: 0;
+        /* Align it at the bottom */
+        left: 0;
+        width: 100%;
+        /* Full width */
+        height: 50px;
+        /* Adjust height as needed */
+        background-color: #333;
+        /* Background color */
+        color: white;
+        text-align: center;
+        z-index: 1000;
+        /* Ensure it stays above other content */
+    }
+
+    /* Add padding to content area to prevent overlap */
+    .container {
+        padding-bottom: 60px;
+        /* Add enough space for the navbar */
+    }
+
+    .header h1 {
+        display: none;
+    }
+}
+
+.welcome-message {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
 }
 
 .header nav a::before {

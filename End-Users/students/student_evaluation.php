@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 </head>
 
 <body>
+
     <div class="header">
         <div class="nav-title">
             <h1>
