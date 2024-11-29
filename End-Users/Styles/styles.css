@@ -15,12 +15,12 @@
     --success: #48bb78;
     --error: #f56565;
 
-    /* Shadows */
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+    /* Enhanced Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.18);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.25);
 
-    /* Gradients */
+    /* Enhanced Gradients */
     --gradient-primary: linear-gradient(135deg, #800000 0%, #b30000 100%);
     --gradient-light: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
     --gradient-overlay: rgba(0, 0, 0, 0.4);
@@ -33,120 +33,257 @@
     box-sizing: border-box;
 }
 
+/* Enhanced Body Background */
 body {
     font-family: "Poppins", Arial, sans-serif;
-    background: linear-gradient(135deg, #7D0006, #D3D3D3);
-    background-repeat: no-repeat;
+    background: 
+        linear-gradient(135deg, rgba(125, 0, 6, 0.95), rgba(211, 211, 211, 0.9)),
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.1) 10px, rgba(255, 255, 255, 0.1) 20px);
     background-attachment: fixed;
     background-size: cover;
     color: #000;
     line-height: 1.6;
     margin: 0;
+    position: relative;
+    overflow-x: hidden;
 }
 
-/* Header Section */
+/* Decorative Elements */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(125, 0, 6, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Enhanced Header */
 .header {
-    background: #7D0006;
+    background: linear-gradient(135deg, #7D0006 0%, #990008 100%);
     padding: 1.5rem 0;
     text-align: center;
     color: #fff;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
 .header h1 {
     font-size: 2.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: inline-block;
 }
 
-/* Header Navigation Links */
+.header h1::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+}
+
+/* Enhanced Navigation Links */
 .header nav a {
     color: #fff;
     text-decoration: none;
     margin: 0 1rem;
     font-size: 1.1rem;
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    background-color: #7D0006;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, rgba(125, 0, 6, 0.9), rgba(125, 0, 6, 0.7));
     border-radius: 8px;
     display: inline-block;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.header nav a:hover {
-    color: #000;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
-}
-
-.welcome-message {
-    background: #e3f2fd;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.welcome-message .close-btn {
+.header nav a::before {
+    content: '';
     position: absolute;
-    top: 5px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 1.2rem;
-    color: #800000;
-    cursor: pointer;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
 }
 
-/* Student Dashboard */
-/* Container */
-.container {
-    max-width: 1100px;
-    margin: 2rem auto;
-    padding: 1rem;
-    background: var(--secondary-color);
-    border-radius: 12px;
-    box-shadow: var(--shadow-large);
+.header nav a:hover::before {
+    left: 100%;
 }
 
-/* Profile Card */
+/* Enhanced Cards */
 .card {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     padding: 2rem;
     margin: 2rem 0;
     text-align: center;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    border: 3px solid rgba(125, 0, 6, 0.1);
-    transition: var(--transition-speed);
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
-    border: 3px solid rgba(125, 0, 6, 0.3);
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #7D0006, #990008);
 }
 
-.card h1 {
-    color: #000;
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+/* Enhanced Table Styling */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
 }
 
-.card p {
+th {
+    background: linear-gradient(135deg, #7D0006, #990008);
+    color: #fff;
     font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: #000;
+    padding: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.card hr {
-    border: 0;
-    height: 1px;
-    background: var(--primary-light);
-    margin: 1.5rem 0;
+td {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+tr:hover td {
+    background: rgba(125, 0, 6, 0.05);
+    transform: scale(1.01);
+}
+
+/* Enhanced Evaluation Page */
+.option-button {
+    margin: 0 10px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #7D0006, #990008);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.option-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.option-button:hover::after {
+    opacity: 1;
+}
+
+.option-button.selected {
+    background: linear-gradient(135deg, #8d8d8d, #666);
+    transform: translateY(-2px);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(240, 240, 240, 0.3);
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(90deg, #7D0006, #990008);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Enhanced Form Elements */
+#comment {
+    width: 100%;
+    min-height: 120px;
+    margin-top: 15px;
+    padding: 15px;
+    border: 2px solid rgba(125, 0, 6, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#comment:focus {
+    border-color: #7D0006;
+    box-shadow: 0 0 0 3px rgba(125, 0, 6, 0.1);
+    outline: none;
 }
 
 /* Profile Picture */
@@ -166,25 +303,7 @@ body {
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Button Styles */
-button {
-    background: var(--primary-color);
-    color: #000;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition-speed);
-    box-shadow: var(--shadow-small);
-}
-
-button:hover {
-    background: var(--primary-light);
-    box-shadow: var(--shadow-large);
-}
-
-/* Modal Container */
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -198,290 +317,45 @@ button:hover {
     align-items: center;
 }
 
-/* Modal Content */
 .modal-content {
-    background: #ffffff;
+    background: var(--white);
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 15px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-large);
     animation: fadeIn 0.3s ease-out;
 }
 
-/* Modal Header */
 .modal-header {
-    font-size: 1.8rem;
-    color: #7D0006;
-    text-align: center;
+    font-size: 1.5rem;
+    color: var(--primary-color);
     margin-bottom: 1rem;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 1rem;
-}
-
-/* Modal Body */
-.modal-body {
-    font-size: 1.1rem;
     text-align: center;
-    color: #000;
-    margin-bottom: 1.5rem;
 }
 
-.modal-body input[type="file"] {
-    display: block;
-    margin: 1rem auto;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    width: 90%;
-    max-width: 300px;
-}
-
-/* Buttons in Modal */
-.btn-change,
-.btn-cancel {
-    background: #e0e0e0;
-    color: #000;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 0.5rem;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.btn-change:hover {
-    background: #7D0006;
-    color: #fff;
-}
-
-.btn-cancel:hover {
-    background: #999;
-    color: #fff;
-}
-
-/* Modal Footer */
 .modal-footer {
-    text-align: center;
     margin-top: 1rem;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    text-align: center;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        padding: 1.5rem;
+    .header h1 {
+        font-size: 1.8rem;
     }
 
-    .modal-header {
-        font-size: 1.5rem;
+    .card h1 {
+        font-size: 2rem;
     }
 
-    .modal-body input[type="file"] {
-        width: 100%;
+    .profile-pic {
+        width: 120px;
+        height: 120px;
     }
 
-    .btn-change,
-    .btn-cancel {
+    button {
         font-size: 0.9rem;
-        padding: 0.6rem 1rem;
+        padding: 0.7rem 1.2rem;
     }
-}
-
-/* Floating Animations */
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-.dashboard::before,
-.dashboard::after,
-.course-card::before {
-    animation: float 6s ease-in-out infinite;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Eval page */
-
-/* Table Styling */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 2px solid #f4f4f4;
-}
-
-th {
-    background-color: #7D0006;
-    color: #fff;
-    font-size: 1.1rem;
-}
-
-td {
-    background-color: #fafafa;
-}
-
-tr:hover {
-    background-color: #f0f0f0;
-    cursor: pointer;
-}
-
-/* Button Styles */
-td a,
-td button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #fff;
-    font-weight: 600;
-    text-align: center;
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-td a {
-    background-color: #7D0006;
-    transition: background-color 0.3s;
-}
-
-td a:hover {
-    background-color: #D3D3D3;
-    color: #7D0006;
-}
-
-td button {
-    background-color: #7D0006;
-    border: none;
-    cursor: not-allowed;
-}
-
-td button:disabled {
-    background-color: #999;
-}
-
-/* Profile Card */
-.card {
-    text-align: center;
-    padding: 2rem;
-    background: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-}
-
-/* Button Styles */
-button {
-    background: #7D0006;
-    color: #fff;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button:hover {
-    background: #D3D3D3;
-    color: #7D0006;
-}
-
-
-
-/* Evaluation Page Specific Styles */
-.option-button {
-    margin: 0 10px;
-    padding: 10px 15px;
-    background-color: #7D0006;
-    border: 2px solid #f0f0f0;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.option-button.selected {
-    background-color: #8d8d8d;
-    color: white;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-.progress {
-    height: 100%;
-    background-color: #7D0006;
-    border-radius: 5px;
-    transition: width 0.5s ease;
-}
-
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-#comment {
-    width: 100%;
-    min-height: 100px;
-    margin-top: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
 }
