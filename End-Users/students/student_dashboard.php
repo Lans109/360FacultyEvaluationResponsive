@@ -72,22 +72,27 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Styles/styles.css">
-    <link rel="stylesheet" href="../Styles/dashboard.css">
     <title>Student Dashboard</title>
 </head>
+
 <body>
     <!-- Centered Header -->
     <div class="header">
+        <div class="nav-title">
+            <h1>
+                Student Dashboard
+            </h1>
+        </div>
         <?php include 'student_navbar.php' ?>
     </div>
 
     <div class="container">
         <!-- Welcome Message -->
         <?php if ($_SESSION['welcome_shown']): ?>
-        <div class="welcome-message" id="welcome-message">
-            Welcome back, <?php echo htmlspecialchars($name); ?>!
-            <button class="close-btn" onclick="closeWelcomeMessage()">X</button>
-        </div>
+            <div class="welcome-message" id="welcome-message">
+                Welcome back, <?php echo htmlspecialchars($name); ?>!
+                <button class="close-btn" onclick="closeWelcomeMessage()">X</button>
+            </div>
         <?php endif; ?>
 
         <!-- Profile Section -->
@@ -101,27 +106,29 @@ $conn->close();
             <!-- Courses Section -->
             <h3 style="margin-top: 30px; margin-bottom: 20px;">Courses Enrolled To</h3>
             <?php if (!empty($courses)): ?>
-            <?php foreach ($courses as $course): ?>
-            <div class="course-card">
-                <h4><?php echo htmlspecialchars($course['course_name']); ?>
-                    (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
-                    <?php echo htmlspecialchars($course['section']); ?></h4>
-                <div class="course-info">
-                    <p><?php echo htmlspecialchars($course['course_description']); ?></p>
-                </div>
-            </div>
-            <?php endforeach; ?>
+                <?php foreach ($courses as $course): ?>
+                    <div class="course-card">
+                        <h4><?php echo htmlspecialchars($course['course_name']); ?>
+                            (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
+                            <?php echo htmlspecialchars($course['section']); ?>
+                        </h4>
+                        <div class="course-info">
+                            <p><?php echo htmlspecialchars($course['course_description']); ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             <?php else: ?>
-            <p>You are not enrolled in any courses yet.</p>
+                <p>You are not enrolled in any courses yet.</p>
             <?php endif; ?>
         </div>
 
     </div>
 
     <script>
-    function closeWelcomeMessage() {
-        document.getElementById('welcome-message').style.display = 'none';
-    }
+        function closeWelcomeMessage() {
+            document.getElementById('welcome-message').style.display = 'none';
+        }
     </script>
 </body>
+
 </html>

@@ -1,9 +1,4 @@
 <nav>
-  <div class="nav-title">
-    <h1>
-      Student Dashboard
-    </h1>
-  </div>
   <div class="nav-items">
     <a href="student_dashboard.php">Courses</a>
     <a href="../userprofile.php">Profile</a>

@@ -71,213 +71,154 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
     <title>Student Dashboard</title>
-<style>
-    /* Reset Styles */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <style>
 
-    body {
-        font-family: "Poppins", Arial, sans-serif;
-        background: linear-gradient(135deg, #7D0006, #D3D3D3);
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-        color: #000;
-        line-height: 1.6;
-        margin: 0;
-    }
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Header Section */
-    .header {
-        background: #7D0006;
-        padding: 1.5rem 0;
-        text-align: center;
-        color: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #f4f4f4;
+        }
 
-    .header h1 {
-        font-size: 2.5rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+        th {
+            background-color: #7D0006;
+            color: #fff;
+            font-size: 1.1rem;
+        }
 
-    /* Header Navigation Links */
-    .header nav a {
-        color: #fff;
-        text-decoration: none;
-        margin: 0 1rem;
-        font-size: 1.1rem;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        background-color: #7D0006;
-        border-radius: 8px;
-        display: inline-block;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        td {
+            background-color: #fafafa;
+        }
 
-    .header nav a:hover {
-        color: #000;
-        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-        box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
-    }
+        tr:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
 
-    /* Container */
-    .container {
-        max-width: 1100px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    }
+        /* Button Styles */
+        td a,
+        td button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-    /* Table Styling */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-    }
+        td a {
+            background-color: #7D0006;
+            transition: background-color 0.3s;
+        }
 
-    th,
-    td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 2px solid #f4f4f4;
-    }
+        td a:hover {
+            background-color: #D3D3D3;
+            color: #7D0006;
+        }
 
-    th {
-        background-color: #7D0006;
-        color: #fff;
-        font-size: 1.1rem;
-    }
+        td button {
+            background-color: #7D0006;
+            border: none;
+            cursor: not-allowed;
+        }
 
-    td {
-        background-color: #fafafa;
-    }
+        td button:disabled {
+            background-color: #999;
+        }
 
-    tr:hover {
-        background-color: #f0f0f0;
-        cursor: pointer;
-    }
+        /* Profile Card */
+        .card {
+            text-align: center;
+            padding: 2rem;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+        }
 
-    /* Button Styles */
-    td a,
-    td button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
-        font-weight: 600;
-        text-align: center;
-        display: inline-block;
-        width: 100%;
-        box-sizing: border-box;
-    }
+        /* Button Styles */
+        button {
+            background: #7D0006;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    td a {
-        background-color: #7D0006;
-        transition: background-color 0.3s;
-    }
-
-    td a:hover {
-        background-color: #D3D3D3;
-        color: #7D0006;
-    }
-
-    td button {
-        background-color: #7D0006;
-        border: none;
-        cursor: not-allowed;
-    }
-
-    td button:disabled {
-        background-color: #999;
-    }
-
-    /* Profile Card */
-    .card {
-        text-align: center;
-        padding: 2rem;
-        background: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    }
-
-    /* Button Styles */
-    button {
-        background: #7D0006;
-        color: #fff;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    button:hover {
-        background: #D3D3D3;
-        color: #7D0006;
-    }
+        button:hover {
+            background: #D3D3D3;
+            color: #7D0006;
+        }
     </style>
 </head>
 
 <body>
     <div class="header">
+        <div class="nav-title">
+            <h1>
+                Evaluation Page
+            </h1>
+        </div>
         <?php include 'student_navbar.php' ?>
     </div>
     <div class="container">
         <div class="card">
             <h2>Evaluation Tasks</h2>
             <?php if (!empty($evaluations)): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Faculty Name</th>
-                        <th>Course Code</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th>Deadline</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($evaluations as $evaluation): ?>
-                    <tr>
-                        <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?>
-                        </td>
-                        <td><?php echo $evaluation['course_code']; ?></td>
-                        <td>
-                            <?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
-                        </td>
-                        <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?></td>
-                        <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?></td>
-                        <td>
-                            <?php if (!$evaluation['is_completed']): ?>
-                            <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
-                                Evaluation</a>
-                            <?php else: ?>
-                            <button disabled>Completed</button>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Faculty Name</th>
+                            <th>Course Code</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Deadline</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($evaluations as $evaluation): ?>
+                            <tr>
+                                <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?>
+                                </td>
+                                <td><?php echo $evaluation['course_code']; ?></td>
+                                <td>
+                                    <?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
+                                </td>
+                                <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?></td>
+                                <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?></td>
+                                <td>
+                                    <?php if (!$evaluation['is_completed']): ?>
+                                        <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
+                                            Evaluation</a>
+                                    <?php else: ?>
+                                        <button disabled>Completed</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             <?php else: ?>
-            <p>No evaluations available at the moment.</p>
+                <p>No evaluations available at the moment.</p>
             <?php endif; ?>
         </div>
     </div>
 </body>
+
 </html>

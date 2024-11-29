@@ -58,7 +58,7 @@ if ($sql == "") {
 // Execute the query
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    die('Error: SQL preparation failed. ' . $conn->error); 
+    die('Error: SQL preparation failed. ' . $conn->error);
 }
 
 $stmt->bind_param("s", $email);
@@ -153,332 +153,69 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Styles/styles.css">
     <script>
-    // Display success or error message in a popup
-    window.onload = function() {
-        <?php if (isset($_SESSION['profile_update_success'])): ?>
-        alert("<?php echo $_SESSION['profile_update_success']; ?>");
-        <?php unset($_SESSION['profile_update_success']); ?>
-        <?php elseif (isset($_SESSION['profile_update_error'])): ?>
-        alert("<?php echo $_SESSION['profile_update_error']; ?>");
-        <?php unset($_SESSION['profile_update_error']); ?>
-        <?php endif; ?>
-    };
-    // Open the modal when the user clicks on the profile image
-    function openModal() {
-        document.getElementById('myModal').style.display = 'block';
-    }
-
-    // Close the modal when the user clicks on "Cancel"
-    function closeModal() {
-        document.getElementById('myModal').style.display = 'none';
-    }
-
-    // Close the modal if the user clicks anywhere outside the modal
-    window.onclick = function(event) {
-        var modal = document.getElementById('myModal');
-        if (event.target == modal) {
-            modal.style.display = 'none';
+        // Display success or error message in a popup
+        window.onload = function () {
+            <?php if (isset($_SESSION['profile_update_success'])): ?>
+                alert("<?php echo $_SESSION['profile_update_success']; ?>");
+                <?php unset($_SESSION['profile_update_success']); ?>
+            <?php elseif (isset($_SESSION['profile_update_error'])): ?>
+                alert("<?php echo $_SESSION['profile_update_error']; ?>");
+                <?php unset($_SESSION['profile_update_error']); ?>
+            <?php endif; ?>
+        };
+        // Open the modal when the user clicks on the profile image
+        function openModal() {
+            document.getElementById('myModal').style.display = 'block';
         }
-    };
+
+        // Close the modal when the user clicks on "Cancel"
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // Close the modal if the user clicks anywhere outside the modal
+        window.onclick = function (event) {
+            var modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
     </script>
-<style>
-    /* Reset Styles */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: "Poppins", Arial, sans-serif;
-        background: linear-gradient(135deg, #7D0006, #D3D3D3);
-        color: #000;
-        line-height: 1.6;
-    }
-
-    /* Header Section */
-    .header {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        padding: 1.5rem 0;
-        text-align: center;
-        color: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: var(--shadow-small);
-    }
-
-    .header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0;
-        padding: 1rem;
-        background-color: #7D0006;
-        color: var(--white);
-        text-align: center;
-        border-radius: 0;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-
-    .header nav {
-        margin-top: 0.5rem;
-    }
-
-    /* Header Navigation Links */
-    .header nav a {
-        color: #fff;
-        text-decoration: none;
-        margin: 0 1rem;
-        font-size: 1.1rem;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        background-color: #7D0006;
-        border-radius: 8px;
-        display: inline-block;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .header nav a:hover {
-        color: #000;
-        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-        box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
-    }
-
-
-    /* Container */
-    .container {
-        max-width: 1100px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background: var(--secondary-color);
-        border-radius: 12px;
-        box-shadow: var(--shadow-large);
-    }
-
-    /* Profile Card */
-    .card {
-        background: var(--white);
-        border-radius: 15px;
-        padding: 2rem;
-        margin: 2rem 0;
-        text-align: center;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-        border: 3px solid rgba(125, 0, 6, 0.1);
-        transition: var(--transition-speed);
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
-        border: 3px solid rgba(125, 0, 6, 0.3);
-    }
-
-    .card h1 {
-        color: var(--primary-color);
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .card p {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        color: var(--text-color);
-    }
-
-    .card hr {
-        border: 0;
-        height: 1px;
-        background: var(--primary-light);
-        margin: 1.5rem 0;
-    }
-
-    /* Profile Picture */
-    .profile-pic {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        border: 5px solid var(--primary-light);
-        box-shadow: var(--shadow-small);
-        transition: var(--transition-speed);
-        object-fit: cover;
-        cursor: pointer;
-    }
-
-    .profile-pic:hover {
-        transform: scale(1.1);
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Button Styles */
-    button {
-        background: var(--primary-color);
-        color: var(--white);
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: var(--transition-speed);
-        box-shadow: var(--shadow-small);
-    }
-
-    button:hover {
-        background: var(--primary-light);
-        box-shadow: var(--shadow-large);
-    }
-
-    /* Modal Container */
-    .modal {
-        display: none;
-        /* Hidden by default */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* Modal Content */
-    .modal-content {
-        background: #ffffff;
-        padding: 2rem;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 500px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
-        animation: fadeIn 0.3s ease-out;
-    }
-
-    /* Modal Header */
-    .modal-header {
-        font-size: 1.8rem;
-        color: #7D0006;
-        text-align: center;
-        margin-bottom: 1rem;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 1rem;
-    }
-
-    /* Modal Body */
-    .modal-body {
-        font-size: 1.1rem;
-        text-align: center;
-        color: #333;
-        margin-bottom: 1.5rem;
-    }
-
-    .modal-body input[type="file"] {
-        display: block;
-        margin: 1rem auto;
-        padding: 0.5rem;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        width: 90%;
-        max-width: 300px;
-    }
-
-    /* Buttons in Modal */
-    .btn-change,
-    .btn-cancel {
-        background: #e0e0e0;
-        color: #333;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin: 0.5rem;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-change:hover {
-        background: #7D0006;
-        color: #fff;
-    }
-
-    .btn-cancel:hover {
-        background: #999;
-        color: #fff;
-    }
-
-    /* Modal Footer */
-    .modal-footer {
-        text-align: center;
-        margin-top: 1rem;
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .modal-content {
-            width: 95%;
-            padding: 1.5rem;
-        }
-
-        .modal-header {
-            font-size: 1.5rem;
-        }
-
-        .modal-body input[type="file"] {
-            width: 100%;
-        }
-
-        .btn-change,
-        .btn-cancel {
-            font-size: 0.9rem;
-            padding: 0.6rem 1rem;
-        }
-    }
-    </style>
 </head>
 
 <body>
     <div class="header">
-        <h1>Profile Information</h1>
+        <div class="nav-title">
+            <h1>
+                Profile Information
+            </h1>
+        </div>
         <nav>
-            <?php
-        // Generate navigation links dynamically based on user type
-        if ($user_type == 'students') {
-            echo '<a href="students/student_dashboard.php">Courses</a>';
-        } elseif ($user_type == 'faculty') {
-            echo '<a href="faculty/faculty_dashboard.php">Courses Handled</a>';
-        } elseif ($user_type == 'program_chair') {
-            echo '<a href="program_chair/program_chair_dashboard.php">Department Info</a>';
-        }
-        ?>
-            <a href="userprofile.php">Profile</a>
-            <?php
-        if ($user_type == 'students') {
-            echo '<a href="students/student_evaluation.php">Evaluate</a>';
-        } elseif ($user_type == 'faculty') {
-            echo '<a href="faculty/faculty_evaluation.php">Evaluate</a>';
-        } elseif ($user_type == 'program_chair') {
-            echo '<a href="program_chair/program_chair_evaluation.php">Evaluate</a>';
-        }
-        ?>
-            <a href="../logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+            <div class="nav-items">
+                <?php
+                // Generate navigation links dynamically based on user type
+                if ($user_type == 'students') {
+                    echo '<a href="students/student_dashboard.php">Courses</a>';
+                } elseif ($user_type == 'faculty') {
+                    echo '<a href="faculty/faculty_dashboard.php">Courses Handled</a>';
+                } elseif ($user_type == 'program_chair') {
+                    echo '<a href="program_chair/program_chair_dashboard.php">Department Info</a>';
+                }
+                ?>
+                <a href="userprofile.php">Profile</a>
+                <?php
+                if ($user_type == 'students') {
+                    echo '<a href="students/student_evaluation.php">Evaluate</a>';
+                } elseif ($user_type == 'faculty') {
+                    echo '<a href="faculty/faculty_evaluation.php">Evaluate</a>';
+                } elseif ($user_type == 'program_chair') {
+                    echo '<a href="program_chair/program_chair_evaluation.php">Evaluate</a>';
+                }
+                ?>
+                <a href="../logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+            </div>
         </nav>
     </div>
 
@@ -498,26 +235,24 @@ $conn->close();
             </div>
             <div class="card" style="text-align:left; margin">
                 <!-- Display user role -->
-                <?php 
-                        if ($user_type == 'students'){
-                            echo "<p><strong>Role: </strong>Student</p>";
-                        }
-                        elseif ($user_type == 'faculty'){
-                            echo "<p><strong>Role: </strong>Faculty</p>";
-                        }
-                        elseif ($user_type == 'program_chair'){
-                            echo "<p><strong>Role: </strong>Program Chair</p>";
-                        }
-                    ?>
+                <?php
+                if ($user_type == 'students') {
+                    echo "<p><strong>Role: </strong>Student</p>";
+                } elseif ($user_type == 'faculty') {
+                    echo "<p><strong>Role: </strong>Faculty</p>";
+                } elseif ($user_type == 'program_chair') {
+                    echo "<p><strong>Role: </strong>Program Chair</p>";
+                }
+                ?>
                 <!-- Display Email as "Username" -->
                 <p><strong>Email (Username):</strong> <?php echo htmlspecialchars($email); ?></p>
 
                 <!-- Display department only for faculty and program chairs -->
                 <?php if ($user_type == 'faculty' || $user_type == 'program_chair'): ?>
-                <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
+                    <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
                 <?php endif; ?>
                 <?php if ($user_type == 'students'): ?>
-                <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
+                    <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
                 <?php endif; ?>
             </div>
 
@@ -563,4 +298,5 @@ $conn->close();
         </div>
     </div>
 </body>
+
 </html>

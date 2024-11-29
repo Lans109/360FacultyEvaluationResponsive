@@ -36,42 +36,34 @@
 body {
     font-family: "Poppins", Arial, sans-serif;
     background: linear-gradient(135deg, #7D0006, #D3D3D3);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
     color: #000;
     line-height: 1.6;
+    margin: 0;
 }
 
 /* Header Section */
 .header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: #7D0006;
     padding: 1.5rem 0;
     text-align: center;
-    color: var(--white);
+    color: #fff;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: var(--shadow-small);
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .header h1 {
     font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0;
-    padding: 1rem;
-    background-color: #7D0006;
-    color: var(--white);
-    text-align: center;
-    border-radius: 0;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.header nav {
-    margin-top: 0.5rem;
 }
 
 /* Header Navigation Links */
 .header nav a {
-    color: var(--white);
+    color: #fff;
     text-decoration: none;
     margin: 0 1rem;
     font-size: 1.1rem;
@@ -80,7 +72,6 @@ body {
     background-color: #7D0006;
     border-radius: 8px;
     display: inline-block;
-    transition: var(--transition-speed);
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -88,6 +79,26 @@ body {
     color: #000;
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
     box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-message {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    position: relative;
+}
+
+.welcome-message .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: #800000;
+    cursor: pointer;
 }
 
 /* Student Dashboard */
@@ -333,4 +344,96 @@ button:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Eval page */
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #f4f4f4;
+}
+
+th {
+    background-color: #7D0006;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+td {
+    background-color: #fafafa;
+}
+
+tr:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+/* Button Styles */
+td a,
+td button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+td a {
+    background-color: #7D0006;
+    transition: background-color 0.3s;
+}
+
+td a:hover {
+    background-color: #D3D3D3;
+    color: #7D0006;
+}
+
+td button {
+    background-color: #7D0006;
+    border: none;
+    cursor: not-allowed;
+}
+
+td button:disabled {
+    background-color: #999;
+}
+
+/* Profile Card */
+.card {
+    text-align: center;
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Button Styles */
+button {
+    background: #7D0006;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #D3D3D3;
+    color: #7D0006;
 }
