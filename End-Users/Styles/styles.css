@@ -104,7 +104,7 @@ body::before {
     background: linear-gradient(90deg, transparent, #fff, transparent);
 }
 
-/* Enhanced Navigation Links */
+/* Navigation Links */
 .header nav a {
     color: #fff;
     text-decoration: none;
@@ -112,7 +112,7 @@ body::before {
     font-size: 1.1rem;
     font-weight: 500;
     padding: 0.5rem 1.5rem;
-    background: linear-gradient(135deg, rgba(125, 0, 6, 0.9), rgba(125, 0, 6, 0.7));
+    background: linear-gradient(135deg, rgba(83, 0, 4, 0.9), rgba(83, 0, 4, 0.9));
     border-radius: 8px;
     display: inline-block;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -162,7 +162,7 @@ body::before {
     background: linear-gradient(90deg, #7D0006, #990008);
 }
 
-/* Enhanced Table Styling */
+/* Table Styling */
 table {
     width: 100%;
     border-collapse: separate;
@@ -196,7 +196,7 @@ tr:hover td {
     transform: scale(1.01);
 }
 
-/* Enhanced Evaluation Page */
+/* Evaluation Page */
 .option-button {
     margin: 0 10px;
     padding: 12px 20px;
@@ -358,4 +358,102 @@ tr:hover td {
         font-size: 0.9rem;
         padding: 0.7rem 1.2rem;
     }
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;  /* Default to space-between */
+    margin-top: 2rem;
+}
+
+.navigation-buttons.first-question {
+    justify-content: center;  /* Center buttons for the first question */
+}
+
+.navigation-buttons.first-question button:first-child {
+    margin: 0 auto;  /* Center only the first button */
+}
+
+button {
+    padding: 12px 12px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, #7D0006, #990008);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #990008, #7D0006);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+button:disabled {
+    background: rgba(125, 0, 6, 0.3);
+    cursor: not-allowed;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Hover Effects */
+button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    opacity: 0;
+}
+
+button:hover::before {
+    opacity: 1;
+}
+
+/* Hide Submit button until the last question */
+#submitBtn {
+    background: linear-gradient(135deg, #264653, #7d0006);
+    display: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#submitBtn:hover {
+    background: linear-gradient(135deg, #264653, #2a9d8f);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Styles for "Previous" button */
+#prevBtn {
+    background: linear-gradient(135deg, #264653, #7d0006);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#prevBtn:hover {
+    background-color: rgba(125, 0, 6, 0.8);
+}
+
+/* Styles for "Next" button */
+#nextBtn {
+    background: linear-gradient(135deg, #264653, #7d0006);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#nextBtn:hover {
+    background-color: rgba(38, 70, 53, 0.8);
+}
+
+/* Display navigation buttons in row */
+.navigation-buttons button {
+    width: 18%;
 }
