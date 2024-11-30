@@ -215,42 +215,65 @@ $conn->close();
     <title>User Profile</title>
     <link rel="stylesheet" href="Styles/styles.css">
     <script>
-        // Display success or error message in a popup
-        window.onload = function () {
-            <?php if (isset($_SESSION['profile_update_success'])): ?>
-                alert("<?php echo $_SESSION['profile_update_success']; ?>");
-                <?php unset($_SESSION['profile_update_success']); ?>
-            <?php elseif (isset($_SESSION['profile_update_error'])): ?>
-                alert("<?php echo $_SESSION['profile_update_error']; ?>");
-                <?php unset($_SESSION['profile_update_error']); ?>
-            <?php endif; ?>
-        };
-        // Open the modal when the user clicks on the profile image
-        function openModal() {
-            document.getElementById('myModal').style.display = 'block';
+    // Centralized modal functionality
+    function toggleModal(action) {
+        const modal = document.getElementById('profile-image-modal');
+        const fileInput = document.getElementById('profile_image');
+
+        if (action === 'open') {
+            modal.style.display = 'flex';
+            fileInput.value = ''; // Reset file input
+        } else if (action === 'close') {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Validate file before submission
+    function validateFileUpload() {
+        const fileInput = document.getElementById('profile_image');
+        const file = fileInput.files[0];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxSize = 2 * 1024 * 1024; // 2MB
+
+        if (!file) {
+            alert('Please select an image to upload.');
+            return false;
         }
 
-        // Close the modal when the user clicks on "Cancel"
-        function closeModal() {
-            document.getElementById('myModal').style.display = 'none';
+        if (!allowedTypes.includes(file.type)) {
+            alert('Invalid file type. Only JPG, PNG, and GIF are allowed.');
+            fileInput.value = ''; // Clear the file input
+            return false;
         }
 
-        // Close the modal if the user clicks anywhere outside the modal
-        window.onclick = function (event) {
-            var modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }; 
+        if (file.size > maxSize) {
+            alert('File is too large. Maximum size is 2MB.');
+            fileInput.value = ''; // Clear the file input
+            return false;
+        }
+
+        return true;
+    }
+
+    // Show success or error messages
+    window.onload = function() {
+        <?php if (isset($_SESSION['profile_update_success'])): ?>
+        alert("<?php echo $_SESSION['profile_update_success']; ?>");
+        <?php unset($_SESSION['profile_update_success']); ?>
+        <?php elseif (isset($_SESSION['profile_update_error'])): ?>
+        alert("<?php echo $_SESSION['profile_update_error']; ?>");
+        <?php unset($_SESSION['profile_update_error']); ?>
+        <?php endif; ?>
+    };
     </script>
 </head>
 
 <body>
     <div class="header">
         <h1>User Profile</h1>
-            <nav>
-                <div class="nav-items">
-                    <?php
+        <nav>
+            <div class="nav-items">
+                <?php
                     // Get the current script name
                     $current_page = basename($_SERVER['PHP_SELF']);
 
@@ -302,9 +325,9 @@ $conn->close();
                 <span class="nav-text">Logout</span>
               </a>';
                     ?>
-                    <span class="active-indicator"></span>
-                </div>
-            </nav>
+                <span class="active-indicator"></span>
+            </div>
+        </nav>
     </div>
 
     <div class="container">
@@ -320,9 +343,9 @@ $conn->close();
                     <p><strong>Role:</strong> <?php echo ucfirst($user_type); ?></p>
 
                     <?php if ($user_type !== 'students'): ?>
-                        <p><strong>Department:</strong> <?php echo htmlspecialchars($profile['department'] ?? 'N/A'); ?></p>
+                    <p><strong>Department:</strong> <?php echo htmlspecialchars($profile['department'] ?? 'N/A'); ?></p>
                     <?php else: ?>
-                        <p><strong>Enrolled Courses:</strong> <?php echo $profile['num_courses']; ?></p>
+                    <p><strong>Enrolled Courses:</strong> <?php echo $profile['num_courses']; ?></p>
                     <?php endif; ?>
                 </div>
 
@@ -345,10 +368,10 @@ $conn->close();
 
                 <!-- Display department only for faculty and program chairs -->
                 <?php if ($user_type == 'faculty' || $user_type == 'program_chair'): ?>
-                    <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
+                <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
                 <?php endif; ?>
                 <?php if ($user_type == 'students'): ?>
-                    <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
+                <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
                 <?php endif; ?>
             </div>
 
@@ -371,47 +394,50 @@ $conn->close();
                     <span style="font-weight:bold;">City/Town:</span>
                     <span>General Trias Cavite</span>
                 </p>
-
-                <div class="profile-actions">
-                    <button onclick="openModal()">Change Profile Picture</button>
-                </div>
             </div>
         </div>
     </div>
 
-    <div id="modal" class="modal">
+    <div id="profile-image-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Change Profile Picture</h3>
+                <h3>Update Profile Picture</h3>
+                <span class="close" onclick="toggleModal('close')">&times;</span>
             </div>
+
             <div class="modal-body">
-                <p>Do you want to change your profile image?</p>
-                <form action="userprofile.php" method="post" enctype="multipart/form-data">
-                    <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
-                    <button type="submit" name="upload">Change Image</button>
+                <form action="userprofile.php" method="post" enctype="multipart/form-data"
+                    onsubmit="return validateFileUpload();">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="profile_image" id="profile_image"
+                            accept="image/jpeg,image/png,image/gif" required>
+                        <p class="file-input-description">
+                            Select an image (JPG, PNG, GIF) - Max 2MB
+                        </p>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-change">Upload Image</button>
+                        <button type="button" class="btn-cancel" onclick="toggleModal('close')">Cancel</button>
+                    </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" onclick="closeModal()">Cancel</button>
-            </div>
-            <span class="close" onclick="closeModal()">&times;</span>
-            <form action="userprofile.php" method="post" enctype="multipart/form-data">
-                <label for="profile_image">Upload New Profile Image</label>
-                <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
-                <button type="submit">Update Image</button>
-            </form>
-
         </div>
+    </div>
+
+    <!-- Button to open modal -->
+    <div class="profile-actions">
+        <button onclick="toggleModal('open')">Change Profile Picture</button>
     </div>
 
     <script>
-        function openModal() {
-            document.getElementById("modal").style.display = "flex";
+    // Close modal if clicked outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('profile-image-modal');
+        if (event.target === modal) {
+            toggleModal('close');
         }
-
-        function closeModal() {
-            document.getElementById("modal").style.display = "none";
-        }
+    });
     </script>
 </body>
 
