@@ -248,8 +248,6 @@ $conn->close();
 <body>
     <div class="header">
         <h1>User Profile</h1>
-        <nav>
-
             <nav>
                 <div class="nav-items">
                     <?php
@@ -307,34 +305,12 @@ $conn->close();
                     <span class="active-indicator"></span>
                 </div>
             </nav>
-
-            <div class="nav-items">
-                <a href="userprofile.php"
-                    class="<?php echo (basename($_SERVER['PHP_SELF']) == 'userprofile.php') ? 'active' : ''; ?>">
-                    Profile
-                </a>
-                <?php
-                $dashboard_links = [
-                    'students' => 'students/student_dashboard.php',
-                    'faculty' => 'faculty/faculty_dashboard.php',
-                    'program_chair' => 'program_chair/program_chair_dashboard.php'
-                ];
-
-                if (isset($dashboard_links[$user_type])): ?>
-                    <a href="<?php echo $dashboard_links[$user_type]; ?>"
-                        class="<?php echo (basename($_SERVER['PHP_SELF']) == basename($dashboard_links[$user_type])) ? 'active' : ''; ?>">
-                        Dashboard
-                    </a>
-                <?php endif; ?>
-                <a href="../logout.php">Logout</a>
-            </div>
-        </nav>
     </div>
 
     <div class="container">
         <div class="profile-section">
             <div class="card profile-card">
-                <img src="uploads/<?php echo htmlspecialchars($profile['profile_image'] ?? 'default-avatar.png'); ?>"
+                <img src="<?php echo htmlspecialchars($profile['profile_image'] ?? 'default-avatar.png'); ?>"
                     alt="Profile Picture" class="profile-pic">
 
                 <h2><?php echo htmlspecialchars($name); ?></h2>

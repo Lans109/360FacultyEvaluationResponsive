@@ -98,7 +98,7 @@ $conn->close();
         <div class="card">
             <div class="profile">
                 <!-- Display Profile Picture -->
-                <img src="../<?php echo isset($profile_image) && !empty($profile_image) ? $profile_image : 'default_profile_pic.jpg'; ?>" alt="Profile Picture" class="profile-pic">
+                <img src="../<?php echo isset($profile_image) && !empty($profile_image) ? $profile_image : 'default_profile_pic.jpg'; ?>" alt="../<?php echo htmlspecialchars($profile_image); ?>" class="profile-pic">
 
                 <h2><?php echo htmlspecialchars($name); ?></h2>
             </div>
