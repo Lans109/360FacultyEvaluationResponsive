@@ -99,6 +99,7 @@ $conn->close();
             <div class="profile">
                 <!-- Display Profile Picture -->
                 <img src="../<?php echo isset($profile_image) && !empty($profile_image) ? $profile_image : 'default_profile_pic.jpg'; ?>" alt="Profile Picture" class="profile-pic">
+
                 <h2><?php echo htmlspecialchars($name); ?></h2>
             </div>
 

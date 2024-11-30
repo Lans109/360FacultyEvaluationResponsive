@@ -138,6 +138,7 @@ $conn->close();
         <!-- Profile Section -->
         <div class="card">
             <div class="profile">
+                <!-- Display profile image (it will use default if no custom image exists in the database) -->
                 <img src="../<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic">
                 <h2><?php echo htmlspecialchars($name); ?></h2> <!-- Display the student's full name here -->
             </div>
