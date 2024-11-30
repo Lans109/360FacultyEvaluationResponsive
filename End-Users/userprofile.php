@@ -235,6 +235,65 @@ $conn->close();
     <div class="header">
         <h1>User Profile</h1>
         <nav>
+
+            <nav>
+                <div class="nav-items">
+                    <?php
+                    // Get the current script name
+                    $current_page = basename($_SERVER['PHP_SELF']);
+
+                    // Dynamically generate navigation links based on user type
+                    if ($user_type == 'students') {
+                        echo '<a href="students/student_dashboard.php" class="' . ($current_page == 'student_dashboard.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/course.svg" alt="Courses" class="nav-icon">
+                    <span class="nav-text">Courses</span>
+                  </a>';
+                    } elseif ($user_type == 'faculty') {
+                        echo '<a href="faculty/faculty_dashboard.php" class="' . ($current_page == 'faculty_dashboard.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/course.svg" alt="Courses Handled" class="nav-icon">
+                    <span class="nav-text">Courses</span>
+                  </a>';
+                    } elseif ($user_type == 'program_chair') {
+                        echo '<a href="program_chair/program_chair_dashboard.php" class="' . ($current_page == 'program_chair_dashboard.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/department.svg" alt="Department Info" class="nav-icon">
+                    <span class="nav-text">Department</span>
+                  </a>';
+                    }
+
+                    // Highlight "Profile" link
+                    echo '<a href="userprofile.php" class="' . ($current_page == 'userprofile.php' ? 'active' : '') . '">
+                <img src="../frontend/assets/icons/account.svg" alt="Profile" class="nav-icon">
+                <span class="nav-text">Profile</span>
+              </a>';
+
+                    // Highlight "Evaluate" link
+                    if ($user_type == 'students') {
+                        echo '<a href="students/student_evaluation.php" class="' . ($current_page == 'student_evaluation.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+                    <span class="nav-text">Evaluate</span>
+                  </a>';
+                    } elseif ($user_type == 'faculty') {
+                        echo '<a href="faculty/faculty_evaluation.php" class="' . ($current_page == 'faculty_evaluation.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+                    <span class="nav-text">Evaluate</span>
+                  </a>';
+                    } elseif ($user_type == 'program_chair') {
+                        echo '<a href="program_chair/program_chair_evaluation.php" class="' . ($current_page == 'program_chair_evaluation.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+                    <span class="nav-text">Evaluate</span>
+                  </a>';
+                    }
+
+                    // Logout link
+                    echo '<a href="../logout.php" onclick="return confirm(\'Are you sure you want to logout?\')" class="nav-link">
+                <img src="../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon">
+                <span class="nav-text">Logout</span>
+              </a>';
+                    ?>
+                    <span class="active-indicator"></span>
+                </div>
+            </nav>
+
             <div class="nav-items">
                 <a href="userprofile.php" 
                    class="<?php echo (basename($_SERVER['PHP_SELF']) == 'userprofile.php') ? 'active' : ''; ?>">
@@ -276,6 +335,52 @@ $conn->close();
                         <p><strong>Enrolled Courses:</strong> <?php echo $profile['num_courses']; ?></p>
                     <?php endif; ?>
                 </div>
+
+
+
+            </div>
+            <div class="card" style="text-align:left; margin">
+                <!-- Display user role -->
+                <?php
+                if ($user_type == 'students') {
+                    echo "<p><strong>Role: </strong>Student</p>";
+                } elseif ($user_type == 'faculty') {
+                    echo "<p><strong>Role: </strong>Faculty</p>";
+                } elseif ($user_type == 'program_chair') {
+                    echo "<p><strong>Role: </strong>Program Chair</p>";
+                }
+                ?>
+                <!-- Display Email as "Username" -->
+                <p><strong>Email (Username):</strong> <?php echo htmlspecialchars($email); ?></p>
+
+                <!-- Display department only for faculty and program chairs -->
+                <?php if ($user_type == 'faculty' || $user_type == 'program_chair'): ?>
+                    <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
+                <?php endif; ?>
+                <?php if ($user_type == 'students'): ?>
+                    <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div class="card" style="text-align:left; margin">
+                <h3>School Information</h3>
+                <hr>
+                <p>
+                    <span style="font-weight:bold;">School Name: </span>
+                    <span>(LPU-C) Lyceum of the Philippines University Cavite.</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold;">Time Zone</span>
+                    <span>Asia/Honkong</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold;">Country:</span>
+                    <span>Philippines</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold;">City/Town:</span>
+                    <span>General Trias Cavite</span>
+                </p>
 
                 <div class="profile-actions">
                     <button onclick="openModal()">Change Profile Picture</button>

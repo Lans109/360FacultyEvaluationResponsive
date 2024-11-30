@@ -72,11 +72,29 @@ nav {
 }
 
 .nav-items a {
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    color: #000;
+    color: black;
     padding: 10px 20px;
-    transition: color 0.3s ease;
     position: relative;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.nav-items a .nav-icon {
+    display: none;
+    /* Hide the icon by default */
+}
+
+.nav-items a .nav-icon {
+    display: none;
+    /* Hide the icon by default */
+}
+
+.nav-items a .nav-text {
+    display: inline-block;
+    /* Show the text */
 }
 
 .nav-items a:hover,
@@ -105,9 +123,46 @@ nav {
     transform-origin: left;
 }
 
+/* Animation for the indicator to slide from left to right */
+.nav-items a.active::after {
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
+/* Animation for the indicator to slide right to left */
+.nav-items a.inactive::after {
+    transform-origin: right;
+    transform: scaleX(0);
+}
+
+/* table to cards */
+.ttc-container {
+    display: none;
+}
+
 /* Mobile Responsive Navigation */
 @media (max-width: 500px) {
+    body {
+        overflow-x: auto;
+    }
+
     .header {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        width: 100%;
+        height: 62px;
+        background-color: #ffffff;
+        color: black;
+        text-align: center;
+        z-index: 1000;
+    }
+
+    /* Add padding to content area to prevent overlap */
+    .container {
+        padding-bottom: 60px;
+        /* Add enough space for the navbar */
         position: fixed; 
         bottom: 0;
         left: 0;
@@ -121,14 +176,193 @@ nav {
         display: none;
     }
 
-    .container {
-        margin: 20px auto;
-        padding: 20px;
-        max-width: 1200px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    nav {
+        display: flex;
+        justify-content: center;
+        /* Center the nav items horizontally */
+        align-items: center;
+        /* Center the nav items vertically */
+        height: 100%;
+        position: relative;
+        top: 0;
     }
+
+    .nav-items {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .nav-items a {
+        display: flex;
+        flex-direction: column;
+        /* Arrange content vertically */
+        justify-content: center;
+        align-items: center;
+        width: 33%;
+        text-decoration: none;
+        /* Ensure no underline on links */
+        text-align: center;
+        /* Center-align the text */
+        white-space: nowrap;
+    }
+
+    .nav-items a .nav-icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-bottom: 5px;
+        /* Space between the icon and text */
+    }
+
+    .nav-items a .nav-text {
+        display: inline-block;
+        font-size: 9px;
+        /* Adjust font size as needed */
+        color: black;
+        /* Text color */
+        text-align: center;
+        word-wrap: break-word;
+        word-break: break-word;
+        line-height: 1.2;
+        /* Adjust spacing between lines of text */
+        max-width: 80%;
+        /* Ensure text fits within its container */
+    }
+
+    /* evalpage */
+    .options-container {
+        display: flex;
+        flex-direction: column;
+        /* Arrange buttons in a column */
+        align-items: center;
+        /* Center buttons horizontally */
+        gap: 10px;
+        /* Add space between buttons */
+        width: 100%;
+        /* Ensure the container spans the full width */
+    }
+
+    .option-button {
+        width: 100%;
+        /* Make buttons span the full width of the container */
+        max-width: 300px;
+        /* Optionally limit the maximum button width */
+        padding: 10px;
+        /* Adjust padding for better usability */
+        text-align: center;
+        /* Center-align the text */
+        box-sizing: border-box;
+        /* Include padding and border in width calculation */
+    }
+}
+
+@media(max-width:350px){
+    .nav-items a .nav-text{
+        display: none;
+    }
+    .header {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        width: 100%;
+        height: 4%;
+        background-color: #ffffff;
+        color: black;
+        text-align: center;
+        z-index: 1000;
+    }
+}
+
+
+
+/* table to cards mobile view */
+@media (max-width:730px) {
+
+    /* table to cards mobile view */
+    /* Show the card container */
+    .ttc-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    table {
+        display: none;
+    }
+
+    .ttc {
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .ttc:hover {
+        transform: scale(1.05);
+    }
+
+    .ttc-header {
+        background-color: #f4f4f4;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .ttc-body {
+        padding: 15px;
+    }
+
+    .ttc-footer {
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    .ttc-footer .btn {
+        background-color: var(--primary);
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .card-footer .btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+}
+
+
+/* Active indicator */
+.nav-items a::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-items a.active::after {
+    transform: scaleX(1);
+}
+
+.welcome-message {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    position: relative;
 }
 
 /* Dashboard and Card Styling */

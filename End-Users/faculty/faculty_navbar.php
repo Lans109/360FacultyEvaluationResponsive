@@ -1,9 +1,21 @@
 <nav>
     <div class="nav-items">
-        <a href="faculty_dashboard.php">Courses Handled</a>
-        <a href="../userprofile.php">Profile</a>
-        <a href="faculty_evaluation.php">Evaluate</a>
-        <a href="../../logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+        <a href="faculty_dashboard.php">
+            <img src="../../frontend/assets/icons/course.svg" alt="Course" class="nav-icon"> <!-- Image for small screen -->
+            <span class="nav-text">Courses</span> <!-- Text for larger screens -->
+        </a>
+        <a href="../userprofile.php">
+            <img src="../../frontend/assets/icons/account.svg" alt="Profile" class="nav-icon"> <!-- Image for small screen -->
+            <span class="nav-text">Profile</span> <!-- Text for larger screens -->
+        </a>
+        <a href="faculty_evaluation.php">
+            <img src="../../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon"> <!-- Image for small screen -->
+            <span class="nav-text">Evaluate</span> <!-- Text for larger screens -->
+        </a>
+        <a href="../../logout.php" onclick="return confirm('Are you sure you want to logout?')">
+            <img src="../../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon"> <!-- Image for small screen -->
+            <span class="nav-text">Logout</span> <!-- Text for larger screens -->
+        </a>
         <span class="active-indicator"></span>
     </div>
 </nav>
