@@ -114,6 +114,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                         </tr>
                     <?php endforeach; ?>
                 </table>
+
+                <!-- table to cards for mobile view -->
+                <div class="ttc-container">
+                    <?php foreach ($evaluations as $evaluation): ?>
+                        <div class="ttc">
+                            <div class="ttc-header">
+                                <h3><?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?>
+                                </h3>
+                            </div>
+                            <div class="ttc-body">
+                                <p><strong>Created At:</strong> <?php echo htmlspecialchars($evaluation['created_at']); ?></p>
+                                <p><strong>Deadline:</strong> <?php echo htmlspecialchars($evaluation['end_date']); ?></p>
+                            </div>
+                            <div class="ttc-footer">
+                                <?php if (!$evaluation['is_completed']): ?>
+                                    <!-- Redirect to evaluation page -->
+                                    <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>"
+                                        class="btn">Start Evaluation</a>
+                                <?php else: ?>
+                                    <button class="btn" disabled>Completed</button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
             <?php else: ?>
                 <p>No evaluations available at the moment.</p>
             <?php endif; ?>

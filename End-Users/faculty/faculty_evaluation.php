@@ -129,6 +129,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+
+                    <!-- mobile view -->
+                    <div class="ttc-container">
+                        <?php foreach ($evaluations as $evaluation): ?>
+                            <div class="ttc">
+                                <div class="ttc-header">
+                                    <h3><?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?>
+                                    </h3>
+                                </div>
+                                <div class="ttc-body">
+                                    <p><strong>Course Code:</strong> <?php echo htmlspecialchars($evaluation['course_code']); ?>
+                                    </p>
+                                    <p><strong>Created At:</strong>
+                                        <?php echo date('F j, Y, g:i a', strtotime($evaluation['created_at'])); ?></p>
+                                    <p><strong>Deadline:</strong>
+                                        <?php echo date('F j, Y', strtotime($evaluation['end_date'])); ?></p>
+                                </div>
+                                <div class="ttc-footer">
+                                    <p><strong>Status:</strong>
+                                        <?php echo $evaluation['is_completed'] ? 'Completed' : 'In Progress'; ?></p>
+                                    <?php if (!$evaluation['is_completed']): ?>
+                                        <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>"
+                                            class="btn">Start</a>
+                                    <?php else: ?>
+                                        <button class="btn" disabled>Completed</button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
                 </table>
             <?php else: ?>
                 <p>No evaluations available at the moment.</p>

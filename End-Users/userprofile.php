@@ -202,31 +202,56 @@ $conn->close();
 
                     // Dynamically generate navigation links based on user type
                     if ($user_type == 'students') {
-                        echo '<a href="students/student_dashboard.php" class="' . ($current_page == 'student_dashboard.php' ? 'active' : '') . '">Courses</a>';
+                        echo '<a href="students/student_dashboard.php" class="' . ($current_page == 'student_dashboard.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/course.svg" alt="Courses" class="nav-icon">
+                    <span class="nav-text">Courses</span>
+                  </a>';
                     } elseif ($user_type == 'faculty') {
-                        echo '<a href="faculty/faculty_dashboard.php" class="' . ($current_page == 'faculty_dashboard.php' ? 'active' : '') . '">Courses Handled</a>';
+                        echo '<a href="faculty/faculty_dashboard.php" class="' . ($current_page == 'faculty_dashboard.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/course.svg" alt="Courses Handled" class="nav-icon">
+                    <span class="nav-text">Courses</span>
+                  </a>';
                     } elseif ($user_type == 'program_chair') {
-                        echo '<a href="program_chair/program_chair_dashboard.php" class="' . ($current_page == 'program_chair_dashboard.php' ? 'active' : '') . '">Department Info</a>';
+                        echo '<a href="program_chair/program_chair_dashboard.php" class="' . ($current_page == 'program_chair_dashboard.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/department.svg" alt="Department Info" class="nav-icon">
+                    <span class="nav-text">Department</span>
+                  </a>';
                     }
 
                     // Highlight "Profile" link
-                    echo '<a href="userprofile.php" class="' . ($current_page == 'userprofile.php' ? 'active' : '') . '">Profile</a>';
+                    echo '<a href="userprofile.php" class="' . ($current_page == 'userprofile.php' ? 'active' : '') . '">
+                <img src="../frontend/assets/icons/account.svg" alt="Profile" class="nav-icon">
+                <span class="nav-text">Profile</span>
+              </a>';
 
                     // Highlight "Evaluate" link
                     if ($user_type == 'students') {
-                        echo '<a href="students/student_evaluation.php" class="' . ($current_page == 'student_evaluation.php' ? 'active' : '') . '">Evaluate</a>';
+                        echo '<a href="students/student_evaluation.php" class="' . ($current_page == 'student_evaluation.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+                    <span class="nav-text">Evaluate</span>
+                  </a>';
                     } elseif ($user_type == 'faculty') {
-                        echo '<a href="faculty/faculty_evaluation.php" class="' . ($current_page == 'faculty_evaluation.php' ? 'active' : '') . '">Evaluate</a>';
+                        echo '<a href="faculty/faculty_evaluation.php" class="' . ($current_page == 'faculty_evaluation.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+                    <span class="nav-text">Evaluate</span>
+                  </a>';
                     } elseif ($user_type == 'program_chair') {
-                        echo '<a href="program_chair/program_chair_evaluation.php" class="' . ($current_page == 'program_chair_evaluation.php' ? 'active' : '') . '">Evaluate</a>';
+                        echo '<a href="program_chair/program_chair_evaluation.php" class="' . ($current_page == 'program_chair_evaluation.php' ? 'active' : '') . '">
+                    <img src="../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+                    <span class="nav-text">Evaluate</span>
+                  </a>';
                     }
 
                     // Logout link
-                    echo '<a href="../logout.php" onclick="return confirm(\'Are you sure you want to logout?\')">Logout</a>';
+                    echo '<a href="../logout.php" onclick="return confirm(\'Are you sure you want to logout?\')" class="nav-link">
+                <img src="../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon">
+                <span class="nav-text">Logout</span>
+              </a>';
                     ?>
                     <span class="active-indicator"></span>
                 </div>
             </nav>
+
 
         </nav>
     </div>
@@ -285,7 +310,7 @@ $conn->close();
                 </p>
                 <p>
                     <span style="font-weight:bold;">City/Town:</span>
-                    <span>Cavite City lance romero tae</span>
+                    <span>General Trias Cavite</span>
                 </p>
             </div>
         </div>
