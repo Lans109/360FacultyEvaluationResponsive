@@ -285,7 +285,7 @@ $conn->close();
                 </p>
                 <p>
                     <span style="font-weight:bold;">City/Town:</span>
-                    <span>Cavite City</span>
+                    <span>Cavite City lance romero tae</span>
                 </p>
             </div>
         </div>
