@@ -5,7 +5,7 @@ include('../db/databasecon.php');
 
 // Ensure the user is logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_type'] != 'students') {
-    header("Location: ..login-pages/student_login.php");
+    header("Location: ../login-pages/student_login.php");
     exit();
 }
 
