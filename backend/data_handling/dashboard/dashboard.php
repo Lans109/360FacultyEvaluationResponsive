@@ -10,25 +10,43 @@ include '../authentication.php';
 // Fetch current evaluation status for the current date
 $current_date = date('Y-m-d'); // Current date in YYYY-MM-DD format
 
+// Query to fetch the active evaluation for today
 $current_evaluation_query = "
-    SELECT academic_year, semester, status 
+    SELECT academic_year, semester, status, start_date, end_date 
     FROM evaluation_periods 
     WHERE status = 'active' 
     AND start_date <= '$current_date' 
     AND end_date >= '$current_date' 
-    LIMIT 1"; // Fetch the active evaluation for today
+    LIMIT 1"; 
+
 $current_evaluation_result = mysqli_query($con, $current_evaluation_query);
 
-// Check if any evaluation exists for the current date
-if (mysqli_num_rows($current_evaluation_result) > 0) {
+// Check if any active evaluation exists for the current date
+if ($current_evaluation_result && mysqli_num_rows($current_evaluation_result) > 0) {
     $current_evaluation_data = mysqli_fetch_assoc($current_evaluation_result);
 } else {
-    $current_evaluation_data = null; // No active evaluation
+    $current_evaluation_data = null;
+
+    // If no active evaluation, fetch the closest upcoming evaluation
+    $upcoming_evaluation_query = "
+        SELECT academic_year, semester, start_date, end_date
+        FROM evaluation_periods 
+        WHERE start_date > '$current_date' 
+        ORDER BY start_date ASC 
+        LIMIT 1"; // Fetch the nearest future evaluation
+
+    $upcoming_evaluation_result = mysqli_query($con, $upcoming_evaluation_query);
+
+    if ($upcoming_evaluation_result && mysqli_num_rows($upcoming_evaluation_result) > 0) {
+        $upcoming_evaluation_data = mysqli_fetch_assoc($upcoming_evaluation_result);
+    } else {
+        $upcoming_evaluation_data = null; // No upcoming evaluation
+    }
 }
 
 // Query to fetch the ID of the active evaluation period
 $period_query = "
-    SELECT academic_year, semester, status, period_id
+    SELECT academic_year, semester, status, period_id, start_date, end_date
     FROM evaluation_periods 
     WHERE 
     start_date <= '$current_date' AND end_date >= '$current_date' 
@@ -92,18 +110,34 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
             </div>
         </div>
         <div class="content">
-            <h2> Current Evaluation </h2>
+            <h2>Evaluation Status</h2>
             <div class="banner">
                 <?php if ($current_evaluation_data): ?>
-                    <h3 class="card-title">Academic Year:
-                        <?php echo $current_evaluation_data['academic_year']; ?>
-                    </h3>
-                    <div class="evaluation-details">
-                        <p class="card-text">Semester: <?php echo $current_evaluation_data['semester']; ?></p>
-                        <p class="card-text">Status: <?php echo $current_evaluation_data['status']; ?></p>
+                    <h3 class="card-title">Active Evaluation</h3>
+                    <div class="evaluation-status-details">
+                        <div>
+                            <p class="card-text">Academic: <?php echo $current_evaluation_data['academic_year']; ?></p>
+                            <p class="card-text">Semester: <?php echo $current_evaluation_data['semester']; ?></p>
+                        </div>
+                        <div>
+                            <p class="card-text">Start Date: <?php echo $current_evaluation_data['start_date']; ?></p>
+                            <p class="card-text">End Date: <?php echo $current_evaluation_data['end_date']; ?></p>
+                        </div>
+                    </div>
+                <?php elseif ($upcoming_evaluation_data): ?>
+                    <h3 class="card-title">Upcoming Evaluation</h3>
+                    <div class="evaluation-status-details">
+                        <div>   
+                            <p class="card-text">Academic Year: <?php echo $upcoming_evaluation_data['academic_year']; ?></p>
+                            <p class="card-text">Semester: <?php echo $upcoming_evaluation_data['semester']; ?></p>
+                        </div>
+                        <div>
+                            <p class="card-text">Start Date: <?php echo $upcoming_evaluation_data['start_date']; ?></p>
+                            <p class="card-text">End Date: <?php echo $upcoming_evaluation_data['end_date']; ?></p>
+                        </div>
                     </div>
                 <?php else: ?>
-                    <div class="card-header">No Active Evaluation</div>
+                    <div class="card-header">No Active or Upcoming Evaluation</div>
                 <?php endif; ?>
             </div>
             <div class="dashboard-content">

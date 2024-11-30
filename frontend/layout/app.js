@@ -63,6 +63,72 @@ document.addEventListener("DOMContentLoaded", function () {
 window.addEventListener('load', function () {
   // Hide the loader after the page has fully loaded
   document.getElementById('loader').style.display = 'none';
+  document.getElementById('content-wrapper').style.display = 'block';
 });
 
+
+// Get the slider and input elements
+const studentSlider = document.getElementById('student_slider');
+const studentInput = document.getElementById('student_scoring');
+
+const chairSlider = document.getElementById('chair_slider');
+const chairInput = document.getElementById('chair_scoring');
+
+const peerSlider = document.getElementById('peer_slider');
+const peerInput = document.getElementById('peer_scoring');
+
+const selfSlider = document.getElementById('self_slider');
+const selfInput = document.getElementById('self_scoring');
+
+// Function to update the input value when the slider is changed
+function updateInputValue(slider, input) {
+    input.value = slider.value;
+}
+
+// Function to update the slider value when the input is changed
+function updateSliderValue(input, slider) {
+    let value = parseInt(input.value, 10);
+    if (isNaN(value)) {
+        value = 0; // Default to 0 if the input is invalid
+    } else if (value < 0) {
+        value = 0; // Ensure the value is not below 0
+    } else if (value > 100) {
+        value = 100; // Ensure the value is not above 100
+    }
+    slider.value = value;
+}
+
+// Event listeners for slider changes
+studentSlider.addEventListener('input', function () {
+    updateInputValue(studentSlider, studentInput);
+});
+
+chairSlider.addEventListener('input', function () {
+    updateInputValue(chairSlider, chairInput);
+});
+
+peerSlider.addEventListener('input', function () {
+    updateInputValue(peerSlider, peerInput);
+});
+
+selfSlider.addEventListener('input', function () {
+    updateInputValue(selfSlider, selfInput);
+});
+
+// Event listeners for input changes
+studentInput.addEventListener('input', function () {
+    updateSliderValue(studentInput, studentSlider);
+});
+
+chairInput.addEventListener('input', function () {
+    updateSliderValue(chairInput, chairSlider);
+});
+
+peerInput.addEventListener('input', function () {
+    updateSliderValue(peerInput, peerSlider);
+});
+
+selfInput.addEventListener('input', function () {
+    updateSliderValue(selfInput, selfSlider);
+});
 

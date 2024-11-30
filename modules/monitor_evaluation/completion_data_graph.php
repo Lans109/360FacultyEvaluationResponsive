@@ -94,20 +94,14 @@
             chart.draw(data, options);
         }
 
-
-
-
-
-
-
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
             // Set Data
             const data = google.visualization.arrayToDataTable([
                 ['Status', 'Percentage'],
-                ['Evaluated', <?php echo json_encode($total_evaluated); ?>],
-                ['Not Evaluated', <?php echo json_encode($total_not_evaluated); ?>],
+                ['Evaluated', <?php echo json_encode($students_completed); ?>],
+                ['Not Evaluated', <?php echo json_encode($students_not_completed); ?>],
             ]);
 
             // Set Options

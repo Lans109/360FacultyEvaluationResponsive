@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $period_id = mysqli_real_escape_string($con, $_POST['period_id']);
         $start_date = mysqli_real_escape_string($con, $_POST['start_date']);
         $end_date = mysqli_real_escape_string($con, $_POST['end_date']);
-        $status = mysqli_real_escape_string($con, $_POST['status']);
+        $status = mysqli_real_escape_string($con, $_POST['evaluation_status']);
         
         // Scoring percentages
         $student_scoring = mysqli_real_escape_string($con, $_POST['student_scoring']);
@@ -32,18 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Validate if the total scoring exceeds 100
         if ($total_scoring > 100) {
-            // If the total exceeds 100, set an error message and redirect
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Total scoring cannot exceed 100%. Please adjust the individual scoring values.';
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
 
-        // Validate if the total scoring is less than 0
+        // Validate if the total scoring is less than 100
         if ($total_scoring < 100) {
-            // If the total is below 0, set an error message and redirect
             $_SESSION['status'] = 'error';
-            $_SESSION['message'] = 'Total scoring cannot be below 100%. Please adjust the individual scoring values.';
+            $_SESSION['message'] = 'Total scoring must be 100%. Please adjust the individual scoring values.';
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
@@ -55,6 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($end_date < $current_date) {
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'End date cannot be before today. Please select a valid end date.';
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+
+        // Validate if trying to set status to "active" outside the start and end date range
+        if ($status === 'active' && ($current_date < $start_date || $current_date > $end_date)) {
+            $_SESSION['status'] = 'error';
+            $_SESSION['message'] = 'Cannot set status to active. The current date must be within the start and end date range.';
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
@@ -72,14 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Attempt to execute the update query
         if (mysqli_query($con, $update_query)) {
-            // If successful, set session variables for success message
             $_SESSION['status'] = 'success';
             $_SESSION['message'] = 'Evaluation updated successfully!';
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         } else {
-            // If query fails, log the error and set session variables for error message
-            error_log("Database Error: " . mysqli_error($con)); // Log the error
+            error_log("Database Error: " . mysqli_error($con));
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'Error updating evaluation. Please try again later.';
             header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -87,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } else {
-        // If CSRF token doesn't match, set error message
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
         header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -95,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 } else {
-    // If no POST request is made, set session variables for error message and redirect
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
+
 ?>
