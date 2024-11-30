@@ -653,6 +653,14 @@ main {
     /* Add transition for smooth effect */
 }
 
+.add-btn:disabled {
+    background-color: #ddd;
+}
+
+.add-btn:disabled:hover {
+    transform: scale(1);
+}
+
 .add-btn img {
     display: inline-flex;
     /* Ensures alignment for flex context */
@@ -859,6 +867,13 @@ input[type=range] {
 .evaluation-details {
     margin: 10px;
 }
+
+.evaluation-status-details {
+    display: flex;
+    justify-content: flex-start;
+    gap: 50px;
+}
+
 .close {
     cursor: pointer;
     font-size: 28px;
@@ -928,6 +943,8 @@ input[type=range] {
 /* Confirmation Modal Styles */
 #editConfirmationModal,
 #deleteConfirmationModal,
+#editEvaluationConfirmationModal,
+#disseminateEvaluationConfirmationModal,
 #successModal {
     display: none;
     position: fixed;
@@ -944,7 +961,9 @@ input[type=range] {
 }
 
 #editConfirmationModal .modal-dialog,
-#deleteConfirmationModal .modal-dialog
+#deleteConfirmationModal .modal-dialog,
+#editEvaluationConfirmationModal .modal-dialog,
+#disseminateEvaluationConfirmationModal .modal-dialog,
 #successModal .modal-dialog {
     max-width: 500px;
     margin: auto;
@@ -962,6 +981,8 @@ input[type=range] {
 /* Icon styling for editConfirmationModal and deleteConfirmationModal */
 #editConfirmationModal .modal-body img,
 #deleteConfirmationModal .modal-body img,
+#editEvaluationConfirmationModal .modal-body img,
+#disseminateEvaluationConfirmationModal .modal-body img,
 #successModal .modal-body img {
     width: 150px; 
     height: 150px;
@@ -976,6 +997,8 @@ input[type=range] {
 /* Text Layout */
 #editConfirmationModal .text-content,
 #deleteConfirmationModal .text-content,
+#editEvaluationConfirmationModal .text-content,
+#disseminateEvaluationConfirmationModal .text-content,
 #successModal .text-content {
     display: flex;
     flex-direction: column;
@@ -984,6 +1007,8 @@ input[type=range] {
 
 #editConfirmationModal .text-content .modal-title,
 #deleteConfirmationModal .text-content .modal-title,
+#editEvaluationConfirmationModal .text-content .modal-title,
+#disseminateEvaluationConfirmationModal .text-content .modal-title,
 #successModal .text-content .modal-title {
     font-size: 18px;
     font-weight: bold;
@@ -992,6 +1017,8 @@ input[type=range] {
 
 #editConfirmationModal .text-content .modal-body,
 #deleteConfirmationModal .text-content .modal-body,
+#editEvaluationConfirmationModal .text-content .modal-body,
+#disseminateEvaluationConfirmationModal .text-content .modal-body,
 #successModal .text-content .modal-body {
     background-color: white;
     font-size: 16px;
@@ -1006,7 +1033,9 @@ input[type=range] {
 }
 
 #editConfirmationModal .text-content .modal-footer,
-#deleteConfirmationModal .text-content .modal-footer {
+#deleteConfirmationModal .text-content .modal-footer,
+#editEvaluationConfirmationModal .text-content .modal-footer,
+#disseminateEvaluationConfirmationModal .text-content .modal-footer {
     display: flex;
     justify-content: flex-end;
     border-top: none;
@@ -1621,7 +1650,7 @@ input[type=range] {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.1); /* White background with transparency */
+    background-color: rgba(255, 255, 255, 0.1); /* White background with transparency */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1651,7 +1680,7 @@ input[type=range] {
     align-items: center;
 }
 .scorings .score input {
-    width: 80px;
+    width: 60px;
     border: 1px solid #ddd;
     height: 30px;
     padding: 10;

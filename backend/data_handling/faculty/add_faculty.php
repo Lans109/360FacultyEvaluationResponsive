@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert the new faculty into the database
         $insert_query = "
-            INSERT INTO faculty (first_name, last_name, email, username, password_hash, phone_number, department_id) 
+            INSERT INTO faculty (first_name, last_name, email, username, password, phone_number, department_id) 
             VALUES ('$first_name', '$last_name', '$email', '$username', '$password_hash', '$phone_number', '$department_id')";
 
         // Attempt to execute the query

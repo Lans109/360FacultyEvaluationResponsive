@@ -27,30 +27,53 @@ if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
 // Get the current date
 $current_date = date('Y-m-d');
 
-// Fetch the current evaluation period
-$query = "SELECT 
-            period_id, 
-            semester, 
-            academic_year, 
-            status, 
-            start_date, 
-            end_date,
-            student_scoring,
-            self_scoring,
-            peer_scoring,
-            chair_scoring
-        FROM 
-            evaluation_periods"; // Get the latest active evaluation period
+// Fetch the current evaluation period (active and ongoing)
+$query = "
+    SELECT 
+        period_id, 
+        semester, 
+        academic_year, 
+        status, 
+        start_date, 
+        end_date,
+        disseminated,
+        student_scoring,
+        self_scoring,
+        peer_scoring,
+        chair_scoring
+    FROM 
+        evaluation_periods
+    WHERE 
+        status = 'active' 
+        AND start_date <= '$current_date' 
+        AND end_date >= '$current_date' 
+    ORDER BY start_date DESC 
+    LIMIT 1"; // Only fetch the active evaluation period that is ongoing
 
 $result = mysqli_query($con, $query);
 
-// Check for results
+// Check if there is an active evaluation period
 if (!$result) {
     die("Database query failed: " . mysqli_error($con));
 }
 
 // Fetch the current evaluation
 $current_evaluation = mysqli_fetch_assoc($result);
+
+// Check if the current evaluation is available
+if (!$current_evaluation) {
+    // Handle case where no active evaluation period is found
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'No active evaluation period found.';
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+}
+
+// Check if the evaluation has already been disseminated
+$disseminated = $current_evaluation['disseminated'];
+
+// Determine the button status based on dissemination status
+$button_disabled = $disseminated == 1 ? 'disabled' : '';  // Disable button if disseminated
 ?>
 
 <!DOCTYPE html>
@@ -59,10 +82,10 @@ $current_evaluation = mysqli_fetch_assoc($result);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
-    <?php include '../../../frontend/layout/navbar.php'; ?>
+	<link rel='stylesheet' href='../../../frontend/templates/admin-style.css'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<?php include '../../../frontend/layout/confirmation_modal.php'; ?>
+	<?php include '../../../frontend/layout/navbar.php'; ?>
     <title>Current Evaluation Status</title>
 </head>
 
@@ -86,54 +109,30 @@ $current_evaluation = mysqli_fetch_assoc($result);
                                     <h3 class="card-title">Academic Year:
                                         <?php echo htmlspecialchars($current_evaluation['academic_year']); ?>
                                     </h3>
-                                    <p class="card-title">Semester:
-                                        <?php echo htmlspecialchars($current_evaluation['semester']); ?>
-                                    </p>
-                                    <p class="card-title">Status:
-                                        <?php
-                                        $status = htmlspecialchars($current_evaluation['status']);
-                                        switch ($status) {
-                                            case 'completed':
-                                                echo '<span class="text-success">Completed</span>';
-                                                break;
-                                            case 'active':
-                                                echo '<span class="text-info">Active</span>';
-                                                break;
-                                            case 'upcoming':
-                                                echo '<span class="text-warning">Upcoming</span>';
-                                                break;
-                                            default:
-                                                echo '<span class="text-muted">Unknown Status</span>';
-                                                break;
-                                        }
-                                        ?>
-                                    </p><br>
-                                </div>
-                                <div class="schedule">
-                                <form action="update_evaluation.php" method="post">
-                                    <div class="mt-4">
-                                        <h3>Evaluation Schedule</h3>
-                                        <div class="evaluation-details">
-                                            <input type="hidden" name="csrf_token"
-                                                value="<?php echo $_SESSION['csrf_token']; ?>">
-                                            <input type="hidden" name="period_id"
-                                                value="<?php echo htmlspecialchars($current_evaluation['period_id']); ?>">
-                                            <div class="form-group">
-                                                <label for="start_date">
-                                                    <p>Start Date:</p>
-                                                    <input type="date" class="form-control" id="start_date"
-                                                        name="start_date"
-                                                        value="<?php echo htmlspecialchars($current_evaluation['start_date']); ?>"
-                                                        required>
-                                            </div>
-                                            <div class="form-group">
-                                                <p>End Date:</p>
-                                                <input type="date" class="form-control" id="end_date" name="end_date"
-                                                    value="<?php echo htmlspecialchars($current_evaluation['end_date']); ?>"
-                                                    required>
-                                            </div>
-                                        </div>
+                                    <div class="evaluation-details">
+                                        <p class="card-title">Semester:
+                                            <?php echo htmlspecialchars($current_evaluation['semester']); ?>
+                                        </p>
+                                        <p class="card-title">Status:
+                                            <?php
+                                            $evaluation_status = htmlspecialchars($current_evaluation['status']);
+                                            switch ($evaluation_status) {
+                                                case 'closed':
+                                                    echo '<span class="text-success">Closed</span>';
+                                                    break;
+                                                case 'active':
+                                                    echo '<span class="text-info">Active</span>';
+                                                    break;
+                                                case 'upcoming':
+                                                    echo '<span class="text-warning">Upcoming</span>';
+                                                    break;
+                                                default:
+                                                    echo '<span class="text-muted">Unknown Status</span>';
+                                                    break;
+                                            }
+                                            ?>
                                     </div>
+                                    </p><br>
                                 </div>
                                 <div class="scorings">
                                     <h3>Weighted Scoring System</h3>
@@ -176,28 +175,63 @@ $current_evaluation = mysqli_fetch_assoc($result);
                                         </div>
                                     </div>
                                 </div>
+                                <div class="schedule">
+                                <form name="updateEvaluationForm" action="update_evaluation.php" method="post">
+                                    <div class="mt-4">
+                                        <h3>Evaluation Schedule</h3>
+                                        <div class="evaluation-details">
+                                            <input type="hidden" name="csrf_token"
+                                                value="<?php echo $_SESSION['csrf_token']; ?>">
+                                            <input type="hidden" name="period_id"
+                                                value="<?php echo htmlspecialchars($current_evaluation['period_id']); ?>">
+                                            <div class="form-group">
+                                                <label for="start_date">
+                                                    <p>Start Date:</p>
+                                                    <input type="date" class="form-control" id="start_date"
+                                                        name="start_date"
+                                                        value="<?php echo htmlspecialchars($current_evaluation['start_date']); ?>"
+                                                        required>
+                                            </div>
+                                            <div class="form-group">
+                                                <p>End Date:</p>
+                                                <input type="date" class="form-control" id="end_date" name="end_date"
+                                                    value="<?php echo htmlspecialchars($current_evaluation['end_date']); ?>"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="status">
                                     <h3>Evaluation Status</h3>
                                     <div class="evaluation-details">
                                         <div class="form-group">
-                                            <select id="status" name="status" required>
-                                                <option value="completed" <?php echo ($status === 'completed') ? 'selected' : ''; ?>>Completed</option>
-                                                <option value="active" <?php echo ($status === 'active') ? 'selected' : ''; ?>>
+                                            <select id="status" name="evaluation_status" required>
+                                                <option value="closed" <?php echo ($evaluation_status === 'closed') ? 'selected' : ''; ?>>Closed</option>
+                                                <option value="active" <?php echo ($evaluation_status === 'active') ? 'selected' : ''; ?>>
                                                     Active</option>
-                                                <option value="upcoming" <?php echo ($status === 'upcoming') ? 'selected' : ''; ?>>Upcoming</option>
                                             </select>
                                         </div>
                                         
                                     </div>
                                 </div>
                                 <div class="update-evaluation">
-                                <div class="form-group">
-                                            <button class="add-btn" type="submit">
-                                                <img src="../../../frontend/assets/icons/update.svg">&nbsp;Update
-                                            </button>
-                                        </div>
+                                    <div class="form-group">
+                                        <button class="add-btn" type="submit">
+                                            <img src="../../../frontend/assets/icons/update.svg">&nbsp;Update
+                                        </button>
+                                    </div>
                                 </div>
+                            </form>
+                            <div class="disseminate">
+                                <form action="disseminate_surveys.php" name="disseminateEvaluationForm" method="POST">
+                                    <input type="hidden" name="period_id" value="<?php echo $current_evaluation['period_id']; ?>">
+                                    <input type="hidden" name="survey_id" value="1">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                    <button class="add-btn" type="submit" <?php echo $button_disabled; ?>>
+                                        <img src="../../../frontend/assets/icons/spread.svg">&nbsp;Disseminate
+                                    </button>
                                 </form>
+                            </div>
                         </div>
                     </div>
                 <?php else: ?>
@@ -213,75 +247,6 @@ $current_evaluation = mysqli_fetch_assoc($result);
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Get the slider and input elements
-                const studentSlider = document.getElementById('student_slider');
-                const studentInput = document.getElementById('student_scoring');
-
-                const chairSlider = document.getElementById('chair_slider');
-                const chairInput = document.getElementById('chair_scoring');
-
-                const peerSlider = document.getElementById('peer_slider');
-                const peerInput = document.getElementById('peer_scoring');
-
-                const selfSlider = document.getElementById('self_slider');
-                const selfInput = document.getElementById('self_scoring');
-
-                // Function to update the input value when the slider is changed
-                function updateInputValue(slider, input) {
-                    input.value = slider.value;
-                }
-
-                // Function to update the slider value when the input is changed
-                function updateSliderValue(input, slider) {
-                    let value = parseInt(input.value, 10);
-                    if (isNaN(value)) {
-                        value = 0; // Default to 0 if the input is invalid
-                    } else if (value < 0) {
-                        value = 0; // Ensure the value is not below 0
-                    } else if (value > 100) {
-                        value = 100; // Ensure the value is not above 100
-                    }
-                    slider.value = value;
-                }
-
-                // Event listeners for slider changes
-                studentSlider.addEventListener('input', function () {
-                    updateInputValue(studentSlider, studentInput);
-                });
-
-                chairSlider.addEventListener('input', function () {
-                    updateInputValue(chairSlider, chairInput);
-                });
-
-                peerSlider.addEventListener('input', function () {
-                    updateInputValue(peerSlider, peerInput);
-                });
-
-                selfSlider.addEventListener('input', function () {
-                    updateInputValue(selfSlider, selfInput);
-                });
-
-                // Event listeners for input changes
-                studentInput.addEventListener('input', function () {
-                    updateSliderValue(studentInput, studentSlider);
-                });
-
-                chairInput.addEventListener('input', function () {
-                    updateSliderValue(chairInput, chairSlider);
-                });
-
-                peerInput.addEventListener('input', function () {
-                    updateSliderValue(peerInput, peerSlider);
-                });
-
-                selfInput.addEventListener('input', function () {
-                    updateSliderValue(selfInput, selfSlider);
-                });
-            });
-
-        </script>
 </body>
 
 </html>

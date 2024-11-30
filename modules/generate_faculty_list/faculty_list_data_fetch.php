@@ -12,13 +12,14 @@ if(mysqli_num_rows($results_department_list) > 0) {
     }
 }
 
+
 // Query to get faculty and their average ratings by department
 $sql_faculty_list = 
 "SELECT 
     f.faculty_id,
     f.profile_image,
     d.department_code,
-    COUNT(DISTINCT fc.course_section_id) AS total_courses,  -- Count distinct course sections
+    COUNT(DISTINCT CASE WHEN cs.period_id = $period THEN fc.course_section_id END) AS total_courses,
     CONCAT(f.first_name, ' ', f.last_name) AS faculty_name,
     IFNULL(AVG(subquery_student.avg_rating_per_question), 0) AS overall_avg_rating_student,
     IFNULL(AVG(subquery_self.avg_rating_per_question), 0) AS overall_avg_rating_self,
@@ -47,7 +48,7 @@ LEFT JOIN (
     LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
     LEFT JOIN surveys s ON e.survey_id = s.survey_id
     LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
-    WHERE s.target_role = 'student'  
+    WHERE s.target_role = 'student' AND cs.period_id = $period
     GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
 ) AS subquery_student ON f.faculty_id = subquery_student.faculty_id
 
@@ -63,7 +64,7 @@ LEFT JOIN (
     LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
     LEFT JOIN surveys s ON e.survey_id = s.survey_id
     LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
-    WHERE s.target_role = 'self'  
+    WHERE s.target_role = 'self' AND cs.period_id = $period  
     GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
 ) AS subquery_self ON f.faculty_id = subquery_self.faculty_id
 
@@ -79,7 +80,7 @@ LEFT JOIN (
     LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
     LEFT JOIN surveys s ON e.survey_id = s.survey_id
     LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
-    WHERE s.target_role = 'faculty'  
+    WHERE s.target_role = 'faculty' AND cs.period_id = $period  
     GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
 ) AS subquery_peer ON f.faculty_id = subquery_peer.faculty_id
 
@@ -95,11 +96,13 @@ LEFT JOIN (
     LEFT JOIN course_sections cs ON e.course_section_id = cs.course_section_id
     LEFT JOIN surveys s ON e.survey_id = s.survey_id
     LEFT JOIN faculty_courses fc ON fc.course_section_id = cs.course_section_id  
-    WHERE s.target_role = 'program_chair'  
+    WHERE s.target_role = 'program_chair' AND cs.period_id = $period  
     GROUP BY fc.faculty_id, cs.course_section_id, r.question_id  
 ) AS subquery_program_chair ON f.faculty_id = subquery_program_chair.faculty_id
 
 LEFT JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
+
+LEFT JOIN course_sections cs ON fc.course_section_id = cs.course_section_id
 
 LEFT JOIN departments d ON d.department_id = f.department_id
 
