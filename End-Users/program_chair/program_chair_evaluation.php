@@ -4,7 +4,7 @@ include('../db/databasecon.php');
 
 // Ensure the user is logged in and is a program chair
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_type'] != 'program_chair') {
-    header("Location: program_chair_login.php");
+    header("Location: ../login-pages/program_chair_login.php");
     exit();
 }
 
