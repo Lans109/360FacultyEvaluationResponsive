@@ -35,11 +35,10 @@ if ($user_type == 'students') {
         GROUP BY s.profile_image";
 } elseif ($user_type == 'faculty') {
     // For faculty, we join `faculty_department` to get the department name
-    $sql = "
+        $sql = "
         SELECT f.profile_image, d.department_name 
         FROM faculty f
-        JOIN faculty_departments fd ON f.faculty_id = fd.faculty_id
-        JOIN departments d ON fd.department_id = d.department_id
+        JOIN departments d ON f.department_id = d.department_id
         WHERE f.email = ?";
 } elseif ($user_type == 'program_chair') {
     // For program chairs, we directly join the `departments` table
@@ -58,7 +57,7 @@ if ($sql == "") {
 // Execute the query
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    die('Error: SQL preparation failed. ' . $conn->error);
+    die('Error: SQL preparation failed. ' . $conn->error); 
 }
 
 $stmt->bind_param("s", $email);
@@ -157,7 +156,7 @@ $conn->close();
 
     <script>
         // Display success or error message in a popup
-        window.onload = function () {
+        window.onload = function() {
             <?php if (isset($_SESSION['profile_update_success'])): ?>
                 alert("<?php echo $_SESSION['profile_update_success']; ?>");
                 <?php unset($_SESSION['profile_update_success']); ?>
@@ -177,12 +176,12 @@ $conn->close();
         }
 
         // Close the modal if the user clicks anywhere outside the modal
-        window.onclick = function (event) {
+        window.onclick = function(event) {
             var modal = document.getElementById('myModal');
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
-        };
+        }; 
     </script>
 </head>
 
@@ -294,19 +293,19 @@ $conn->close();
     <!-- Modal for Profile Image Change -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Change Profile Picture</h3>
-            </div>
-            <div class="modal-body">
-                <p>Do you want to change your profile image?</p>
-                <form action="userprofile.php" method="post" enctype="multipart/form-data">
-                    <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
-                    <button class="btn-change" type="submit" name="upload">Change Image</button>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" type="button" onclick="closeModal()">Cancel</button>
-            </div>
+                <div class="modal-header">
+                    <h3>Change Profile Picture</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to change your profile image?</p>
+                    <form action="userprofile.php" method="post" enctype="multipart/form-data">
+                        <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
+                        <button type="submit" name="upload">Change Image</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeModal()">Cancel</button>
+                </div>
         </div>
     </div>
 </body>

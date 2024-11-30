@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                 <table>
                     <tr>
                         <th>Faculty Name</th>
+                        <th>Status</th>
                         <th>Created At</th>
                         <th>Deadline</th>
                         <th>Actions</th>
@@ -99,6 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                     <?php foreach ($evaluations as $evaluation): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?>
+                            </td>
+                            <td><?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
                             </td>
                             <td><?php echo htmlspecialchars($evaluation['created_at']); ?></td>
                             <td><?php echo htmlspecialchars($evaluation['end_date']); ?></td>
