@@ -9,29 +9,24 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit();
 }
 
-// Fetch the user's name and email from the session
-$name = isset($_SESSION['name']) ? $_SESSION['name'] : 'Student';
+// Fetch user's data from session
+$name = $_SESSION['name'] ?? 'Student';
 $email = $_SESSION['email'];
 
-// For showing welcome only once when dashboard refreshes
-if (!isset($_SESSION['welcome_shown'])) {
-    $_SESSION['welcome_shown'] = true; // Set flag to true
-} else {
-    $_SESSION['welcome_shown'] = false; // Flag is already true, don't show the message
-}
+// Display welcome message only once
+$showWelcome = !isset($_SESSION['welcome_shown']);
+$_SESSION['welcome_shown'] = true;
 
-// Fetch user's profile image from the database (updated column name to profile_image)
+// Fetch user's profile image
 $sql = "SELECT profile_image FROM students WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
 $stmt->execute();
-$stmt->store_result();
 $stmt->bind_result($profile_image);
 $stmt->fetch();
-$stmt->close(); // Close the statement
+$stmt->close();
 
-
-// Fetch the courses the user is enrolled in
+// Fetch courses
 $sql = "SELECT 
             c.course_name, 
             c.course_code, 
@@ -41,88 +36,82 @@ $sql = "SELECT
         JOIN course_sections cs ON c.course_id = cs.course_id
         JOIN student_courses sc ON cs.course_section_id = sc.course_section_id
         JOIN students s ON sc.student_id = s.student_id
-        WHERE s.email = ?"; // Use the student's email to fetch their courses
+        WHERE s.email = ?";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $email);  // Bind the email parameter to the query
+$stmt->bind_param("s", $email);
 $stmt->execute();
-$stmt->store_result();
 $stmt->bind_result($course_name, $course_code, $course_description, $section);
 
-// Fetch courses into an array
 $courses = [];
 while ($stmt->fetch()) {
     $courses[] = [
         'course_name' => $course_name,
         'course_code' => $course_code,
         'course_description' => $course_description,
-        'section' => $section
+        'section' => $section,
+    ];
+}
+$stmt->close();
+
+// Add sample courses if none are fetched
+if (empty($courses)) {
+    $courses = [
+        ['course_name' => 'Web Development', 'course_code' => 'CS101', 'course_description' => 'Learn the basics of web development.', 'section' => 'A'],
+        ['course_name' => 'Data Science', 'course_code' => 'CS201', 'course_description' => 'Explore data analysis and machine learning.', 'section' => 'B'],
+        ['course_name' => 'Digital Marketing', 'course_code' => 'CS301', 'course_description' => 'Master SEO, SEM, and social media marketing.', 'section' => 'C'],
     ];
 }
 
-// Close the statement and connection
-$stmt->close();
 $conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Styles/styles.css">
     <title>Student Dashboard</title>
 </head>
-
 <body>
-    <!-- Centered Header -->
-    <div class="header">
-        <div class="nav-title">
-            <h1>
-                Student Dashboard
-            </h1>
-        </div>
-        <?php include 'student_navbar.php' ?>
-    </div>
+    <header class="header">
+        <h1>Student Dashboard</h1>
+        <?php include 'student_navbar.php'; ?>
+    </header>
 
-    <div class="container">
-        <!-- Welcome Message -->
-        <?php if ($_SESSION['welcome_shown']): ?>
-            <div class="welcome-message" id="welcome-message">
+    <main class="container">
+        <?php if ($showWelcome): ?>
+            <div id="welcome-message" class="welcome-message">
                 Welcome back, <?php echo htmlspecialchars($name); ?>!
                 <button class="close-btn" onclick="closeWelcomeMessage()">X</button>
             </div>
         <?php endif; ?>
 
-        <!-- Profile Section -->
-        <div class="card">
-            <div class="profile">
-                <!-- Display profile image (it will use default if no custom image exists in the database) -->
-                <img src="../<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic">
-                <h2><?php echo htmlspecialchars($name); ?></h2>
-            </div>
-
-            <!-- Courses Section -->
-            <h3 style="margin-top: 30px; margin-bottom: 20px;">Courses Enrolled To</h3>
-            <?php if (!empty($courses)): ?>
-                <?php foreach ($courses as $course): ?>
-                    <div class="course-card">
-                        <h4><?php echo htmlspecialchars($course['course_name']); ?>
-                            (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
-                            <?php echo htmlspecialchars($course['section']); ?>
-                        </h4>
-                        <div class="course-info">
-                            <p><?php echo htmlspecialchars($course['course_description']); ?></p>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>You are not enrolled in any courses yet.</p>
-            <?php endif; ?>
+        <div class="profile-card">
+            <img src="../<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic">
+            <h2><?php echo htmlspecialchars($name); ?></h2>
+            <p><?php echo htmlspecialchars($email); ?></p>
         </div>
 
-    </div>
+        <section class="motivation">
+            <h2>Quote of the Day</h2>
+            <p>"Once the UI is complete, I can finally sleep."</p>
+        </section>
+
+        <section class="courses">
+            <h3>Your Courses</h3>
+            <div class="courses-grid">
+                <?php foreach ($courses as $course): ?>
+                    <div class="course-card">
+                        <h4><?php echo htmlspecialchars($course['course_name']); ?> (<?php echo htmlspecialchars($course['course_code']); ?>)</h4>
+                        <p>Section: <?php echo htmlspecialchars($course['section']); ?></p>
+                        <p><?php echo htmlspecialchars($course['course_description']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    </main>
 
     <script>
         function closeWelcomeMessage() {
@@ -130,5 +119,4 @@ $conn->close();
         }
     </script>
 </body>
-
 </html>
