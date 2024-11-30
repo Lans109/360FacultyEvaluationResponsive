@@ -11,74 +11,70 @@ if (!isset($_SESSION['loggedin']) || !in_array($_SESSION['user_type'], ['student
 
 // Validate evaluation ID
 if (!isset($_GET['evaluation_id'])) {
-    header("Location: students/student_evaluation.php");
+    header("Location: faculty/faculty_evaluation.php");
     exit();
 }
 
 $evaluation_id = $_GET['evaluation_id'];
 $user_email = $_SESSION['email'];
-$user_type = $_SESSION['user_type'];
+$user_type = $_SESSION['user_type']; 
 
-// Fetch evaluation questions
-$sql = "
-    SELECT q.question_id, q.question_text 
-    FROM questions q 
-    WHERE q.survey_id = (SELECT survey_id FROM evaluations WHERE evaluation_id = ?)
-";
+// Fetch the evaluation and its questions
+$sql = "SELECT q.question_id, q.question_text
+FROM questions q
+JOIN questions_criteria qc ON q.criteria_id = qc.criteria_id
+WHERE qc.survey_id = (SELECT survey_id FROM evaluations WHERE evaluation_id = ?)";
+
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $evaluation_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $questions = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+
 
 // Handle response submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) {
     $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
+    $date = date("Y-m-d"); 
+    $time = date("H:i:s"); 
 
-    // Begin transaction for data integrity
-    $conn->begin_transaction();
-
-    try {
-        // Insert individual responses
-        $response_stmt = $conn->prepare("INSERT INTO responses (evaluation_id, question_id, rating) VALUES (?, ?, ?)");
-        foreach ($_POST['responses'] as $question_id => $rating) {
-            $response_stmt->bind_param("iii", $evaluation_id, $question_id, $rating);
-            $response_stmt->execute();
-        }
-        $response_stmt->close();
-
-        // Update evaluation status based on user type
-        $status_update_sql = match($user_type) {
-            'students' => "UPDATE students_evaluations SET is_completed = 1, comments = ? WHERE evaluation_id = ? AND student_id = (SELECT student_id FROM students WHERE email = ?)",
-            'faculty' => "UPDATE faculty_evaluations SET is_completed = 1, comments = ? WHERE evaluation_id = ? AND faculty_id = (SELECT faculty_id FROM faculty WHERE email = ?)",
-            'program_chair' => "UPDATE program_chair_evaluations SET is_completed = 1, comments = ? WHERE evaluation_id = ? AND chair_id = (SELECT chair_id FROM program_chairs WHERE email = ?)",
-            default => null
-        };
-
-        if ($status_update_sql) {
-            $status_stmt = $conn->prepare($status_update_sql);
-            $status_stmt->bind_param("sis", $comment, $evaluation_id, $user_email);
-            $status_stmt->execute();
-            $status_stmt->close();
-        }
-
-        $conn->commit();
-
-        // Redirect based on user type
-        $redirect_urls = [
-            'students' => 'students/student_evaluation.php',
-            'faculty' => 'faculty/faculty_evaluation.php', 
-            'program_chair' => 'program_chair/program_chair_evaluation.php'
-        ];
-        header("Location: " . $redirect_urls[$user_type]);
-        exit();
-
-    } catch (Exception $e) {
-        $conn->rollback();
-        // Log error or handle appropriately
-        die("Submission failed: " . $e->getMessage());
+    // Insert each response into the database
+    foreach ($_POST['responses'] as $question_id => $rating) {
+        // Insert response into the database
+        $stmt = $conn->prepare("INSERT INTO responses (evaluation_id, question_id, rating) VALUES (?, ?, ?)");
+        $stmt->bind_param("iii", $evaluation_id, $question_id, $rating);
+        $stmt->execute();
+        $stmt->close();
     }
+
+    // Update the evaluation status to "completed" and save the comment
+    if ($user_type == 'students') {
+        // For students: Update the student's evaluation status
+        $stmt = $conn->prepare("UPDATE students_evaluations SET is_completed = 1, comments = ?, date_evaluated= ?, time_evaluated= ? WHERE evaluation_id = ? AND student_id = (SELECT student_id FROM students WHERE email = ?)");
+        $stmt->bind_param("sssis", $comment, $date, $time, $evaluation_id, $user_email);
+    } elseif ($user_type == 'faculty') {
+        // For faculty: Update the faculty's evaluation status
+        $stmt = $conn->prepare("UPDATE faculty_evaluations SET is_completed = 1 WHERE evaluation_id = ? AND faculty_id = (SELECT faculty_id FROM faculty WHERE email = ?)");
+        $stmt->bind_param("is", $evaluation_id, $user_email);
+    } elseif ($user_type == 'program_chair') {
+        // For program chair: Update the program chair's evaluation status
+        $stmt = $conn->prepare("UPDATE program_chair_evaluations SET is_completed = 1 WHERE evaluation_id = ? AND chair_id = (SELECT chair_id FROM program_chairs WHERE email = ?)");
+        $stmt->bind_param("is", $evaluation_id, $user_email);
+    }
+
+    $stmt->execute();
+    $stmt->close();
+
+    // Redirect back to the appropriate evaluation page based on user type
+    if ($user_type == 'students') {
+        header("Location: students/student_evaluation.php");
+    } elseif ($user_type == 'faculty') {
+        header("Location: faculty/faculty_evaluation.php");
+    } elseif ($user_type == 'program_chair') {
+        header("Location: program_chair/program_chair_evaluation.php");
+    }
+    exit();
 }
 ?>
 

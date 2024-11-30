@@ -3,12 +3,92 @@
 session_start();
 require_once('db/databasecon.php');
 
-// Authentication and Authorization Check
-function authenticateUser() {
-    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['user_type'])) {
-        header("Location: ../index.php");
-        exit();
-    }
+// Ensure the user is logged in and the user_type exists in the session
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['user_type'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
+// Get the user's email, name, and user type from the session
+$email = $_SESSION['email'];
+$name = $_SESSION['name'];
+$user_type = $_SESSION['user_type'];  // This should now be set after login
+
+// Initialize variables
+$department = "";// to get department name
+$profile_image = ""; //Fr profile picture
+$num_courses = 0; //Course count to display
+
+
+// Initialize the SQL query variable
+$sql = "";
+
+// Check the user type and set the query accordingly
+if ($user_type == 'students') {
+    // Query to get the profile picture for students (no department for students)
+    $sql = "
+        SELECT s.profile_image, COUNT(sc.course_section_id) 
+        FROM students s
+        LEFT JOIN student_courses sc ON s.student_id = sc.student_id
+        LEFT JOIN course_sections cs ON sc.course_section_id = cs.course_section_id
+        WHERE s.email = ?
+        GROUP BY s.profile_image";
+} elseif ($user_type == 'faculty') {
+    // For faculty, we join `faculty_department` to get the department name
+        $sql = "
+        SELECT f.profile_image, d.department_name 
+        FROM faculty f
+        JOIN departments d ON f.department_id = d.department_id
+        WHERE f.email = ?";
+} elseif ($user_type == 'program_chair') {
+    // For program chairs, we directly join the `departments` table
+    $sql = "
+        SELECT pc.profile_image, d.department_name 
+        FROM program_chairs pc
+        JOIN departments d ON pc.department_id = d.department_id
+        WHERE pc.email = ?";
+}
+
+// Check if $sql was set correctly
+if ($sql == "") {
+    die("Error: SQL query is empty. User type might not be set correctly.");
+}
+
+// Execute the query
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die('Error: SQL preparation failed. ' . $conn->error); 
+}
+
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$stmt->store_result();
+
+// Bind the result based on the number of columns
+if ($user_type == 'students') {
+    $stmt->bind_result($profile_image, $num_courses); // Returns profile ad course count for student
+} else {
+    $stmt->bind_result($profile_image, $department); // Both profile_image and department_name are returned for faculty and program chairs
+}
+
+$stmt->fetch();
+$stmt->close();
+
+// Handle profile picture update
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
+    // Validate file upload
+    $file = $_FILES['profile_image'];
+    $file_name = $file['name'];
+    $file_tmp = $file['tmp_name'];
+    $file_size = $file['size'];
+    $file_error = $file['error'];
+
+    // File extension validation
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+    if (!in_array($file_ext, $allowed_extensions)) {
+        $_SESSION['profile_update_error'] = "Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.";
+        header("Location: userprofile.php");  // Redirect to avoid form resubmission
 }
 
 // Profile Image Upload Handler
@@ -121,6 +201,35 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="Styles/styles.css">
+    <script>
+        // Display success or error message in a popup
+        window.onload = function() {
+            <?php if (isset($_SESSION['profile_update_success'])): ?>
+                alert("<?php echo $_SESSION['profile_update_success']; ?>");
+                <?php unset($_SESSION['profile_update_success']); ?>
+            <?php elseif (isset($_SESSION['profile_update_error'])): ?>
+                alert("<?php echo $_SESSION['profile_update_error']; ?>");
+                <?php unset($_SESSION['profile_update_error']); ?>
+            <?php endif; ?>
+        };
+        // Open the modal when the user clicks on the profile image
+        function openModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        // Close the modal when the user clicks on "Cancel"
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // Close the modal if the user clicks anywhere outside the modal
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }; 
+    </script>
 </head>
 <body>
     <div class="header">
@@ -177,12 +286,26 @@ $conn->close();
 
     <div id="modal" class="modal">
         <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Change Profile Picture</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to change your profile image?</p>
+                    <form action="userprofile.php" method="post" enctype="multipart/form-data">
+                        <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
+                        <button type="submit" name="upload">Change Image</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeModal()">Cancel</button>
+                </div>
             <span class="close" onclick="closeModal()">&times;</span>
             <form action="userprofile.php" method="post" enctype="multipart/form-data">
                 <label for="profile_image">Upload New Profile Image</label>
                 <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
                 <button type="submit">Update Image</button>
             </form>
+
         </div>
     </div>
 

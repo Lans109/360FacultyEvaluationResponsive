@@ -88,11 +88,13 @@ $conn->close();
             </div>
         <?php endif; ?>
 
-        <div class="profile-card">
-            <img src="../<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic">
-            <h2><?php echo htmlspecialchars($name); ?></h2>
-            <p><?php echo htmlspecialchars($email); ?></p>
-        </div>
+        <!-- Profile Section -->
+        <div class="card">
+            <div class="profile">
+                <!-- Display profile image (it will use default if no custom image exists in the database) -->
+                <img src="../<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic">
+                <h2><?php echo htmlspecialchars($name); ?></h2>
+            </div>
 
         <section class="motivation">
             <h2>Quote of the Day</h2>
