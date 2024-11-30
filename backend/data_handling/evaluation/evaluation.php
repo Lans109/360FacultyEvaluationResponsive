@@ -136,6 +136,7 @@ $button_disabled = $disseminated == 1 ? 'disabled' : '';  // Disable button if d
                                 </div>
                                 <div class="scorings">
                                     <h3>Weighted Scoring System</h3>
+                                    <form name="updateEvaluationForm" action="update_evaluation.php" method="post">
                                     <div class="evaluation-details">
                                         <div class="form-group">
                                             <div class="score">
@@ -176,7 +177,6 @@ $button_disabled = $disseminated == 1 ? 'disabled' : '';  // Disable button if d
                                     </div>
                                 </div>
                                 <div class="schedule">
-                                <form name="updateEvaluationForm" action="update_evaluation.php" method="post">
                                     <div class="mt-4">
                                         <h3>Evaluation Schedule</h3>
                                         <div class="evaluation-details">
