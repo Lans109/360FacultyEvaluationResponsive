@@ -287,7 +287,7 @@ $conn->close();
         </div>
     </div>
 
-    <!-- Modal for Profile Image Change -->
+    <!-- Modal for Profile Image Changea -->
     <div id="myModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
