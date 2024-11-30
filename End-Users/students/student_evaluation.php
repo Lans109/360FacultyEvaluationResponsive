@@ -43,18 +43,20 @@ $evaluations = $result->fetch_all(MYSQLI_ASSOC);
 
 // Handle response submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) {
+    // Get the evaluation_id from the form
     $evaluation_id = $_POST['evaluation_id'];
     $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
 
-    // Insert responses into the database
+    // Insert each response into the responses table
     foreach ($_POST['responses'] as $question_id => $rating) {
+        // Insert response into the database
         $stmt = $conn->prepare("INSERT INTO responses (evaluation_id, question_id, rating) VALUES (?, ?, ?)");
         $stmt->bind_param("iii", $evaluation_id, $question_id, $rating);
         $stmt->execute();
         $stmt->close();
     }
 
-    // Update evaluation status and comments
+    // Update the evaluation status to "completed" and save the comment
     $stmt = $conn->prepare("UPDATE students_evaluations SET is_completed = 1, comments = ? WHERE evaluation_id = ? AND student_id = (SELECT student_id FROM students WHERE email = ?)");
     $stmt->bind_param("sis", $comment, $evaluation_id, $student_email);
     $stmt->execute();
