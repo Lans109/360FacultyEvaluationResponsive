@@ -200,9 +200,9 @@ $conn->close();
                     if ($user_type == 'students') {
                         echo '<a href="students/student_dashboard.php" class="' . ($current_page == 'student_dashboard.php' ? 'active' : '') . '">Courses</a>';
                     } elseif ($user_type == 'faculty') {
-                        echo '<a href="faculty/faculty_dashboard.php" class="' . ($current_page == 'faculty_dashboard.php' ? 'active' : '') . '">Courses Handled</a>';
+                        echo '<a href="faculty/faculty_dashboard.php" class="' . ($current_page == 'faculty_dashboard.php' ? 'active' : '') . '">Courses</a>';
                     } elseif ($user_type == 'program_chair') {
-                        echo '<a href="program_chair/program_chair_dashboard.php" class="' . ($current_page == 'program_chair_dashboard.php' ? 'active' : '') . '">Department Info</a>';
+                        echo '<a href="program_chair/program_chair_dashboard.php" class="' . ($current_page == 'program_chair_dashboard.php' ? 'active' : '') . '">Department</a>';
                     }
 
                     // Highlight "Profile" link
