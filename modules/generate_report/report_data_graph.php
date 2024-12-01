@@ -53,6 +53,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                 titleTextStyle: {
                     fontSize: 15,   // Adjust font size of the header title
                     color: '#666',  // Change the color of the title header
+                    bold: true,     // Make the title bold
+                    italic: false,  // Disable italics
                 },
                 colors: [
                     '#923534', // Maroon (primary color)
@@ -62,22 +64,22 @@ while ($row = mysqli_fetch_assoc($result)) {
                     '#ffb6b6', // Soft blush pink (light and subtle)
                     '#2c3e50', // Dark blue-gray (providing contrast)
                     '#e1c8b1', // Beige (soft neutral to balance boldness)
-                ], 
-                fontName: 'myFont2', // Custom font name from the first example
+                ],
+                fontName: 'myFont2', // Custom font name
                 fontSize: 14,
                 hAxis: {
-                    title: 'Evaluators', // Maintain x-axis title
-                    titleTextStyle: { fontSize: 15, color: '#666' }, // Match x-axis title style
+                    title: '', // Maintain x-axis title
+                    titleTextStyle: { fontSize: 15, color: '#666', bold: true }, // Match x-axis title style
                     textStyle: { fontSize: 15, color: '#666' }, // Adjust x-axis text style
                     gridlines: {
                         color: '#e0e0e0',
                         count: 5 // Limit horizontal gridlines to 5
                     },
-                    slantedTextAngle: 45, // Add text angle for labels
+                    textPosition: 'out', // Place axis labels outside
                 },
                 vAxis: {
-                    title: 'Rating', // Maintain y-axis title
-                    titleTextStyle: { fontSize: 16, color: '#666' }, // Match y-axis title style
+                    title: '', // Maintain y-axis title
+                    titleTextStyle: { fontSize: 16, color: '#666', bold: true }, // Match y-axis title style
                     textStyle: { fontSize: 12, color: '#ddd' }, // Adjust y-axis text style
                     gridlines: {
                         color: '#ddd', // Gridline color
@@ -86,19 +88,15 @@ while ($row = mysqli_fetch_assoc($result)) {
                     minValue: 1,
                     maxValue: 5,
                     ticks: [1, 2, 3, 4, 5], // Y-axis ticks
-                },
-                legend: {
-                    position: 'top', // Legend position
-                    alignment: 'center', // Align legend text
-                    textStyle: { fontSize: 15, color: '#666' } // Legend text style
+                    format: '0', // Format tick labels as integers
                 },
                 chartArea: {
                     left: 50, // Match padding and margins
                     top: 50,
                     right: 20,
                     bottom: 50,
-                    width: '100%',
-                    height: '100%'
+                    width: '90%', // Adjust chart area width
+                    height: '80%' // Adjust chart area height
                 },
                 bars: 'vertical', // Keep bars vertical
                 isStacked: false, // No stacking
@@ -110,8 +108,17 @@ while ($row = mysqli_fetch_assoc($result)) {
                     easing: 'inAndOut' // Easing effect
                 },
                 tooltip: { isHtml: true }, // HTML tooltips
-                curveType: 'function' // Enable smooth curves if applicable
+                curveType: 'function', // Enable smooth curves if applicable
+                enableInteractivity: true, // Allow interaction like hover and clicks
+                focusTarget: 'category', // Highlight category on hover
+                annotations: {
+                    textStyle: { fontSize: 12, color: '#444', bold: true }, // Annotation text style
+                    alwaysOutside: true, // Place annotations outside
+                },
+                // Legend removed:
+                legend: { position: 'none' },
             };
+
 
 
             var chart = new google.visualization.ColumnChart(document.getElementById(elementId));

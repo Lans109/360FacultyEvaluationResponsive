@@ -1,35 +1,84 @@
 <?php
+// Include configuration and database connection
 include_once "../../../config.php";
-// Include database connection
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+// Authentication check
+include '../authentication.php';
 
-// Retrieve departments and program chairs
-$department_query = "SELECT 
-                d.*, 
-                pc.chair_id,
-                pc.first_name,
-                pc.last_name
-            FROM 
-                departments d
-            LEFT JOIN 
-                program_chairs pc ON pc.department_id = d.department_id";
-
-if ($search) {
-    $department_query .= " WHERE (
-    d.department_name LIKE '%$search%' OR 
-    d.department_code LIKE '%$search%' OR 
-    CONCAT(pc.first_name, ' ', pc.last_name) LIKE '%$search%'
-    )";
+### Generate a CSRF token if one doesn't exist ###
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
 }
 
+### Display Status Messages ###
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
+
+### Handle Search and Filter Inputs ###
+if (isset($_GET['search'])) {
+    $_SESSION['search'] = mysqli_real_escape_string($con, $_GET['search']);
+}
+if (isset($_GET['department_filter'])) {
+    $_SESSION['department_filter'] = $_GET['department_filter'];
+}
+
+// Use session values if set, otherwise default to empty
+$search = $_SESSION['search'] ?? '';
+$department_filter = $_SESSION['department_filter'] ?? '';
+
+### Build Query to Fetch Departments ###
+$department_query = "
+    SELECT 
+        d.*, 
+        pc.chair_id,
+        pc.first_name,
+        pc.last_name
+    FROM departments d
+    LEFT JOIN program_chairs pc ON pc.department_id = d.department_id
+";
+
+// Add conditions for search and department filter
+if ($search) {
+    $department_query .= " WHERE (
+        d.department_name LIKE '%$search%' OR 
+        d.department_code LIKE '%$search%' OR 
+        CONCAT(pc.first_name, ' ', pc.last_name) LIKE '%$search%'
+    )";
+}
+if ($department_filter) {
+    $department_query .= $search
+        ? " AND d.department_id = '$department_filter'"
+        : " WHERE d.department_id = '$department_filter'";
+}
+
+// Execute the query
 $department_result = mysqli_query($con, $department_query);
+
+if (!$department_result) {
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = "Error fetching departments: " . mysqli_error($con);
+    header("Location: error_page.php");
+    exit();
+}
 
 $num_rows = mysqli_num_rows($department_result);
 
-if (!$department_result) {
-    die("Error fetching departments: " . mysqli_error($con));
+### Reset Filters ###
+if (isset($_GET['reset_filters'])) {
+    unset($_SESSION['search']);
+    unset($_SESSION['department_filter']);
+    header("Location: departments.php");
+    exit;
 }
 ?>
 
@@ -48,10 +97,13 @@ if (!$department_result) {
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <div><h1>Department Management</h1></div>
+            <div>
+                <h1>Department Management</h1>
+            </div>
         </div>
         <div class="content">
             <div class="upperContent">
@@ -60,30 +112,24 @@ if (!$department_result) {
                     <form method="GET" action="">
                         <div class="form-group">
                             <div class="search-container">
-                                <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
+                                <input type="text" placeholder="Search..." id="search" name="search"
+                                    class="search-input">
                                 <button type="submit" class="search-button">
-                                    <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
+                                    <i class="fa fa-search"></i> <!-- Magnifying Glass Icon -->
                                 </button>
                             </div>
-                            <a href="departments.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
+                            <a href="departments.php?reset_filters=1" class="fitler-btn"><i class="fa fa-eraser"></i>
+                                Clear</a>
 
                         </div>
                     </form>
                 </div>
                 <div>
-                    <button id="openModalBtn-add-department" class="add-btn" data-toggle="modal" data-target="#addModal">
+                    <button id="openModalBtn-add-department" class="add-btn" data-toggle="modal"
+                        data-target="#addModal">
                         <img src="../../../frontend/assets/icons/add.svg">&nbsp;Department&nbsp;
                     </button>
                 </div>
-
-                <!-- no function yet add at app.js
-                    <div class="sortDropDown">
-                        <label for="sort">Sort by:</label>
-                        <select id="sort" onchange="sortCourses()">
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                        </select>
-                    </div> -->
             </div>
             <div class="table">
                 <table>
@@ -97,43 +143,50 @@ if (!$department_result) {
                         </tr>
                     </thead>
                     <tbody>
-                    <?php if (mysqli_num_rows($department_result) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($department_result)): ?>
-                            <tr>
-                                <td><?php echo $row['department_code']; ?></td>
-                                <td><?php echo $row['department_name']; ?></td>
-                                <td><?php echo $row['department_description']; ?></td>
-                                <td>
-                                    <?php
-                                    echo $row['first_name'] ? $row['first_name'] . ' ' . $row['last_name'] : 'Not Assigned';
-                                    ?>
-                                </td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="edit-btn" data-toggle="modal" data-target="#editModal"
-                                            data-id="<?php echo $row['department_id']; ?>"
-                                            data-name="<?php echo $row['department_name']; ?>"
-                                            data-code="<?php echo $row['department_code']; ?>"
-                                            data-description="<?php echo $row['department_description']; ?>"
-                                            data-chair-id="<?php echo $row['chair_id']; ?>">
-                                            <img src="../../../frontend/assets/icons/edit.svg">
-                                        </button>
-
-                                        <a href="delete_department.php?department_id=<?php echo $row['department_id']; ?>"
-                                            class="delete-btn"
-                                            onclick="openDeleteConfirmationModal(event, this)">
-                                            
-                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                        <?php else: ?>
+                        <?php if (mysqli_num_rows($department_result) > 0): ?>
+                            <?php while ($department = mysqli_fetch_assoc($department_result)): ?>
                                 <tr>
-                                    <td colspan="4">No Departments found.</td>
+                                    <td><?php echo $department['department_code']; ?></td>
+                                    <td><?php echo $department['department_name']; ?></td>
+                                    <td><?php echo $department['department_description']; ?></td>
+                                    <td>
+                                        <?php
+                                        echo $department['first_name'] ? $department['first_name'] . ' ' . $department['last_name'] : 'Not Assigned';
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="edit-btn" data-toggle="modal" data-target="#editModal"
+                                                data-id="<?php echo $department['department_id']; ?>"
+                                                data-name="<?php echo $department['department_name']; ?>"
+                                                data-code="<?php echo $department['department_code']; ?>"
+                                                data-description="<?php echo $department['department_description']; ?>"
+                                                data-chair-id="<?php echo $department['chair_id']; ?>">
+                                                <img src="../../../frontend/assets/icons/edit.svg">
+                                            </button>
+
+                                            <form name="deleteForm" action="delete_department.php" method="POST">
+                                                <!-- Hidden input to pass the course_id -->
+                                                <input type="hidden" name="department_id"
+                                                    value="<?php echo $department['department_id']; ?>">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No Departments found.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -145,9 +198,12 @@ if (!$department_result) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addModalLabel">Add New Department</h5>
-                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                            </span>
                         </div>
                         <form action="add_department.php" method="POST">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="department_name">Department Name</label>
@@ -198,9 +254,12 @@ if (!$department_result) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editModalLabel">Edit Department</h5>
-                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                            <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                            </span>
                         </div>
                         <form id="editForm" method="POST" action="update_department.php">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <div class="modal-body">
                                 <input type="hidden" name="department_id" id="edit_department_id">
                                 <div class="form-group">
@@ -234,7 +293,8 @@ if (!$department_result) {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
+                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save
+                                    changes</button>
                             </div>
                         </form>
                     </div>

@@ -57,16 +57,29 @@ if ($resultFaculty->num_rows > 0) {
 
                 $sqlSurvey = "
                     SELECT 
-                        s.survey_id, 
-                        s.survey_name, 
+                        s.survey_id,
+                        s.survey_name,
                         s.target_role,
-                        COUNT(e.evaluation_id) AS total_evaluated_survey
+                        (
+                            COUNT(DISTINCT se.evaluation_id) + 
+                            COUNT(DISTINCT fe.evaluation_id) + 
+                            COUNT(DISTINCT pce.evaluation_id)
+                        ) AS total_evaluated_survey
                     FROM 
                         surveys s
                     LEFT JOIN 
-                        evaluations e ON s.survey_id = e.survey_id AND e.course_section_id = ? AND e.period_id = ?
+                        evaluations e ON s.survey_id = e.survey_id 
+                        AND e.course_section_id = ?  -- Add course_section_id condition
+                        AND e.period_id = ?          -- Add period_id condition
+                    LEFT JOIN 
+                        students_evaluations se ON e.evaluation_id = se.evaluation_id AND se.is_completed = 1
+                    LEFT JOIN 
+                        faculty_evaluations fe ON e.evaluation_id = fe.evaluation_id AND fe.is_completed = 1
+                    LEFT JOIN 
+                        program_chair_evaluations pce ON e.evaluation_id = pce.evaluation_id AND pce.is_completed = 1
                     GROUP BY 
                         s.survey_id, s.survey_name, s.target_role;
+
                 ";
 
                 $stmtSurvey = $con->prepare($sqlSurvey);
@@ -79,20 +92,20 @@ if ($resultFaculty->num_rows > 0) {
                         $evaluationQuestions = [];
 
                         $sqlQuestions = "
-                           SELECT 
-                                q.question_code, 
-                                q.question_id,
-                                q.criteria_id,
-                                qc.description AS criteria_description,
-                                q.question_text
-                            FROM 
-                                questions q
-                            JOIN
-                                questions_criteria qc ON qc.criteria_id = q.criteria_id
-                            WHERE 
-                                q.survey_id = ?
-                            ORDER BY
-                                q.criteria_id;
+                        SELECT 
+                            q.question_code, 
+                            q.question_id,
+                            q.criteria_id,
+                            qc.description AS criteria_description,
+                            q.question_text
+                        FROM 
+                            questions q
+                        JOIN
+                            questions_criteria qc ON qc.criteria_id = q.criteria_id
+                        WHERE 
+                            qc.survey_id = ? -- Change from q.survey_id to qc.survey_id
+                        ORDER BY
+                            q.criteria_id;
                         ";
 
                         $stmtQuestions = $con->prepare($sqlQuestions);
@@ -177,20 +190,3 @@ if ($resultFaculty->num_rows > 0) {
 } else {
     echo "No faculty members found.";
 }
-
-$sqlComments = "
-    SELECT 
-        comments
-    FROM 
-        students_evaluations
-";
-
-$resultComments = $con->query($sqlComments);
-$comments = [];
-if ($resultComments->num_rows > 0) {
-    
-    while ($commentsRow = $resultComments->fetch_assoc()) {
-        $comments[] = $commentsRow['comments'];
-    }
-}
-

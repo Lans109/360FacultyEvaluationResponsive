@@ -1,30 +1,74 @@
 <?php
+// Include configuration and database connection
 include_once "../../../config.php";
-// Include database connection
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
-$department_filter = isset($_GET['department_filter']) ? $_GET['department_filter'] : '';
-// Fetch all faculty members along with their department IDs
-$faculty_query = "
-SELECT 
-    f.phone_number, 
-    f.faculty_id, 
-    f.email, 
-    f.first_name, 
-    f.last_name, 
-    f.department_id, 
-    f.profile_image,
-    d.department_code, 
-    CONCAT(f.first_name, ' ', f.last_name) AS full_name,
-    COUNT(fc.course_section_id) AS total_courses
-FROM 
-    faculty f
-JOIN 
-    departments d ON f.department_id = d.department_id
-LEFT JOIN 
-    faculty_courses fc ON f.faculty_id = fc.faculty_id  -- Assuming there's a table tracking courses taught by faculty
-";
+// Authentication check
+include '../authentication.php';
+
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display Status Messages if any
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
+
+// Handle Search and Filter Inputs from the URL (GET)
+if (isset($_GET['search'])) {
+    $_SESSION['search'] = mysqli_real_escape_string($con, $_GET['search']);
+}
+if (isset($_GET['department_filter'])) {
+    $_SESSION['department_filter'] = $_GET['department_filter'];
+}
+
+// Use session values if set, otherwise default to empty
+$search = $_SESSION['search'] ?? '';
+$department_filter = $_SESSION['department_filter'] ?? '';
+
+// Query to fetch all faculty members along with their department info and total courses
+if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
+    $period_id = mysqli_real_escape_string($con, $_SESSION['period_id']); // Sanitize the input
+
+    $faculty_query = "
+        SELECT 
+            f.phone_number, 
+            f.faculty_id, 
+            f.email, 
+            f.first_name, 
+            f.last_name, 
+            f.department_id, 
+            f.profile_image,
+            d.department_code, 
+            CONCAT(f.first_name, ' ', f.last_name) AS full_name,
+            COUNT(cs.course_section_id) AS total_courses
+        FROM 
+            faculty f
+        JOIN 
+            departments d ON f.department_id = d.department_id
+        LEFT JOIN 
+            faculty_courses fc ON f.faculty_id = fc.faculty_id
+        LEFT JOIN 
+            course_sections cs ON fc.course_section_id = cs.course_section_id AND cs.period_id = '$period_id'
+    ";
+} else {
+    // Handle missing or invalid period_id
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid or missing period ID.';
+    header("Location: some_error_page.php");
+    exit();
+}
+
 
 // Apply search filter if the $search variable is set
 if (!empty($search)) {
@@ -37,8 +81,8 @@ if (!empty($search)) {
 
 // Apply department filter condition if a department is selected
 if (!empty($department_filter)) {
-    $faculty_query .= !empty($search) 
-        ? " AND f.department_id = '$department_filter'" 
+    $faculty_query .= !empty($search)
+        ? " AND f.department_id = '$department_filter'"
         : " WHERE f.department_id = '$department_filter'";
 }
 
@@ -46,13 +90,11 @@ $faculty_query .= "
 GROUP BY 
     f.faculty_id, f.phone_number, f.email, f.first_name, f.last_name, f.department_id, f.profile_image, d.department_code";
 
+// Execute the faculty query
 $faculty_result = mysqli_query($con, $faculty_query);
-
-// Fetch the number of rows returned by the query
 $num_rows = mysqli_num_rows($faculty_result);
 
-
-// Fetch all course sections along with their department IDs
+// Query to fetch courses and their department info
 $courses_query = "
     SELECT cs.course_section_id, c.course_name, cs.section, d.department_id
     FROM course_sections cs 
@@ -64,14 +106,23 @@ while ($course = mysqli_fetch_assoc($courses_result)) {
     $courses[$course['department_id']][] = $course; // Organize courses by department
 }
 
-// Fetch all departments for the add faculty modal and the edit faculty modal
+// Query to fetch departments for the add/edit faculty modal
 $departments_query = "SELECT department_id, department_name FROM departments";
 $departments_result = mysqli_query($con, $departments_query);
 $departments = [];
 while ($department = mysqli_fetch_assoc($departments_result)) {
     $departments[] = $department; // Store all departments
 }
+
+// Reset filters if needed
+if (isset($_GET['reset_filters'])) {
+    unset($_SESSION['search']);
+    unset($_SESSION['department_filter']);
+    header("Location: faculty.php"); // Redirect to reset the filters
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,49 +138,55 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <main>
         <div class="upperMain">
-            <div><h1>Faculty Management</h1></div>
+            <div>
+                <h1>Faculty Management</h1>
+            </div>
         </div>
         <div class="content">
             <div class="upperContent">
-            <div>
+                <div>
                     <p>Showing <?= $num_rows ?> <?= $num_rows == 1 ? 'Faculty Member' : 'Faculty Members' ?></p>
                 </div>
                 <!-- Search and Filter Form -->
                 <div class="search-filter">
                     <form method="GET" action="">
-                        <div class="form-group">            
-                        <div class="search-container">
-                            <input type="text" placeholder="Search..." id="search" name="search" class="search-input">
-                            <button type="submit" class="search-button">
-                                <i class="fa fa-search"></i>  <!-- Magnifying Glass Icon -->
-                            </button>
-                        </div>
-                        <div class="select-container">
-                            <div class="select-wrapper">
-                                <select id="department_filter" name="department_filter" class="custom-select">
-                                    <option value="" selected>All Departments</option>
-                                    <?php
-                                    // Fetch all departments to populate the filter dropdown
-                                    $departments_query = "SELECT department_id, department_code FROM departments";
-                                    $departments_result = mysqli_query($con, $departments_query);
-
-                                    // Fetch and display department options
-                                    while ($department = mysqli_fetch_assoc($departments_result)) {
-                                        $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
-                                        echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
-                                    }
-                                    ?>
-                                </select>
-                                <i class="fa fa-chevron-down select-icon"></i>  <!-- Icon for dropdown -->
+                        <div class="form-group">
+                            <div class="search-container">
+                                <input type="text" placeholder="Search..." id="search" name="search"
+                                    class="search-input">
+                                <button type="submit" class="search-button">
+                                    <i class="fa fa-search"></i> <!-- Magnifying Glass Icon -->
+                                </button>
                             </div>
+                            <div class="select-container">
+                                <div class="select-wrapper">
+                                    <select id="department_filter" name="department_filter" class="custom-select">
+                                        <option value="" selected>All Departments</option>
+                                        <?php
+                                        // Fetch all departments to populate the filter dropdown
+                                        $departments_query = "SELECT department_id, department_code FROM departments";
+                                        $departments_result = mysqli_query($con, $departments_query);
+
+                                        // Fetch and display department options
+                                        while ($department = mysqli_fetch_assoc($departments_result)) {
+                                            $selected = (isset($_GET['department_filter']) && $_GET['department_filter'] == $department['department_id']) ? 'selected' : '';
+                                            echo "<option value='" . $department['department_id'] . "' . $selected>" . $department['department_code'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <i class="fa fa-chevron-down select-icon"></i> <!-- Icon for dropdown -->
+                                </div>
+                            </div>
+                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i>
+                                Filter</button>
+                            <a href="faculty.php?reset_filters=1" class="fitler-btn"><i class="fa fa-eraser"></i>
+                                Clear</a>
                         </div>
-                            <button type="submit" class="fitler-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
-                            <a href="faculty.php" class="fitler-btn"><i class="fa fa-eraser"></i> Clear</a>
-                        </div>
-                        
+
                     </form>
                 </div>
                 <div>
@@ -155,137 +212,115 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                         </tr>
                     </thead>
                     <tbody>
-                    <?php if (mysqli_num_rows($faculty_result) > 0): ?>
-                        <?php while ($faculty = mysqli_fetch_assoc($faculty_result)): ?>
-                            <tr>
-                                <td><img class="profile-icon" src="../../../<?= $faculty['profile_image'] ?>"></td>
-                                <td><?php echo $faculty['full_name']; ?></td>
-                                <td><?php echo $faculty['email']; ?></td>
-                                <td><?php echo $faculty['phone_number']; ?></td>
-                                <td><?php echo $faculty['department_code']; ?></td>
-                                <td><?php echo $faculty['faculty_id']; ?></td>
-                                <td><?php echo $faculty['total_courses']; ?></td>
-                                <td>
-                                        <!-- View Profile Button -->
-                                        <a href="view_faculty_profile.php?faculty_id=<?php echo $faculty['faculty_id']; ?>" class="view-btn">
-                                            View Profile
-                                        </a>
-                                </td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="edit-btn" data-toggle="modal"
-                                            data-target="#editModal<?php echo $faculty['faculty_id']; ?>"
-                                            data-id="<?php echo $faculty['faculty_id']; ?>"
-                                            data-first-name="<?php echo $faculty['first_name']; ?>"
-                                            data-last-name="<?php echo $faculty['last_name']; ?>"
-                                            data-department-id="<?php echo $faculty['department_id']; ?>">
-                                            <img src="../../../frontend/assets/icons/edit.svg"></button>
-
-                                        <a href="delete_faculty.php?faculty_id=<?php echo $faculty['faculty_id']; ?>"
-                                            class="delete-btn"
-                                            onclick="openDeleteConfirmationModal(event, this)">
-                                            <img src="../../../frontend/assets/icons/delete.svg"></a>
-
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Edit Faculty Modal -->
-                            <div class="modal" id="editModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
-                                role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Faculty</h5>
-                                            <span class="close" class="close" data-dismiss="modal"
-                                                aria-label="Close">&times;</span>
-                                        </div>
-                                        <form id="editForm" method="POST" action="update_faculty.php">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="faculty_id"
-                                                    value="<?php echo $faculty['faculty_id']; ?>">
-                                                <div class="form-group">
-                                                    <label for="first_name">First Name</label>
-                                                    <input type="text" name="first_name" class="form-control"
-                                                        value="<?php echo $faculty['first_name']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="last_name">Last Name</label>
-                                                    <input type="text" name="last_name" class="form-control"
-                                                        value="<?php echo $faculty['last_name']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="email">Email</label>
-                                                    <input type="email" name="email" class="form-control"
-                                                        value="<?php echo $faculty['email']; ?>" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="department_id">Select Department</label>
-                                                    <select name="department_id" class="form-control" required>
-                                                        <option value="">Choose a department...</option>
-                                                        <?php foreach ($departments as $department): ?>
-                                                            <option value="<?php echo $department['department_id']; ?>" <?php echo ($department['department_id'] == $faculty['department_id']) ? 'selected' : ''; ?>>
-                                                                <?php echo $department['department_name']; ?>
-                                                            </option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Assign Course Modal -->
-                            <div class="modal" id="assignCourseModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
-                                role="dialog" aria-labelledby="assignCourseLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="assignCourseLabel">Assign Course to
-                                                <?php echo $faculty['first_name'] . ' ' . $faculty['last_name']; ?>
-                                            </h5>
-                                            <span class="close" class="close" data-dismiss="modal"
-                                                aria-label="Close">&times;</span>
-                                        </div>
-                                        <form method="POST" action="add_course_to_faculty.php">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="faculty_id"
-                                                    value="<?php echo $faculty['faculty_id']; ?>">
-                                                <div class="form-group">
-                                                    <label for="course_section_id">Select Course Section</label>
-                                                    <select name="course_section_id" class="form-control" required>
-                                                        <option value="">Choose a course...</option>
-                                                        <?php foreach ($courses as $department_id => $course_list): ?>
-                                                            <optgroup label="Department <?php echo $department_id; ?>">
-                                                                <?php foreach ($course_list as $course): ?>
-                                                                    <option value="<?php echo $course['course_section_id']; ?>">
-                                                                        <?php echo $course['section'] . " - " . $course['course_name']; ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
-                                                            </optgroup>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="save-btn">Assign Course</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endwhile; ?>
-                        <?php else: ?>
+                        <?php if (mysqli_num_rows($faculty_result) > 0): ?>
+                            <?php while ($faculty = mysqli_fetch_assoc($faculty_result)): ?>
                                 <tr>
-                                    <td colspan="4">No faculty members found.</td>
+                                    <td><img class="profile-icon" src="../../../<?= $faculty['profile_image'] ?>"></td>
+                                    <td><?php echo $faculty['full_name']; ?></td>
+                                    <td><?php echo $faculty['email']; ?></td>
+                                    <td><?php echo $faculty['phone_number']; ?></td>
+                                    <td><?php echo $faculty['department_code']; ?></td>
+                                    <td><?php echo $faculty['faculty_id']; ?></td>
+                                    <td><?php echo $faculty['total_courses']; ?></td>
+                                    <td>
+                                        <!-- View Profile Button -->
+                                        <form action="view_faculty_profile.php" method="GET">
+                                            <input type="hidden" name="faculty_id"
+                                                value="<?php echo $faculty['faculty_id']; ?>">
+                                            <button type="submit" class="view-btn">View Profile</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="edit-btn" data-toggle="modal"
+                                                data-target="#editModal<?php echo $faculty['faculty_id']; ?>"
+                                                data-id="<?php echo $faculty['faculty_id']; ?>"
+                                                data-first-name="<?php echo $faculty['first_name']; ?>"
+                                                data-last-name="<?php echo $faculty['last_name']; ?>"
+                                                data-department-id="<?php echo $faculty['department_id']; ?>">
+                                                <img src="../../../frontend/assets/icons/edit.svg"></button>
+
+                                            <form name="deleteForm" action="delete_faculty.php" method="POST">
+                                                <!-- Hidden input to pass the course_id -->
+                                                <input type="hidden" name="faculty_id"
+                                                    value="<?php echo $faculty['faculty_id']; ?>">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
                                 </tr>
-                            <?php endif; ?>
+
+                                <!-- Edit Faculty Modal -->
+                                <div class="modal" id="editModal<?php echo $faculty['faculty_id']; ?>" tabindex="-1"
+                                    role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Edit Faculty</h5>
+                                                <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                                                </span>
+                                            </div>
+                                            <form id="editForm<?php echo $faculty['faculty_id']; ?>" method="POST"
+                                                action="update_faculty.php">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="faculty_id"
+                                                        value="<?php echo $faculty['faculty_id']; ?>">
+                                                    <div class="form-group">
+                                                        <label for="first_name">First Name</label>
+                                                        <input type="text" name="first_name" class="form-control"
+                                                            value="<?php echo $faculty['first_name']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="last_name">Last Name</label>
+                                                        <input type="text" name="last_name" class="form-control"
+                                                            value="<?php echo $faculty['last_name']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="phone_number">Phone Number</label>
+                                                        <input type="text" name="phone_number" class="form-control"
+                                                            value="<?php echo $faculty['phone_number']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" name="email" class="form-control"
+                                                            value="<?php echo $faculty['email']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="department_id">Select Department</label>
+                                                        <select name="department_id" class="form-control" required>
+                                                            <option value="">Choose a department...</option>
+                                                            <?php foreach ($departments as $department): ?>
+                                                                <option value="<?php echo $department['department_id']; ?>" <?php echo ($department['department_id'] == $faculty['department_id']) ? 'selected' : ''; ?>>
+                                                                    <?php echo $department['department_name']; ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="save-btn" id="openConfirmationModalBtn">Save
+                                                        changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No faculty members found.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -294,15 +329,17 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
     </main>
 
     <!-- Add Faculty Modal -->
-    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addFacultyLabel"
-        aria-hidden="true">
+    <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addFacultyLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addFacultyLabel">Add Faculty</h5>
-                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
                 </div>
                 <form method="POST" action="add_faculty.php">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="first_name">First Name</label>
@@ -311,6 +348,10 @@ while ($department = mysqli_fetch_assoc($departments_result)) {
                         <div class="form-group">
                             <label for="last_name">Last Name</label>
                             <input type="text" name="last_name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label>
+                            <input type="text" name="phone_number" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
