@@ -153,19 +153,36 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="Styles/styles.css">
+    <?php include 'update_modalsMessage.php' ?>
 
     <!-- changing pfp -->
     <script>
         // Display success or error message in a popup
         window.onload = function () {
             <?php if (isset($_SESSION['profile_update_success'])): ?>
-                alert("<?php echo $_SESSION['profile_update_success']; ?>");
+                // Set the success message
+                document.getElementById('successMessage').innerText = "<?php echo $_SESSION['profile_update_success']; ?>";
+
+                // Show the success modal
+                document.getElementById('successModal').style.display = 'block';
+
+                // Clear the session variable after displaying the modal
                 <?php unset($_SESSION['profile_update_success']); ?>
             <?php elseif (isset($_SESSION['profile_update_error'])): ?>
-                alert("<?php echo $_SESSION['profile_update_error']; ?>");
+                // Set the error message
+                document.getElementById('errorMessage').innerText = "<?php echo $_SESSION['profile_update_error']; ?>";
+
+                // Show the error modal
+                document.getElementById('errorModal').style.display = 'block';
+
+                // Clear the session variable after displaying the modal
                 <?php unset($_SESSION['profile_update_error']); ?>
             <?php endif; ?>
-        };
+        }
+        // Function to close the modal
+        function closeMessageModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
         // Open the modal when the user clicks on the profile image
         function openModal() {
             document.getElementById('myModal').style.display = 'block';
@@ -293,8 +310,8 @@ $conn->close();
             <h1>About Me</h1>
             <div class="profile">
                 <!-- Display profile image and make it clickable -->
-                <img src="<?php echo htmlspecialchars($profile_image); ?>" 
-                alt="Profile Picture" onerror="this.onerror=null; this.src='uploads/default_image.jpg';" class="profile-pic"
+                <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture"
+                    onerror="this.onerror=null; this.src='uploads/default_image.jpg';" class="profile-pic"
                     onclick="openModal()">
 
                 <!-- Display Full Name -->
