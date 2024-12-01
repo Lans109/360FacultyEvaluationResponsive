@@ -362,6 +362,10 @@ nav {
     transform: scaleX(1);
 }
 
+.nav-item a{
+    cursor: pointer;
+}
+
 
 
 

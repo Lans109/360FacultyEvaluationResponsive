@@ -152,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         <?php include 'faculty_navbar.php' ?>
     </div>
     <div class="container">
-  <!-- Self-Evaluation Section -->
-  <div class="card">
+        <!-- Self-Evaluation Section -->
+        <div class="card">
             <h2>Self-Evaluation</h2>
             <?php if (!empty($self_evaluation)): ?>
                 <p><strong>Status: </strong>
@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         <div class="card">
             <h2>Co-Faculty Evaluation</h2>
             <?php if (!empty($co_faculty_evaluations)): ?>
-                <table border="1">
+                <table>
                     <tr>
                         <th>Faculty Name</th>
                         <th>Course Code</th>
@@ -196,14 +196,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                             <td>
                                 <?php if (!$evaluation['is_completed'] && $co_faculty_completed_count === 0): ?>
                                     <!-- Redirect to evaluation page -->
-                                    <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>&is_self_evaluation=0">Start Evaluation</a>
+                                    <a
+                                        href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>&is_self_evaluation=0">Start
+                                        Evaluation</a>
                                 <?php else: ?>
-                                    <button disabled>Completed or Evaluation Already Started</button>
+                                    <button disabled>Already Evaluated One Faculty</button>
                                 <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
+
+                <div class="ttc-container">
+                    <?php foreach ($co_faculty_evaluations as $evaluation): ?>
+                        <div class="ttc">
+                            <!-- Card Header -->
+                            <div class="ttc-header">
+                                <h3>
+                                    <?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?>
+                                </h3>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="ttc-body">
+                                <p><strong>Course Code:</strong> <?php echo htmlspecialchars($evaluation['course_code']); ?></p>
+                                <p><strong>Created At:</strong>
+                                    <?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?>
+                                </p>
+                                <p><strong>Deadline:</strong>
+                                    <?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?>
+                                </p>
+                                <p><strong>Status:</strong>
+                                    <?php echo $evaluation['is_completed']
+                                        ? '<span style="color: green;">Completed</span>'
+                                        : '<span style="color: red;">Pending</span>'; ?>
+                                </p>
+                            </div>
+
+                            <!-- Card Footer -->
+                            <div class="ttc-footer">
+                                <?php if (!$evaluation['is_completed'] && $co_faculty_completed_count === 0): ?>
+                                    <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>&is_self_evaluation=0"
+                                        class="btn">
+                                        Start Evaluation
+                                    </a>
+                                <?php else: ?>
+                                    <button class="btn" disabled>
+                                        <?php echo $evaluation['is_completed']
+                                            ? 'Completed'
+                                            : 'Already Evaluated One Faculty'; ?>
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
             <?php else: ?>
                 <p>No evaluations available at the moment.</p>
             <?php endif; ?>

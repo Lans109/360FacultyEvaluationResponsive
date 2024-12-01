@@ -17,7 +17,7 @@ if (!isset($_GET['evaluation_id'])) {
 
 $evaluation_id = $_GET['evaluation_id'];
 $user_email = $_SESSION['email'];
-$user_type = $_SESSION['user_type']; 
+$user_type = $_SESSION['user_type'];
 
 // Fetch the evaluation and its questions
 $sql = "SELECT q.question_id, q.question_text
@@ -36,8 +36,8 @@ $questions = $result->fetch_all(MYSQLI_ASSOC);
 // Handle response submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) {
     $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
-    $date = date("Y-m-d"); 
-    $time = date("H:i:s"); 
+    $date = date("Y-m-d");
+    $time = date("H:i:s");
 
     // Insert each response into the database
     foreach ($_POST['responses'] as $question_id => $rating) {
@@ -80,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,16 +89,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     <link rel="stylesheet" href="Styles/styles.css">
     <link rel="stylesheet" href="Styles/evaluation.css">
 </head>
+
 <body>
     <div class="header">
         <h1>Evaluation Form</h1>
+        <div class="nav-item">
+            <a onclick="goBack()" class="return-button">
+                <!-- <img src="../frontend/assets/icons/return.svg" class="button-icon"> -->
+                Return
+            </a>
+        </div>
+        <script>
+            function goBack() {
+                window.history.back(); // Navigates to the previous page
+            }
+        </script>
+
     </div>
     <div class="container">
         <div class="card">
             <div class="progress-bar">
                 <div id="progressBar" class="progress"></div>
             </div>
-            
+
             <form id="evaluationForm" method="POST" onsubmit="return validateForm()">
                 <div id="questionContainer">
                     <div id="questionText" class="question-text"></div>
@@ -112,7 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                 <div class="navigation-buttons">
                     <button type="button" id="prevBtn" style="display:none;">Previous</button>
                     <button type="button" id="nextBtn">Next</button>
-                    <button type="submit" id="submitBtn" name="submit_responses" style="display:none;">Submit Evaluation</button>
+                    <button type="submit" id="submitBtn" name="submit_responses" style="display:none;">Submit
+                        Evaluation</button>
                 </div>
             </form>
         </div>
@@ -213,4 +228,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         window.addEventListener('load', initializeResponses);
     </script>
 </body>
+
 </html>
