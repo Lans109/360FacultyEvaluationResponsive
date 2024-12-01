@@ -13,25 +13,7 @@ $facultyId = isset($_GET['facultyId']) ? $_GET['facultyId'] : 0;
 if (isset($_GET['evaluation_period'])) {
     $period = $_GET['evaluation_period']; // Use the period from URL if set
 } else {
-    // If not set, get the period_id from the evaluation_periods table based on today's date
-    $today = date('Y-m-d'); // Get today's date in YYYY-MM-DD format
-
-    // Query to find the evaluation period that matches today's date
-    $period_query = "SELECT period_id 
-                     FROM evaluation_periods 
-                     WHERE '$today' BETWEEN start_date AND end_date 
-                     LIMIT 1"; // We limit to 1 since only one period should match today's date
-
-    $period_result = mysqli_query($con, $period_query);
-
-    if ($period_result && mysqli_num_rows($period_result) > 0) {
-        // Fetch the period_id from the result
-        $period_data = mysqli_fetch_assoc($period_result);
-        $period = $period_data['period_id']; // Assign the period_id
-    } else {
-        // Default to period 1 (or any fallback value) if no period is found
-        $period = 1;
-    }
+    $period = $_SESSION['period_id'];
 }
 
 // Query to fetch the semester and academic year for the selected period

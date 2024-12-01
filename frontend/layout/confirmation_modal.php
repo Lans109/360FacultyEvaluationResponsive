@@ -105,3 +105,31 @@
     </div>
 </div>
 
+<!-- Confirmation Modal for Starting New Evaluation  -->
+<div class="startNewEvaluationConfirmationModal" id="startNewEvaluationConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="startNewEvaluationConfirmationModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="text-content">
+                <div class="modal-header">
+                    <span class="close" id="closeStartEvaluationButton">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Close">
+                    </span>
+                </div>
+                <div class="modal-body">
+                    <img src="../../../frontend/assets/icons/danger.svg" alt="Warning">
+                    <h3>Are you sure?</h3>
+                    <p>
+                        You are about to start a new evaluation for this period. 
+                        Once started, the evaluation will be available to the designated participants. 
+                        This action cannot be undone, and you will no longer be able to return to the previous evaluation.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" id="cancelStartEvaluationButton" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="save-btn" id="confirmStartEvaluationButton">Yes, Start Evaluation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

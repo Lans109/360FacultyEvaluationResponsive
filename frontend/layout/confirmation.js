@@ -138,7 +138,52 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
   });
+
+
+
+  const startNewEvaluationForm = document.querySelector('form[id="startNewEvaluationForm"]');
+  const startNewEvaluationConfirmationModal = document.getElementById('startNewEvaluationConfirmationModal');
+  const addEvaluationModal = document.getElementById('addEvaluationModal');
+  const closeStartEvaluationButton = document.getElementById('closeStartEvaluationButton');
+  const cancelStartEvaluationButton = document.getElementById('cancelStartEvaluationButton');
+  const confirmStartEvaluationButton = document.getElementById('confirmStartEvaluationButton');
   
+  // Check if the form is found
+  if (startNewEvaluationForm) {
+    startNewEvaluationForm.addEventListener('submit', function (event) {
+      event.preventDefault();  // Stop the form from submitting immediately
+      addEvaluationModal.style.display = "none";  // Show the confirmation modal
+      startNewEvaluationConfirmationModal.style.display = "block";  // Show the confirmation modal
+    });
+  } else {
+    console.log('Form not found.');
+  }
+  
+  // Close modal functionality when clicking on the close button or cancel button
+  closeStartEvaluationButton.addEventListener('click', function () {
+    startNewEvaluationConfirmationModal.style.display = "none";  // Hide the modal
+    addEvaluationModal.style.display = "block";  // Show the confirmation modal
+
+  });
+  
+  cancelStartEvaluationButton.addEventListener('click', function () {
+    startNewEvaluationConfirmationModal.style.display = "none";  // Hide the modal
+    addEvaluationModal.style.display = "block";  // Show the confirmation modal
+  });
+  
+  // Action when the user confirms the evaluation start
+  confirmStartEvaluationButton.addEventListener('click', function () {
+    // Here, you can submit the form or trigger any other logic you need
+    startNewEvaluationForm.submit();  // Submitting the form after confirmation
+  
+    startNewEvaluationConfirmationModal.style.display = "none";  // Hide the modal
+  });
+
+
+
+
+
+
 
   // Close modals if the user clicks outside of them or on the cancel button
   window.addEventListener("click", function (event) {
@@ -161,7 +206,4 @@ document.addEventListener("DOMContentLoaded", function () {
       disseminateEvaluationConfirmationModal.style.display = "none"; // Hide the success modal
     } 
   });
-
-  // Expose the openDeleteConfirmationModal function for external use
-  window.openDeleteConfirmationModal = openDeleteConfirmationModal;
 });

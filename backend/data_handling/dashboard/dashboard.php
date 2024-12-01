@@ -31,7 +31,7 @@ if ($current_evaluation_result && mysqli_num_rows($current_evaluation_result) > 
     $upcoming_evaluation_query = "
         SELECT academic_year, semester, start_date, end_date
         FROM evaluation_periods 
-        WHERE start_date > '$current_date' 
+        WHERE start_date > '$current_date' AND is_completed = 0
         ORDER BY start_date ASC 
         LIMIT 1"; // Fetch the nearest future evaluation
 
@@ -44,27 +44,43 @@ if ($current_evaluation_result && mysqli_num_rows($current_evaluation_result) > 
     }
 }
 
-// Query to fetch the ID of the active evaluation period
+// Query to fetch the latest active evaluation period that is not completed
 $period_query = "
     SELECT academic_year, semester, status, period_id, start_date, end_date
     FROM evaluation_periods 
     WHERE 
-    start_date <= '$current_date' AND end_date >= '$current_date' 
-    LIMIT 1"; // Fetch the active evaluation for today
+        is_completed = 0
+    ORDER BY period_id ASC 
+    LIMIT 1"; // Fetch the latest active evaluation for today that is not completed
 
 $period_result = mysqli_query($con, $period_query);
 
-// Check if any evaluation exists for the current date
+// Check if any evaluation exists with is_completed = 0
 if ($period_result && mysqli_num_rows($period_result) > 0) {
     $period_data = mysqli_fetch_assoc($period_result);
 
     // Store the period ID in the session
     $_SESSION['period_id'] = $period_data['period_id'];
 } else {
-    // No active evaluation period, clear session or set default value
-    $_SESSION['period_id'] = null; // Or use a fallback like 0 if needed
-}
+    // If no evaluation is not completed, fetch the latest evaluation period
+    $latest_query = "
+        SELECT academic_year, semester, status, period_id, start_date, end_date
+        FROM evaluation_periods 
+        ORDER BY period_id DESC 
+        LIMIT 1"; // Fetch the latest evaluation period
 
+    $latest_result = mysqli_query($con, $latest_query);
+
+    if ($latest_result && mysqli_num_rows($latest_result) > 0) {
+        $latest_data = mysqli_fetch_assoc($latest_result);
+
+        // Store the period ID in the session
+        $_SESSION['period_id'] = $latest_data['period_id'];
+    } else {
+        // If no evaluation periods exist, set a fallback or clear session
+        $_SESSION['period_id'] = 0; // Or any default value
+    }
+}
 
 // Fetch totals
 $total_programs_query = "SELECT COUNT(*) AS total_programs FROM programs"; // Query for total programs
@@ -119,10 +135,12 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p class="card-text">Academic: <?php echo $current_evaluation_data['academic_year']; ?></p>
                             <p class="card-text">Semester: <?php echo $current_evaluation_data['semester']; ?></p>
                         </div>
+                        <!--
                         <div>
-                            <p class="card-text">Start Date: <?php echo $current_evaluation_data['start_date']; ?></p>
-                            <p class="card-text">End Date: <?php echo $current_evaluation_data['end_date']; ?></p>
+                            <p class="card-text">Start Date: <?php // echo $current_evaluation_data['start_date']; ?></p>
+                            <p class="card-text">End Date: <?php // echo $current_evaluation_data['end_date']; ?></p>
                         </div>
+                        -->
                     </div>
                 <?php elseif ($upcoming_evaluation_data): ?>
                     <h3 class="card-title">Upcoming Evaluation</h3>
@@ -131,10 +149,12 @@ $total_faculty = mysqli_fetch_assoc($total_faculty_result)['total_faculty'];
                             <p class="card-text">Academic Year: <?php echo $upcoming_evaluation_data['academic_year']; ?></p>
                             <p class="card-text">Semester: <?php echo $upcoming_evaluation_data['semester']; ?></p>
                         </div>
+                        <!--
                         <div>
-                            <p class="card-text">Start Date: <?php echo $upcoming_evaluation_data['start_date']; ?></p>
-                            <p class="card-text">End Date: <?php echo $upcoming_evaluation_data['end_date']; ?></p>
+                            <p class="card-text">Start Date: <?php // echo $upcoming_evaluation_data['start_date']; ?></p>
+                            <p class="card-text">End Date: <?php // echo $upcoming_evaluation_data['end_date']; ?></p>
                         </div>
+                        -->
                     </div>
                 <?php else: ?>
                     <div class="card-header">No Active or Upcoming Evaluation</div>

@@ -37,25 +37,38 @@ $search = $_SESSION['search'] ?? '';
 $department_filter = $_SESSION['department_filter'] ?? '';
 
 // Query to fetch all faculty members along with their department info and total courses
-$faculty_query = "
-SELECT 
-    f.phone_number, 
-    f.faculty_id, 
-    f.email, 
-    f.first_name, 
-    f.last_name, 
-    f.department_id, 
-    f.profile_image,
-    d.department_code, 
-    CONCAT(f.first_name, ' ', f.last_name) AS full_name,
-    COUNT(fc.course_section_id) AS total_courses
-FROM 
-    faculty f
-JOIN 
-    departments d ON f.department_id = d.department_id
-LEFT JOIN 
-    faculty_courses fc ON f.faculty_id = fc.faculty_id  -- Assuming this tracks courses taught by faculty
-";
+if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
+    $period_id = mysqli_real_escape_string($con, $_SESSION['period_id']); // Sanitize the input
+
+    $faculty_query = "
+        SELECT 
+            f.phone_number, 
+            f.faculty_id, 
+            f.email, 
+            f.first_name, 
+            f.last_name, 
+            f.department_id, 
+            f.profile_image,
+            d.department_code, 
+            CONCAT(f.first_name, ' ', f.last_name) AS full_name,
+            COUNT(cs.course_section_id) AS total_courses
+        FROM 
+            faculty f
+        JOIN 
+            departments d ON f.department_id = d.department_id
+        LEFT JOIN 
+            faculty_courses fc ON f.faculty_id = fc.faculty_id
+        LEFT JOIN 
+            course_sections cs ON fc.course_section_id = cs.course_section_id AND cs.period_id = '$period_id'
+    ";
+} else {
+    // Handle missing or invalid period_id
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid or missing period ID.';
+    header("Location: some_error_page.php");
+    exit();
+}
+
 
 // Apply search filter if the $search variable is set
 if (!empty($search)) {

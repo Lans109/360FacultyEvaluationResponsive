@@ -50,21 +50,33 @@ $faculty_result = mysqli_query($con, $faculty_query);
 $faculty = mysqli_fetch_assoc($faculty_result);
 
 // Fetch courses the faculty is assigned to along with course sections
-$courses_query = "
-SELECT 
-    cs.course_section_id, 
-    c.course_code, 
-    c.course_name, 
-    cs.section
-FROM 
-    course_sections cs
-JOIN 
-    courses c ON cs.course_id = c.course_id
-JOIN 
-    faculty_courses fc ON fc.course_section_id = cs.course_section_id
-WHERE
-    fc.faculty_id = '$faculty_id'
-";
+if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
+    $period_id = mysqli_real_escape_string($con, $_SESSION['period_id']); // Sanitize the input
+
+    $courses_query = "
+        SELECT 
+            cs.course_section_id, 
+            c.course_code, 
+            c.course_name, 
+            cs.section
+        FROM 
+            course_sections cs
+        JOIN 
+            courses c ON cs.course_id = c.course_id
+        JOIN 
+            faculty_courses fc ON fc.course_section_id = cs.course_section_id
+        WHERE
+            fc.faculty_id = '$faculty_id'
+            AND cs.period_id = '$period_id'  -- Filter by the session period_id
+    ";
+} else {
+    // Handle missing or invalid period_id
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid or missing period ID.';
+    header("Location: some_error_page.php");
+    exit();
+}
+
 
 $courses_result = mysqli_query($con, $courses_query);
 

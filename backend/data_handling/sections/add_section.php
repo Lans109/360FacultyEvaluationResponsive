@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Get the form data and sanitize it to prevent SQL injection
         $section = mysqli_real_escape_string($con, $_POST['section']);
         $course_id = mysqli_real_escape_string($con, $_POST['course_id']);
-        $period_id = 1; // Sample Period (can be dynamically set based on your logic)
+        $period_id = $_SESSION['period_id']; // Sample Period (can be dynamically set based on your logic)
 
         // Validate input to ensure all fields are filled
         if (empty($section) || empty($course_id)) {
