@@ -1,3 +1,4 @@
+
 const sidebar = document.getElementById("sidebar");
 
 function toggleSidebar() {
@@ -17,6 +18,24 @@ window.addEventListener("resize", () => {
 
 // Confirmation on Edits
 document.addEventListener("DOMContentLoaded", function () {
+
+  const jsConfetti = new JSConfetti()
+
+  window.addEventListener('load', () => {
+    jsConfetti.addConfetti({
+      confettiColors: [
+        "#923534",  // Base Maroon
+        "#C04747",  // Vibrant Red-Maroony
+        "#FF6868",  // Bright Coral Red
+        "#F2D3C4",  // Peach Beige
+        "#FFD27F",  // Warm Gold
+        "#FFB3B3"   // Playful Blush Pink
+      ],
+      confettiRadius: 6,
+      confettiNumber: 200,
+    })
+  })
+
   // Select all forms and dynamically assign event listeners
   const forms = document.querySelectorAll('form[id^="editForm"]'); // Select forms with IDs starting with "editForm"
 

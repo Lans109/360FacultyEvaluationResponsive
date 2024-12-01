@@ -93,6 +93,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                             </form>
                         </div>
                     </div>
+                    
                 </div>
                 <form action="generate_ranking.php" method="post">
                     <input type="hidden" value="<?= $selected_academic_year ?>" name="academic_year">
@@ -105,12 +106,17 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                 </form>
             </div>
             <div class="departments-wrapper">
-                <?php
+            <?php
                 // Initialize ranking HTML string
                 $ranking = '';
 
                 // Loop through each department
                 foreach ($faculty_list_by_department as $department_code => $faculty_list):
+                    // Sort the faculty list by score in descending order
+                    usort($faculty_list, function($a, $b) {
+                        return $b['score'] <=> $a['score']; // Compare scores in descending order
+                    });
+
                     $ranking .= '<div class="department-box">';
                     $ranking .= '<h3>' . htmlspecialchars($department_code) . ' Department</h3>';
                     $ranking .= '<div class="table">';
@@ -120,9 +126,10 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                                     <th class="metadata" width="20px">P.P</th>
                                     <th class="metadata">Faculty Name</th>
                                     <th class="metadata">Faculty id</th>
-                                    <th class="metadata" width="140px"># of Courses</th></th>
+                                    <th class="metadata" width="140px"># of Courses</th>
                                     <th class="metadata">AVG</th>
-                                    </thead>';
+                                    <th class="metadata">Score</th>
+                                </thead>';
                     $ranking .= '<tbody>';
 
                     // Check if faculty list is not empty
@@ -146,12 +153,14 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                             } else {
                                 $ranking .= '<td>' . $rank++ . '</td>'; // No icon for others
                             }
-                            $ranking .= '<td><img class="profile-icon" src="../../../' . htmlspecialchars($faculty['profile_image']) . '" alt="Profile Image"></td>';
 
+                            // Faculty profile and details
+                            $ranking .= '<td><img class="profile-icon" src="../../../' . htmlspecialchars($faculty['profile_image']) . '" alt="Profile Image"></td>';
                             $ranking .= '<td><a href="../results/faculty_summary.php?facultyId=' . htmlspecialchars($faculty['faculty_id']) - 1 . '&period=1">' . htmlspecialchars($faculty['faculty_name']) . '</a></td>';
                             $ranking .= '<td>' . htmlspecialchars($faculty['faculty_id']) . '</td>';
                             $ranking .= '<td>' . htmlspecialchars($faculty['total_courses']) . '</td>';
                             $ranking .= '<td><b>' . htmlspecialchars($faculty['AVG']) . '</b></td>';
+                            $ranking .= '<td><b>' . htmlspecialchars($faculty['score']) . '</b></td>';
                             $ranking .= '</tr>';
                         }
                     } else {
@@ -167,6 +176,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
                 // The $ranking variable now contains the entire HTML structure for the faculty list tables
                 ?>
 
+
                 <!-- You can print $ranking here for visual rendering in the browser -->
                 <?php echo $ranking; ?>
 
@@ -176,6 +186,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
     </main>
 
     <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
     <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

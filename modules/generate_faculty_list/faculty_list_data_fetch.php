@@ -119,23 +119,67 @@ foreach ($department_list as $department) {
     $faculty_list_by_department[$department] = [];
 }
 
+// Step 1: Fetch all faculty data into an array
+$faculty_data = [];
+$min_avg = INF; // To track minimum AVG
+$max_avg = -INF; // To track maximum AVG
+$min_courses = INF; // To track minimum total_courses
+$max_courses = -INF; // To track maximum total_courses
+
 if(mysqli_num_rows($results_faculty_list) > 0) {
     while($row_faculty = mysqli_fetch_assoc($results_faculty_list)) {
         $department_code = $row_faculty['department_code'];
-        
-        // Append each faculty to the correct department
-        $faculty_list_by_department[$department_code][] = [
+        $avg_rating = $row_faculty['weighted_avg_rating'];
+        $total_courses = $row_faculty['total_courses'];
+
+        // Track min and max values for AVG and total_courses
+        $min_avg = min($min_avg, $avg_rating);
+        $max_avg = max($max_avg, $avg_rating);
+        $min_courses = min($min_courses, $total_courses);
+        $max_courses = max($max_courses, $total_courses);
+
+        // Store faculty data for later processing
+        $faculty_data[] = [
             'faculty_name' => $row_faculty['faculty_name'],
-            'AVG' => ROUND($row_faculty['weighted_avg_rating'], 2),
-            'total_courses' => $row_faculty['total_courses'],
+            'AVG' => ROUND($avg_rating, 2),
+            'total_courses' => $total_courses,
             'profile_image' => $row_faculty['profile_image'],
             'faculty_id' => $row_faculty['faculty_id'],
+            'department_code' => $department_code
         ];
-
-        // Calculate Scaling Factor
-        $scaled_avg = $row_faculty['weighted_avg_rating']*$row_faculty['total_courses'];
     }
 }
+
+// Step 2: Normalize data and calculate rank score for each faculty
+foreach ($faculty_data as $faculty) {
+    // Min-Max Normalization for AVG rating
+    if ($max_avg != $min_avg) {
+        $normalized_avg = ($faculty['AVG'] - $min_avg) / ($max_avg - $min_avg);
+    } else {
+        $normalized_avg = 0; // If all AVG values are the same, set to 0
+    }
+
+    // Min-Max Normalization for total_courses
+    if ($max_courses != $min_courses) {
+        $normalized_courses = ($faculty['total_courses'] - $min_courses) / ($max_courses - $min_courses);
+    } else {
+        $normalized_courses = 0; // If all total_courses values are the same, set to 0
+    }
+
+    // Calculate average score as the sum of normalized AVG and normalized total_courses
+    $rank_score = ($normalized_avg + $normalized_courses) / 2;
+
+    // Append faculty data to the correct department and add the rank score
+    $faculty_list_by_department[$faculty['department_code']][] = [
+        'faculty_name' => $faculty['faculty_name'],
+        'AVG' => $faculty['AVG'],
+        'total_courses' => $faculty['total_courses'],
+        'profile_image' => $faculty['profile_image'],
+        'faculty_id' => $faculty['faculty_id'],
+        'score' => round($rank_score, 2) // Rounded to 2 decimal places
+    ];
+}
+
 
 
 ?>
