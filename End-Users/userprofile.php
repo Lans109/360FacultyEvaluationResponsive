@@ -257,7 +257,8 @@ $conn->close();
             <h1>About Me</h1>
             <div class="profile">
                 <!-- Display profile image and make it clickable -->
-                <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture" class="profile-pic"
+                <img src="<?php echo htmlspecialchars($profile_image); ?>" 
+                alt="Profile Picture" onerror="this.onerror=null; this.src='uploads/default_image.jpg';" class="profile-pic"
                     onclick="openModal()">
 
                 <!-- Display Full Name -->
