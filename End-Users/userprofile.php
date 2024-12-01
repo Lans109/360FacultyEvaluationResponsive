@@ -189,7 +189,7 @@ $conn->close();
     <?php include 'modals.php' ?>
     <script>
         // Show the logout modal
-        function showLogoutModal() {
+        function showLogoutModalProfile() {
             // Hide other modals (if any) before showing the logout modal
             var otherModals = document.querySelectorAll('.modal');
             otherModals.forEach(function (modal) {
@@ -197,21 +197,21 @@ $conn->close();
             });
 
             // Show the logout modal
-            document.getElementById('logoutModal').style.display = 'block';
+            document.getElementById('logoutModalProfile').style.display = 'block';
         }
 
         function closeModal() {
-            document.getElementById('logoutModal').style.display = 'none';
+            document.getElementById('logoutModalProfile').style.display = 'none';
         }
 
         // Redirect to logout page
         function logout() {
-            window.location.href = '../../logout.php'; // Redirect to logout page
+            window.location.href = '../logout.php'; // Redirect to logout page
         }
 
         // Close the modal when clicking outside of it
         window.onclick = function (event) {
-            var modal = document.getElementById('logoutModal');
+            var modal = document.getElementById('logoutModalProfile');
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
@@ -275,7 +275,7 @@ $conn->close();
                 }
 
                 // Logout link
-                echo '<a onclick="showLogoutModal()">
+                echo '<a onclick="showLogoutModalProfile()">
                 <img src="../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon">
                 <span class="nav-text">Logout</span>
               </a>';
