@@ -1,53 +1,78 @@
-<?php 
-
-include 'config.php';
-
-session_start();
-
-if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
-    $status = $_SESSION['status'];
-    $message = $_SESSION['message'];
-
-    // Output JavaScript to show an alert with the message
-    echo "<script type='text/javascript'>alert('$message');</script>";
-
-    // Clear session variables after displaying the message
-    unset($_SESSION['status']);
-    unset($_SESSION['message']);
-}
-
+<?php
+// login.php
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login</title>
-</head>
-    <link rel='stylesheet' href='frontend/templates/admin-style.css'>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<?php include 'frontend/layout/confirmation_modal.php'; ?>
+    <nav class="topnav">
+    </nav>
+    <link rel='stylesheet' href="/360FacultyEvaluationSystem/End-Users/Styles/index-style.css">
+    <title>Login - Faculty Evaluation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #800000;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            background: #600000;
+        }
+    </style>
+
 <body>
+    <div class="container">
+        <div class="wrapper">
+            <div class="login-box">
+                <div class="logo">
+                    <img src="/360FacultyEvaluationSystem/End-Users/LPU-LOGO.png" alt="LPU Logo">
+                </div>
 
-<div class="login-container">
-    <h2>Login</h2>
-    <form action="backend/validation.php" method="POST">
-        <div>
-            <label for="username_or_email">Username or Email</label>
-            <input type="text" id="username_or_email" name="username_or_email" required>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Login</button>
-    </form>
-</div>
-<script type="text/javascript" src="frontend/layout/app.js" defer></script>
+                <!-- Buttons for Role Selection -->
+                <!-- Buttons for Role Selection -->
+                <form method="get" action="">
+                    <button type="submit" name="role" value="student" class="btn">Login as Student</button>
+                    <button type="submit" name="role" value="faculty" class="btn">Login as Faculty</button>
+                    <button type="submit" name="role" value="program_chair" class="btn">Login as Program Chair</button>
+                </form>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <?php
+                // Handle role-based redirection
+                if (isset($_GET['role'])) {
+                    $role = $_GET['role'];
+
+                    // Check if the 'role' is set and redirect based on it
+                    if ($role == 'student') {
+                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/students_login.php");
+                        exit();
+                    } elseif ($role == 'faculty') {
+                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/faculty_login.php");
+                        exit();
+                    } elseif ($role == 'program_chair') {
+                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/program_chair_login.php");
+                        exit();
+                    } else {
+                        echo "<p class='error-message show'>Invalid role selected!</p>";
+                    }
+                }
+                ?>
+            </div>
+        </div>
+    </div>
 </body>
+
+
+
+</body>
+
 </html>
