@@ -1,3 +1,4 @@
+
 const sidebar = document.getElementById("sidebar");
 
 function toggleSidebar() {
@@ -17,6 +18,24 @@ window.addEventListener("resize", () => {
 
 // Confirmation on Edits
 document.addEventListener("DOMContentLoaded", function () {
+
+  const jsConfetti = new JSConfetti()
+
+  window.addEventListener('load', () => {
+    jsConfetti.addConfetti({
+      confettiColors: [
+        "#923534",  // Base Maroon
+        "#C04747",  // Vibrant Red-Maroony
+        "#FF6868",  // Bright Coral Red
+        "#F2D3C4",  // Peach Beige
+        "#FFD27F",  // Warm Gold
+        "#FFB3B3"   // Playful Blush Pink
+      ],
+      confettiRadius: 6,
+      confettiNumber: 200,
+    })
+  })
+
   // Select all forms and dynamically assign event listeners
   const forms = document.querySelectorAll('form[id^="editForm"]'); // Select forms with IDs starting with "editForm"
 
@@ -60,35 +79,75 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// COnfirmation on deletes
-let deleteHref = ""; // Variable to store the delete link dynamically
+window.addEventListener('load', function () {
+  // Hide the loader after the page has fully loaded
+  document.getElementById('loader').style.display = 'none';
+  document.getElementById('content-wrapper').style.display = 'block';
+});
 
-function openDeleteConfirmationModal(event, element) {
-  event.preventDefault(); // Prevent the default link behavior
-  deleteHref = element.getAttribute("href"); // Store the href of the clicked button
-  const deleteModal = document.getElementById("deleteConfirmationModal");
-  deleteModal.style.display = "block"; // Show the modal
+
+// Get the slider and input elements
+const studentSlider = document.getElementById('student_slider');
+const studentInput = document.getElementById('student_scoring');
+
+const chairSlider = document.getElementById('chair_slider');
+const chairInput = document.getElementById('chair_scoring');
+
+const peerSlider = document.getElementById('peer_slider');
+const peerInput = document.getElementById('peer_scoring');
+
+const selfSlider = document.getElementById('self_slider');
+const selfInput = document.getElementById('self_scoring');
+
+// Function to update the input value when the slider is changed
+function updateInputValue(slider, input) {
+    input.value = slider.value;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const deleteModal = document.getElementById("deleteConfirmationModal");
-  const confirmDeleteButton = document.getElementById("confirmDeleteButton");
-  const cancelDeleteButton = document.getElementById("cancelDeleteButton");
-
-  // Confirm deletion: Navigate to the stored href
-  confirmDeleteButton.addEventListener("click", function () {
-    window.location.href = deleteHref; // Redirect to the stored href
-  });
-
-  // Cancel deletion: Hide the modal
-  cancelDeleteButton.addEventListener("click", function () {
-    deleteModal.style.display = "none";
-  });
-
-  // Optional: Close modal when clicking outside the content
-  deleteModal.addEventListener("click", function (event) {
-    if (event.target === deleteModal) {
-      deleteModal.style.display = "none";
+// Function to update the slider value when the input is changed
+function updateSliderValue(input, slider) {
+    let value = parseInt(input.value, 10);
+    if (isNaN(value)) {
+        value = 0; // Default to 0 if the input is invalid
+    } else if (value < 0) {
+        value = 0; // Ensure the value is not below 0
+    } else if (value > 100) {
+        value = 100; // Ensure the value is not above 100
     }
-  });
+    slider.value = value;
+}
+
+// Event listeners for slider changes
+studentSlider.addEventListener('input', function () {
+    updateInputValue(studentSlider, studentInput);
 });
+
+chairSlider.addEventListener('input', function () {
+    updateInputValue(chairSlider, chairInput);
+});
+
+peerSlider.addEventListener('input', function () {
+    updateInputValue(peerSlider, peerInput);
+});
+
+selfSlider.addEventListener('input', function () {
+    updateInputValue(selfSlider, selfInput);
+});
+
+// Event listeners for input changes
+studentInput.addEventListener('input', function () {
+    updateSliderValue(studentInput, studentSlider);
+});
+
+chairInput.addEventListener('input', function () {
+    updateSliderValue(chairInput, chairSlider);
+});
+
+peerInput.addEventListener('input', function () {
+    updateSliderValue(peerInput, peerSlider);
+});
+
+selfInput.addEventListener('input', function () {
+    updateSliderValue(selfInput, selfSlider);
+});
+

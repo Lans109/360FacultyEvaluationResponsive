@@ -1,13 +1,31 @@
 <?php
+// Include configuration and database connection
 include_once "../../../config.php";
-// Include database connection
-include '../../db/dbconnect.php';
+include ROOT_PATH . '/backend/db/dbconnect.php';
 
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Pragma: no-cache");
-header("Expires: 0");
+// Authentication check
+include '../authentication.php';
+
 // Get the student_id from the URL
 $student_id = isset($_GET['student_id']) ? mysqli_real_escape_string($con, $_GET['student_id']) : '';
+
+// Generate a CSRF token if one doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a random token
+}
+
+// Display Status Messages if any
+if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+    $status = $_SESSION['status'];
+    $message = $_SESSION['message'];
+
+    // Include status handling layout for displaying the message
+    include '../../../frontend/layout/status_handling.php';
+
+    // Clear session variables after displaying the message
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+}
 
 // Fetch student details
 $student_query = "
@@ -32,26 +50,37 @@ $student_result = mysqli_query($con, $student_query);
 $student = mysqli_fetch_assoc($student_result);
 
 // Fetch courses the student is enrolled in along with course sections
-// Fetch courses the student is enrolled in along with course sections
-$courses_query = "
-    SELECT 
-        c.course_code, 
-        c.course_name,
-        cs.course_section_id,
-        cs.section,
-        COALESCE(CONCAT(f.first_name, ' ', f.last_name), 'No Faculty Assigned') AS faculty
-    FROM 
-        courses c
-    JOIN 
-        course_sections cs ON cs.course_id = c.course_id
-    LEFT JOIN
-        faculty_courses fc ON fc.course_section_id = cs.course_section_id
-    LEFT JOIN
-        faculty f ON f.faculty_id = fc.faculty_id
-    JOIN
-        student_courses sc ON sc.course_section_id = cs.course_section_id
-    WHERE
-        sc.student_id = '$student_id'";
+if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
+    $period_id = mysqli_real_escape_string($con, $_SESSION['period_id']); // Sanitize the input
+
+    $courses_query = "
+        SELECT 
+            c.course_code, 
+            c.course_name,
+            cs.course_section_id,
+            cs.section,
+            COALESCE(CONCAT(f.first_name, ' ', f.last_name), 'No Faculty Assigned') AS faculty
+        FROM 
+            courses c
+        JOIN 
+            course_sections cs ON cs.course_id = c.course_id
+        LEFT JOIN
+            faculty_courses fc ON fc.course_section_id = cs.course_section_id
+        LEFT JOIN
+            faculty f ON f.faculty_id = fc.faculty_id
+        JOIN
+            student_courses sc ON sc.course_section_id = cs.course_section_id
+        WHERE
+            sc.student_id = '$student_id'
+            AND cs.period_id = '$period_id'  -- Filter by the session period_id
+    ";
+} else {
+    // Handle missing or invalid period_id
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid or missing period ID.';
+    header("Location: some_error_page.php");
+    exit();
+}
 
 $courses_result = mysqli_query($con, $courses_query);
 
@@ -94,108 +123,128 @@ $available_courses_result = mysqli_query($con, $available_courses_query);
 </head>
 
 <body>
-
+    <div id="loader" class="loader"></div>
     <?php include '../../../frontend/layout/navbar.php'; ?>
     <?php include '../../../frontend/layout/sidebar.php'; ?>
     <?php include '../../../frontend/layout/confirmation_modal.php'; ?>
-    
+
     <main>
         <div class="upperMain">
-            <div><h1>Student Profile</h1></div>
+            <div>
+                <h1>Student Profile</h1>
+            </div>
         </div>
         <div class="content">
             <div class="student-profile">
                 <div class="profile-info">
-                <img class="profile-image" src="../../../<?= $student['profile_image'] ?>">
+                    <img class="profile-image" src="../../../<?= $student['profile_image'] ?>">
                     <div class="student-info">
                         <h3><?php echo $student['first_name'] . " " . $student['last_name']; ?></h3>
-                        <div><img class="icon" src="../../../frontend/assets/icons/message.svg"><p><?php echo $student['email']; ?></p></div>
-                        <div><img class="icon" src="../../../frontend/assets/icons/call.svg"><p><?php echo $student['phone_number']; ?></p></div>
-                        <div><img class="icon" src="../../../frontend/assets/icons/course.svg"><p><?php echo $student['program_name']; ?> - <?php echo $student['program_code']; ?></p></div>
+                        <div><img class="icon" src="../../../frontend/assets/icons/message.svg">
+                            <p><?php echo $student['email']; ?></p>
+                        </div>
+                        <div><img class="icon" src="../../../frontend/assets/icons/call.svg">
+                            <p><?php echo $student['phone_number']; ?></p>
+                        </div>
+                        <div><img class="icon" src="../../../frontend/assets/icons/course.svg">
+                            <p><?php echo $student['program_name']; ?> - <?php echo $student['program_code']; ?></p>
+                        </div>
                         <div>
-                            <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal" data-target="#addModal">
+                            <button id="openModalBtn-add-course" class="add-btn" data-toggle="modal"
+                                data-target="#addModal">
                                 <img src="../../../frontend/assets/icons/add.svg">&nbsp;Enroll Course&nbsp;
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            
-        <div class="table">  
-    <table>
-        <thead>
-            <tr>
-                <th width="100px">Section</th>
-                <th width="150px">Course Code</th>
-                <th>Course Name</th>
-                <th>Faculty</th>
-                <th width="100px">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (mysqli_num_rows($courses_result) > 0): ?>
-                <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
-                    <tr>
-                        <td><?php echo $course['section']; ?></td>
-                        <td><?php echo $course['course_code']; ?></td>
-                        <td><?php echo $course['course_name']; ?></td>
-                        <td><?php echo $course['faculty']; ?></td>
-                        <td>
-                            <div class="action-btns">
-                                <a href="delete_student_course.php?student_id=<?php echo $student_id; ?>&course_section_id=<?php echo $course['course_section_id']; ?>" 
-                                onclick="openDeleteConfirmationModal(event, this)"
-                                class="delete-btn">
-                                    <img src="../../../frontend/assets/icons/delete.svg">
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="5">No courses enrolled yet.</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="100px">Section</th>
+                            <th width="150px">Course Code</th>
+                            <th>Course Name</th>
+                            <th>Faculty</th>
+                            <th width="100px">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (mysqli_num_rows($courses_result) > 0): ?>
+                            <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
+                                <tr>
+                                    <td><?php echo $course['section']; ?></td>
+                                    <td><?php echo $course['course_code']; ?></td>
+                                    <td><?php echo $course['course_name']; ?></td>
+                                    <td><?php echo $course['faculty']; ?></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <form name="deleteForm" action="delete_student_course.php" method="POST">
+                                                <!-- Hidden input to pass the course_id -->
+                                                <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
+                                                <input type="hidden" name="course_section_id"
+                                                    value="<?php echo $course['course_section_id']; ?>">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <!-- Submit button for deleting the course -->
+                                                <button type="submit" class="delete-btn">
+                                                    <img src="../../../frontend/assets/icons/delete.svg" alt="Delete Icon">
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5">No courses enrolled yet.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
     </main>
     <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addCourseLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCourseLabel">Add Course</h5>
-                <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
-            </div>
-            <form method="POST" action="add_student_coruse.php">
-                <input type="hidden" name="student_id" value="<?= $student_id ?>">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="course_section_id">Available Courses</label>
-                        <select name="course_section_id" class="form-control" required>
-                            <option value="">Select Course</option>
-                            <?php
-                            // Loop through available courses
-                            while ($course = mysqli_fetch_assoc($available_courses_result)): ?>
-                                <option value="<?php echo $course['course_section_id']; ?>">
-                                    <?php echo $course['course_code'] . " - " . $course['course_name'] . " (Section: " . $course['section'] . ")"; ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCourseLabel">Add Course</h5>
+                    <span class="close" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="../../../frontend/assets/icons/close2.svg" alt="Delete">
+                    </span>
+                </div>
+                <form method="POST" action="add_student_coruse.php">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="student_id" value="<?= $student_id ?>">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="course_section_id">Available Courses</label>
+                            <select name="course_section_id" class="form-control" required>
+                                <option value="">Select Course</option>
+                                <?php
+                                // Loop through available courses
+                                while ($course = mysqli_fetch_assoc($available_courses_result)): ?>
+                                    <option value="<?php echo $course['course_section_id']; ?>">
+                                        <?php echo $course['course_code'] . " - " . $course['course_name'] . " (Section: " . $course['section'] . ")"; ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-                    <button type="submit" class="save-btn">Enroll Course</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                        <button type="submit" name="submit" class="save-btn">Enroll Course</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></body>
+    <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 
 </html>

@@ -18,6 +18,10 @@ if ($resultPeriod->num_rows > 0) {
     while ($row = $resultPeriod->fetch_assoc()) {
         $academicYear = $row['academic_year'];
         $semester = $row['semester'];
+        $student_scoring = $row['student_scoring'];
+        $chair_scoring = $row['chair_scoring'];
+        $peer_scoring = $row['peer_scoring'];
+        $self_scoring = $row['self_scoring'];
     }
 }
 
@@ -68,8 +72,8 @@ function generateFacultyCourseEvaluation($facultyData, $facultyNo, $role, $perio
                         }
                     }
 
-                    $overallAverage = ($questionCount > 0) ? ($totalAvg / $questionCount) : 0;
-                    $facultyCourses .= "<td class='avg' style='border-left: 2px solid #D3D3D3;'>" . round($overallAverage, 2) . "</td></tr>";
+                    $overallAverage = ($questionCount > 0) ? ROUND(($totalAvg / $questionCount), 3) : '-';
+                    $facultyCourses .= "<td class='avg' style='border-left: 2px solid #D3D3D3;'>" . $overallAverage . "</td></tr>";
 
                     $avgResults[] = [
                         'course_code' => $course['course_code'],
@@ -121,12 +125,21 @@ function generateFacultyCourseEvaluation($facultyData, $facultyNo, $role, $perio
     $avgCount = 0;
 
     foreach ($avgResults as $result) {
-        $results .= "<tr><td>" . htmlspecialchars($result['course_code']) . "</td><td align='center'>" . round($result['average'], 2) . "</td></tr>";
-        $studentFinal += $result['average'];
-        $avgCount++;
+        $average = $result['average'];
+        
+        // Display the result
+        $results .= "<tr><td>" . htmlspecialchars($result['course_code']) . "</td><td align='center'>" . 
+                    (is_numeric($average) ? $average : '-') . 
+                    "</td></tr>";
+        
+        // Only include numeric averages in the final calculation
+        if (is_numeric($average)) {
+            $studentFinal += $average;
+            $avgCount++;
+        }
     }
 
-    $finalResults = ($avgCount > 0) ? round($studentFinal / $avgCount, 2) : 0;
+    $finalResults = ($avgCount > 0) ? round($studentFinal / $avgCount, 2) : '-';
 
     return [
         'facultyCourses' => $facultyCourses,
@@ -174,13 +187,13 @@ $finalResultsSelf = $evaluationDataSelf['finalResults'];
 $avgResultsSelf = $evaluationDataSelf['avgResults'];
 $legendSelf = $evaluationDataSelf['legend'];
 
-//Arrays for graph generation ----------------------------------------------------------------------------------------------------
 $array_graph_overall = [
-    ['Student', $finalResultsStudent],
-    ['Faculty', $finalResultsFaculty],
-    ['Self', $finalResultsSelf],
-    ['Chair/Dean', $finalResultsChair],
+    ['Student', $finalResultsStudent === '-' ? 0 : $finalResultsStudent],
+    ['Faculty', $finalResultsFaculty === '-' ? 0 : $finalResultsFaculty],
+    ['Self', $finalResultsSelf === '-' ? 0 : $finalResultsSelf],
+    ['Chair/Dean', $finalResultsChair === '-' ? 0 : $finalResultsChair],
 ];
+
 function array_results($result) {
     return [$result['course_code'] . ' - ' . $result['section'], (float)$result['average']];
 }
@@ -201,10 +214,10 @@ if (empty($avgResultsStudent) || empty($avgResultsFaculty) || empty($avgResultsS
 
         $array_graph_combined[] = [
             $studentResult['course_code'] . ' - ' . $studentResult['section'],
-            (float)$studentResult['average'],
-            (float)$facultyResult['average'],
-            (float)$chairResult['average'],
-            (float)$selfResult['average']
+            round((float)$studentResult['average'], 2),
+            round((float)$facultyResult['average'], 2),
+            round((float)$chairResult['average'], 2),
+            round((float)$selfResult['average'], 2)
         ];
     }
 }
@@ -218,10 +231,7 @@ array_unshift($array_graph_overall, $header);
 array_unshift($array_graph_combined, $header_combined);
 
 
-//---------------------------------------------------------------------------------------------------------------------------------
 
-
-//Final Result Generation --------------------------------------------------------------------------------------------------------
 $overallResult = [
     'Student' => $finalResultsStudent,
     'Faculty' => $finalResultsFaculty,
@@ -233,42 +243,76 @@ $finalOverall = '';
 $overallTotal = 0;
 
 $weights = [
-    'Student' => 0.5,
-    'Faculty' => 0.05,
-    'Self' => 0.05,
-    'Chair/Dean' => 0.4,
+    'Student' => ($student_scoring/100),
+    'Faculty' => ($peer_scoring/100),
+    'Self' => ($self_scoring/100),
+    'Chair/Dean' => ($chair_scoring/100),
 ];
 
 foreach ($overallResult as $evaluator => $average) {
-    if (array_key_exists($evaluator, $weights)) {
-        $percentage = $weights[$evaluator] * 100;
+    // Determine the weight and percentage
+    $percentage = isset($weights[$evaluator]) ? $weights[$evaluator] * 100 : 0;
+
+    // Handle empty averages by skipping calculation and displaying '-'
+    if (is_numeric($average)) {
+        $weightedTotal = $average * (isset($weights[$evaluator]) ? $weights[$evaluator] : 0);
+        $overallTotal += $weightedTotal;
     } else {
-        $percentage = 0;
+        $weightedTotal = '-'; // Display '-' if the average is not numeric
     }
 
-    $weightedTotal = $average * (isset($weights[$evaluator]) ? $weights[$evaluator] : 0); 
-
+    // Append to finalOverall
     $finalOverall .= "<tr>
                         <td>" . htmlspecialchars($evaluator) . "</td>
-                        <td>" . htmlspecialchars($average) . "</td>
+                        <td>" . (is_numeric($average) ? htmlspecialchars(round($average, 2)) : '-') . "</td>
                         <td>" . htmlspecialchars($percentage) . "%</td>
-                        <td>" . htmlspecialchars($weightedTotal) . "</td>
+                        <td>" . (is_numeric($weightedTotal) ? htmlspecialchars(round($weightedTotal, 2)) : '-') . "</td>
                     </tr>";
-    $overallTotal += $weightedTotal;
 }
-//------------------------------------------------------------------------------------------------------------------------------
+
+$sql_comment = "SELECT 
+            se.comments
+        FROM 
+            students_evaluations se
+        JOIN
+            evaluations e ON e.evaluation_id = se.evaluation_id
+        JOIN
+            course_sections cs ON cs.course_section_id = e.course_section_id
+        JOIN
+            faculty_courses fc ON fc.course_section_id = cs.course_section_id
+        JOIN
+            faculty f ON f.faculty_id = fc.faculty_id
+        WHERE 
+            f.faculty_id = ($facultyId+1)
+            AND comments IS NOT NULL 
+            AND TRIM(comments) != ''
+            AND e.period_id = $period
+        ORDER BY 
+            se.date_evaluated ASC";
+
+$result_comment = mysqli_query($con, $sql_comment);
 
 
-$columns = 2; // Number of columns per row
+$comments = [];
+if (mysqli_num_rows($result_comment) > 0) {
+    while ($row = mysqli_fetch_assoc($result_comment)) {
+        $comments[] = $row["comments"];
+    }
+}
+
+// Generate HTML for displaying comments with pagination after every 30 rows
+$page = 1;
+$maxPage = ceil((count($comments)/30));
 $showComments = '<div class="page-break"></div>
                 <span class="evalbody">
-                    <h5 style="margin-bottom: 10px;">**Student Comments/Suggestions**</h5>
+                    <h5 style="margin-bottom: 10px;">**Student Comments/Suggestions | Page ' . $page . '/' . $maxPage . ' |**</h5>
                         <div>
                             <table class="comments">';
 
 for ($i = 0; $i < count($comments); $i++) {
     // Add page break every 30 rows
     if ($i > 0 && $i % 30 === 0) {
+        $page++;
         $showComments .= '
                             </table>
                         </div>
@@ -277,30 +321,15 @@ for ($i = 0; $i < count($comments); $i++) {
                     <div class="page-break"></div>
 
                 <span class="evalbody">
-                    <h5 style="margin-bottom: 10px;">**Student Comments/Suggestions**</h5>
+                    <h5 style="margin-bottom: 10px;">**Student Comments/Suggestions | Page ' . $page . '/' . $maxPage . ' |**</h5>
                         <div>
                             <table class="comments">';
     }
-    
-    // Start a new row for every set of columns
-    if ($i % $columns == 0) {
-        $showComments .= '<tr>';
-    }
 
-    // Output each comment in a cell
-    $showComments .= '<td style="vertical-align: top; width: ' . (100 / $columns) . '%;">';
+    // Output each comment in a single row
+    $showComments .= '<tr><td style="vertical-align: top;">';
     $showComments .= htmlspecialchars($comments[$i] ?? '');
-    $showComments .= '</td>';
-
-    // Close the row after the last column
-    if (($i + 1) % $columns == 0) {
-        $showComments .= '</tr>';
-    }
-}
-
-// Close the last row if it’s not completely filled
-if (count($comments) % $columns != 0) {
-    $showComments .= '</tr>';
+    $showComments .= '</td></tr>';
 }
 
 $showComments .= '</table>';

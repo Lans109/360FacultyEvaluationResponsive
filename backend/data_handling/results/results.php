@@ -1,7 +1,10 @@
 <?php
-// Include database connection
+// Include configuration and database connection
 include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
+
+// Authentication check
+include '../authentication.php';
 
 // Fetch departments for filtering
 $departmentQuery = "SELECT department_id, department_name FROM departments";
@@ -59,6 +62,7 @@ $num_rows = mysqli_num_rows($facultyResult);
 
 <body>
     <?php include ROOT_PATH . '/frontend/layout/sidebar.php'; ?>
+    <div id="loader" class="loader"></div>
     <main>
         <div class="upperMain">
             <div><h1>Faculty Results</h1></div>
@@ -134,7 +138,7 @@ $num_rows = mysqli_num_rows($facultyResult);
                                         <td><?php echo htmlspecialchars($row['department_name']); ?></td>
                                         <td>
                                             <!--test-->
-                                            <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>&period=1" class="view-btn">
+                                            <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>" class="view-btn">
                                                 View Results
                                             </a>
                                         </td>   
@@ -154,5 +158,10 @@ $num_rows = mysqli_num_rows($facultyResult);
 </body>
 <!-- for sidebar button -->
 <script type="text/javascript" src="../../../frontend/layout/app.js" defer></script>
-
+<script>
+    window.addEventListener('load', function () {
+    // Hide the loader after the page has fully loaded
+    document.getElementById('loader').style.display = 'none';
+});
+</script>
 </html>

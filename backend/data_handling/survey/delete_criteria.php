@@ -1,37 +1,62 @@
 <?php
-// Include database connection
+// Include the database connection file
 include_once "../../../config.php";
 include ROOT_PATH . '/backend/db/dbconnect.php';
 
-// Check if criteria_id is set
-if (isset($_POST['criteria_id'])) {
-    $criteria_id = $_POST['criteria_id'];
+// Authentication check
+include '../authentication.php';
 
-    // Prepare and execute the delete query
-    $delete_query = "DELETE FROM questions_criteria WHERE criteria_id = ?";
-    $stmt = mysqli_prepare($con, $delete_query);
-    
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, 'i', $criteria_id);
-        $result = mysqli_stmt_execute($stmt);
-        
-        if ($result) {
-            // Redirect back to the question management page with success message
-            header("Location: survey.php?message=Criteria+deleted+successfully");
+// Check if the form is submitted via POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate if criteria_id, survey_id, and csrf_token are not empty
+    if (!empty($_POST['criteria_id']) && !empty($_POST['survey_id']) && !empty($_POST['csrf_token'])) {
+        $criteria_id = mysqli_real_escape_string($con, $_POST['criteria_id']);
+        $survey_id = mysqli_real_escape_string($con, $_POST['survey_id']);
+        $csrf_token = $_POST['csrf_token'];
+
+        // CSRF Token validation (ensure the token matches the session one)
+        if ($csrf_token === $_SESSION['csrf_token']) {
+
+            // Unset the CSRF token after validation
+            unset($_SESSION['csrf_token']);
+
+            // Prepare the delete query
+            $delete_query = "DELETE FROM questions_criteria WHERE criteria_id = '$criteria_id'";
+
+            // Execute the delete query
+            if (mysqli_query($con, $delete_query)) {
+                // If successful, set session variables for success message
+                $_SESSION['status'] = 'success';
+                $_SESSION['message'] = 'Criteria deleted successfully!';
+                header("Location: view_survey.php?survey_id=$survey_id");
+                exit();
+            } else {
+                // Log the error and show a user-friendly message
+                error_log("Database Error: " . mysqli_error($con));
+                $_SESSION['status'] = 'error';
+                $_SESSION['message'] = 'Error deleting criteria. Please try again later.';
+                header("Location: view_survey.php?survey_id=$survey_id");
+                exit();
+            }
         } else {
-            // Redirect back with error message
-            header("Location: survey.php?message=Error+deleting+criteria");
+            // If CSRF token doesn't match, set error message
+            $_SESSION['status'] = 'error';
+            $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
+            header("Location: view_survey.php?survey_id=$survey_id");
+            exit();
         }
-
-        mysqli_stmt_close($stmt);
     } else {
-        // Redirect back with error message
-        header("Location: survey.php?message=Error+preparing+delete+query");
+        // If any required parameter is empty, set error message
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Invalid request. Please try again.';
+        header("Location: view_survey.php?survey_id=$survey_id");
+        exit();
     }
-
-    mysqli_close($con);
 } else {
-    // Redirect back if criteria_id is not provided
-    header("Location: survey.php?message=No+criteria+id+provided");
+    // Redirect back if the request method is not POST
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid request method. Please try again.';
+    header("Location: view_survey.php?survey_id=$survey_id");
+    exit();
 }
 ?>

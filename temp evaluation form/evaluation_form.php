@@ -40,7 +40,17 @@ if ($resultCourses->num_rows > 0) {
 
 // Fetch questions for the selected survey
 $questions = [];
-$sqlQuestions = "SELECT question_id, question_code, question_text FROM questions WHERE survey_id = ?";
+$sqlQuestions = "
+    SELECT 
+        q.question_id, 
+        q.question_code, 
+        q.question_text 
+    FROM 
+        questions q
+    JOIN 
+        questions_criteria qc ON q.criteria_id = qc.criteria_id
+    WHERE 
+        qc.survey_id = ?";  // Update to use qc.survey_id
 $stmt = $con->prepare($sqlQuestions);
 $stmt->bind_param("i", $survey_id);
 $stmt->execute();
@@ -96,7 +106,7 @@ if ($resultQuestions->num_rows > 0) {
         display: block;
     }
 
-    select, input[type="submit"] {
+    select, input[type="submit"], textarea {
         padding: 8px;
         font-size: 1rem;
         border: 1px solid #ccc;
@@ -106,7 +116,7 @@ if ($resultQuestions->num_rows > 0) {
         box-sizing: border-box;
     }
 
-    select:focus, input[type="submit"]:focus {
+    select:focus, input[type="submit"]:focus, textarea:focus {
         border-color: #0066cc;
     }
 
@@ -160,6 +170,12 @@ if ($resultQuestions->num_rows > 0) {
         gap: 10px;
     }
 
+    .comment-box {
+        width: 100%;
+        height: 80px;
+        resize: vertical;
+    }
+
     /* Prevent text overflow and make the form fit within the page */
     .container {
         max-height: 90vh;
@@ -200,6 +216,9 @@ if ($resultQuestions->num_rows > 0) {
             echo '</div>';
         }
         ?>
+
+        <label for="survey_comment">Additional Comments for the Survey:</label>
+        <textarea name="survey_comment" id="survey_comment" class="comment-box"></textarea>
         
         <input type="submit" value="Submit Evaluation">
     </form>

@@ -25,70 +25,74 @@
             ]);
 
             const options = {
-                backgroundColor: 'transparent',
-                title: header,
-                colors: ['#923534'], // Updated colors
-                fontName: 'myFont2', // Custom font name
-                fontSize: 14,
-                titleTextStyle: {
-                    fontSize: 15,   // Adjust font size of the header title
-                    color: '#666', // Change the color of the title header
-                },
-                hAxis: {
-                    title: '', // Remove title from x-axis
-                    titleTextStyle: { fontSize: 15, color: '#666' },
-                    textStyle: { fontSize: 15, color: '#ddd' },
-                    gridlines: {
-                        count: 5 // Limits horizontal gridlines to 5
-                    },
-                    slantedTextAngle: 45, // Angle of the rotated text
-                    titlePosition: 'out' // Position the title outside the chart area
-                },
-                
-                vAxis: {
-                    title: '', // Remove title from y-axis
-                    titleTextStyle: { fontSize: 16, color: '#666' },
-                    textStyle: { fontSize: 12, color: '#ddd' },
-                    gridlines: {
-                        color: '#ddd',
-                        count: 5 // Limits vertical gridlines to 5
-                    },
-                    minValue: 0,
-                    maxValue: <?php echo json_encode($total_students); ?>,
-                    format: '0',
-                    titlePosition: 'out' // Position the title outside the chart area
-                },
-                legend: {
-                    position: 'none' // Hides the legend completely
-                },
-                chartArea: {
-                    left: 20,
-                    top: 50,
-                    right: 0,
-                    bottom: 50,
-                    width: '100%',
-                    height: '100%'
-                },
-                curveType: 'function', // Enable smooth curves
-                bar: { 
-                    groupWidth: '50%' 
-                },
-                tooltip: {isHtml: true},
-                animation: {
-                    duration: 1000,
-                    easing: 'inAndOut'
-                }
-            };
+    backgroundColor: 'transparent',
+    title: header,
+    titleTextStyle: {
+        fontSize: 15,   // Adjust font size of the header title
+        color: '#666',  // Change the color of the title header
+        bold: true,     // Make the title bold
+        italic: false,  // Disable italics
+    },
+    colors: [
+        '#923534', // Maroon (primary color)
+        '#b2493b', // Reddish-brown (complementary to maroon)
+        '#ff8c42', // Soft amber (to add warmth and contrast)
+        '#4a3f35', // Dark brown (for depth and grounding)
+        '#ffb6b6', // Soft blush pink (light and subtle)
+        '#2c3e50', // Dark blue-gray (providing contrast)
+        '#e1c8b1', // Beige (soft neutral to balance boldness)
+    ],
+    fontName: 'myFont2', // Custom font name
+    fontSize: 14,
+    hAxis: {
+        title: '', // Remove title from x-axis
+        titleTextStyle: { fontSize: 15, color: '#666', bold: true },
+        textStyle: { fontSize: 15, color: '#ddd' },
+        gridlines: {
+            color: '#e0e0e0',
+            count: 5 // Limits horizontal gridlines to 5
+        },
+        textPosition: 'out', // Position axis labels outside the chart
+    },
+    vAxis: {
+        title: '', // Remove title from y-axis
+        titleTextStyle: { fontSize: 16, color: '#666', bold: true },
+        textStyle: { fontSize: 12, color: '#ddd' },
+        gridlines: {
+            color: '#ddd', // Gridline color
+            count: 5 // Limits vertical gridlines to 5
+        },
+        format: '0', // Format y-axis labels as integers
+    },
+    chartArea: {
+        left: 50, // Adjust padding and margins
+        top: 50,
+        right: 20,
+        bottom: 50,
+        width: '90%', // Adjust chart area width
+        height: '80%' // Adjust chart area height
+    },
+    curveType: 'function', // Enable smooth curves
+    tooltip: { isHtml: true }, // HTML tooltips
+    animation: {
+        duration: 1000, // Smooth animation duration
+        easing: 'inAndOut' // Easing effect
+    },
+    focusTarget: 'category', // Highlight category on hover
+    enableInteractivity: true, // Allow interaction
+    annotations: {
+        textStyle: { fontSize: 12, color: '#444', bold: true }, // Annotation text style
+        alwaysOutside: true, // Place annotations outside
+    },
+    legend: { 
+        position: 'none' // Hides the legend completely
+    }
+};
+
 
             const chart = new google.visualization.LineChart(document.getElementById(chartName));
             chart.draw(data, options);
         }
-
-
-
-
-
-
 
         google.charts.setOnLoadCallback(drawChart);
 
@@ -96,8 +100,8 @@
             // Set Data
             const data = google.visualization.arrayToDataTable([
                 ['Status', 'Percentage'],
-                ['Evaluated', <?php echo json_encode($total_evaluated); ?>],
-                ['Not Evaluated', <?php echo json_encode($total_not_evaluated); ?>],
+                ['Evaluated', <?php echo json_encode($students_completed); ?>],
+                ['Not Evaluated', <?php echo json_encode($students_not_completed); ?>],
             ]);
 
             // Set Options
