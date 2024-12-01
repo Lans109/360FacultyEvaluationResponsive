@@ -1,25 +1,63 @@
+<?php include '../modals.php' ?>
 <nav>
     <div class="nav-items">
         <a href="faculty_dashboard.php">
-            <img src="../../frontend/assets/icons/course.svg" alt="Course" class="nav-icon"> <!-- Image for small screen -->
+            <img src="../../frontend/assets/icons/course.svg" alt="Course" class="nav-icon">
+            <!-- Image for small screen -->
             <span class="nav-text">Courses</span> <!-- Text for larger screens -->
         </a>
         <a href="../userprofile.php">
-            <img src="../../frontend/assets/icons/account.svg" alt="Profile" class="nav-icon"> <!-- Image for small screen -->
+            <img src="../../frontend/assets/icons/account.svg" alt="Profile" class="nav-icon">
+            <!-- Image for small screen -->
             <span class="nav-text">Profile</span> <!-- Text for larger screens -->
         </a>
         <a href="faculty_evaluation.php">
-            <img src="../../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon"> <!-- Image for small screen -->
+            <img src="../../frontend/assets/icons/evaluation.svg" alt="Evaluate" class="nav-icon">
+            <!-- Image for small screen -->
             <span class="nav-text">Evaluate</span> <!-- Text for larger screens -->
         </a>
-        <a href="../../logout.php" onclick="return confirm('Are you sure you want to logout?')">
-            <img src="../../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon"> <!-- Image for small screen -->
+        <a onclick="showLogoutModal()">
+            <img src="../../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon">
+            <!-- Image for small screen -->
             <span class="nav-text">Logout</span> <!-- Text for larger screens -->
         </a>
         <span class="active-indicator"></span>
     </div>
 </nav>
 
+<!-- logout script -->
+<script>
+    // Show the logout modal
+    function showLogoutModal() {
+        // Hide other modals (if any) before showing the logout modal
+        var otherModals = document.querySelectorAll('.modal');
+        otherModals.forEach(function(modal) {
+            modal.style.display = 'none';
+        });
+
+        // Show the logout modal
+        document.getElementById('logoutModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('logoutModal').style.display = 'none';
+    }
+
+    // Redirect to logout page
+    function logout() {
+        window.location.href = '../../logout.php'; // Redirect to logout page
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        var modal = document.getElementById('logoutModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
+<!-- script for active -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const links = document.querySelectorAll('.nav-items a');

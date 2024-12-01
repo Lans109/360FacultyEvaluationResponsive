@@ -153,6 +153,8 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="Styles/styles.css">
+
+    <!-- changing pfp -->
     <script>
         // Display success or error message in a popup
         window.onload = function () {
@@ -170,7 +172,7 @@ $conn->close();
         }
 
         // Close the modal when the user clicks on "Cancel"
-        function closeModal() {
+        function closeChangePFPModal() {
             document.getElementById('myModal').style.display = 'none';
         }
 
@@ -181,6 +183,39 @@ $conn->close();
                 modal.style.display = 'none';
             }
         }; 
+    </script>
+
+    <!-- logout modal -->
+    <?php include 'modals.php' ?>
+    <script>
+        // Show the logout modal
+        function showLogoutModal() {
+            // Hide other modals (if any) before showing the logout modal
+            var otherModals = document.querySelectorAll('.modal');
+            otherModals.forEach(function (modal) {
+                modal.style.display = 'none';
+            });
+
+            // Show the logout modal
+            document.getElementById('logoutModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        // Redirect to logout page
+        function logout() {
+            window.location.href = '../../logout.php'; // Redirect to logout page
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function (event) {
+            var modal = document.getElementById('logoutModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 </head>
 
@@ -240,7 +275,7 @@ $conn->close();
                 }
 
                 // Logout link
-                echo '<a href="../logout.php" onclick="return confirm(\'Are you sure you want to logout?\')">
+                echo '<a onclick="showLogoutModal()">
                 <img src="../frontend/assets/icons/logout.svg" alt="Logout" class="nav-icon">
                 <span class="nav-text">Logout</span>
               </a>';
@@ -248,6 +283,7 @@ $conn->close();
                 <span class="active-indicator"></span>
             </div>
         </nav>
+
 
     </div>
 
@@ -326,7 +362,7 @@ $conn->close();
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" type="button" onclick="closeModal()">Cancel</button>
+                <button class="btn-cancel" type="button" onclick="closeChangePFPModal()">Cancel</button>
             </div>
         </div>
     </div>
