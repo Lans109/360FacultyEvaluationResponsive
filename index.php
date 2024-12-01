@@ -1,36 +1,21 @@
 <?php
-// login.php
+// index.php
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-
-    <title>Login</title>
-    <nav class="topnav">
-    </nav>
-    <link rel='stylesheet' href="/360FacultyEvaluationSystem/End-Users/Styles/index-style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Faculty Evaluation</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: #800000;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .btn:hover {
-            background: #600000;
-        }
-    </style>
+    <link rel="stylesheet" href="/360FacultyEvaluationSystem/End-Users/Styles/index-style.css">
+</head>
 
 <body>
+    <nav class="topnav">
+        <!-- Add navigation links here if needed -->
+    </nav>
+
     <div class="container">
         <div class="wrapper">
             <div class="login-box">
@@ -38,7 +23,6 @@
                     <img src="/360FacultyEvaluationSystem/End-Users/LPU-LOGO.png" alt="LPU Logo">
                 </div>
 
-                <!-- Buttons for Role Selection -->
                 <!-- Buttons for Role Selection -->
                 <form method="get" action="">
                     <button type="submit" name="role" value="student" class="btn">Login as Student</button>
@@ -51,28 +35,25 @@
                 if (isset($_GET['role'])) {
                     $role = $_GET['role'];
 
-                    // Check if the 'role' is set and redirect based on it
-                    if ($role == 'student') {
-                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/students_login.php");
-                        exit();
-                    } elseif ($role == 'faculty') {
-                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/faculty_login.php");
-                        exit();
-                    } elseif ($role == 'program_chair') {
-                        header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/program_chair_login.php");
-                        exit();
-                    } else {
-                        echo "<p class='error-message show'>Invalid role selected!</p>";
+                    switch ($role) {
+                        case 'student':
+                            header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/students_login.php");
+                            exit();
+                        case 'faculty':
+                            header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/faculty_login.php");
+                            exit();
+                        case 'program_chair':
+                            header("Location: /360FacultyEvaluationSystem/End-Users/login-pages/program_chair_login.php");
+                            exit();
+                        default:
+                            echo "<p class='error-message'>Invalid role selected!</p>";
+                            break;
                     }
                 }
                 ?>
             </div>
         </div>
     </div>
-</body>
-
-
-
 </body>
 
 </html>
