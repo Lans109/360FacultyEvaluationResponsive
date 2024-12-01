@@ -36,26 +36,38 @@ if (isset($_GET['program_filter'])) {
 $search = $_SESSION['search'] ?? '';
 $program_filter = $_SESSION['program_filter'] ?? '';
 
-// Query to fetch all students along with their program info and total courses
-$students_query = "
-    SELECT 
-        s.student_id, 
-        s.email, 
-        CONCAT(s.first_name, ' ', s.last_name) AS full_name, 
-        p.program_id, 
-        p.program_code, 
-        s.phone_number, 
-        s.first_name, 
-        s.last_name,
-        s.profile_image,
-        COUNT(sc.student_id) AS total_courses
-    FROM 
-        students s
-    LEFT JOIN 
-        student_courses sc ON s.student_id = sc.student_id
-    JOIN 
-        programs p ON s.program_id = p.program_id
-";
+if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
+    $period_id = mysqli_real_escape_string($con, $_SESSION['period_id']); // Sanitize the input
+
+    $students_query = "
+        SELECT 
+            s.student_id, 
+            s.email, 
+            CONCAT(s.first_name, ' ', s.last_name) AS full_name, 
+            p.program_id, 
+            p.program_code, 
+            s.phone_number, 
+            s.first_name, 
+            s.last_name,
+            s.profile_image,
+            COUNT(cs.course_section_id) AS total_courses
+        FROM 
+            students s
+        LEFT JOIN 
+            student_courses sc ON s.student_id = sc.student_id
+        LEFT JOIN 
+            course_sections cs ON sc.course_section_id = cs.course_section_id AND cs.period_id = '$period_id'
+        LEFT JOIN 
+            programs p ON s.program_id = p.program_id
+    ";
+} else {
+    // Handle missing or invalid period_id
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid or missing period ID.';
+    header("Location: some_error_page.php");
+    exit();
+}
+
 
 // Apply search filter if the $search variable is set
 if (!empty($search)) {

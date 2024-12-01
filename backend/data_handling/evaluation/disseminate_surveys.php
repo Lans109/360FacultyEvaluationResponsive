@@ -18,6 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get form data and sanitize it to prevent SQL injection
         $period_id = mysqli_real_escape_string($con, $_POST['period_id']);  // ID of the evaluation period
 
+        // Check if the evaluation period is already disseminated
+        $query_check_disseminated = "SELECT disseminated FROM evaluation_periods WHERE period_id = '$period_id'";
+        $result_check_disseminated = mysqli_query($con, $query_check_disseminated);
+
+        if ($result_check_disseminated && mysqli_num_rows($result_check_disseminated) > 0) {
+            $row = mysqli_fetch_assoc($result_check_disseminated);
+            if ($row['disseminated'] == 1) {
+                $_SESSION['status'] = 'error';
+                $_SESSION['message'] = 'The survey for this evaluation period has already been disseminated.';
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
+        } else {
+            $_SESSION['status'] = 'error';
+            $_SESSION['message'] = 'Invalid evaluation period or database error.';
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+
         // Step 1: Fetch all available survey_ids from surveys table (no filter)
         $query_surveys = "SELECT survey_id, target_role FROM surveys";  // No target_role filtering
         $result_surveys = mysqli_query($con, $query_surveys);
@@ -48,17 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $evaluation_id = mysqli_insert_id($con);  // Get the last inserted evaluation_id
 
                             // Step 4: Insert into students_evaluations table ONLY if survey_id is 1
-                            if ($target_role == 'Student') {  // Insert into students_evaluations only for survey_id 1
+                            if ($target_role == 'Student') {
                                 $query_students_evaluation = "SELECT s.student_id 
                                                    FROM students s
                                                    JOIN student_courses sc ON s.student_id = sc.student_id
-                                                   WHERE sc.course_section_id = '$course_section_id'"; // Ensure $course_section_id is sanitized
+                                                   WHERE sc.course_section_id = '$course_section_id'"; 
                                 $result_students_evaluation = mysqli_query($con, $query_students_evaluation);
 
                                 while ($student = mysqli_fetch_assoc($result_students_evaluation)) {
                                     $student_id = $student['student_id'];
-
-                                    // Insert record for each student evaluation (only for survey_id 1)
                                     $query_insert_student_eval = "INSERT INTO students_evaluations 
                                                                   (evaluation_id, student_id, comments, date_evaluated, time_evaluated, is_completed)
                                                                   VALUES ('$evaluation_id', '$student_id', '', NULL, NULL, 0)";
@@ -66,19 +83,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 }
                             }
 
-                            if ($target_role == 'Faculty' || $target_role == 'Self') {  // Insert into faculty_evaluations only for 'Faculty' role
+                            if ($target_role == 'Faculty' || $target_role == 'Self') {
                                 $query_faculty_evaluation = "SELECT f.faculty_id 
                                                   FROM faculty f
                                                   JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
-                                                  WHERE fc.course_section_id = '$course_section_id'"; // Ensure $course_section_id is sanitized
+                                                  WHERE fc.course_section_id = '$course_section_id'";
                                 $result_faculty_evaluation = mysqli_query($con, $query_faculty_evaluation);
-                            
 
                                 while ($faculty = mysqli_fetch_assoc($result_faculty_evaluation)) {
                                     $faculty_id = $faculty['faculty_id'];
-                            
-
-                                    // Insert record for each faculty evaluation
                                     $query_insert_faculty_eval = "INSERT INTO faculty_evaluations 
                                                                   (evaluation_id, faculty_id, date_evaluated, time_evaluated, is_completed)
                                                                   VALUES ('$evaluation_id', '$faculty_id', NULL, NULL, 0)";
@@ -86,55 +99,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 }
                             }
 
-                            // New condition for Program Chair
-                            if ($target_role == 'Program_chair') {  // Insert into program_chair_evaluations for program chairs
+                            if ($target_role == 'Program_chair') {
                                 $query_program_chairs_evaluation = "
                                     SELECT p.chair_id 
                                     FROM program_chairs p
                                     JOIN faculty f ON f.department_id = p.department_id
                                     JOIN departments d ON d.department_id = p.department_id 
                                     JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
-                                    WHERE fc.course_section_id = '$course_section_id'"; // Ensure $course_section_id is sanitized
-                            
-
+                                    WHERE fc.course_section_id = '$course_section_id'";
                                 $result_program_chairs_evaluation = mysqli_query($con, $query_program_chairs_evaluation);
-                            
 
                                 while ($program_chair = mysqli_fetch_assoc($result_program_chairs_evaluation)) {
                                     $chair_id = $program_chair['chair_id'];
-                            
-
-                                    // Insert record for each program chair evaluation
                                     $query_insert_program_chair_eval = "
                                         INSERT INTO program_chair_evaluations 
                                         (evaluation_id, chair_id, date_evaluated, time_evaluated, is_completed)
                                         VALUES ('$evaluation_id', '$chair_id', NULL, NULL, 0)";
-                                    
                                     mysqli_query($con, $query_insert_program_chair_eval);
                                 }
                             }
 
                         } else {
-                            // Log error if evaluation insertion fails
                             error_log("Database Error: " . mysqli_error($con));
                         }
                     }
                 }
             }
 
-            // Step 5: After all evaluations are inserted, update the disseminated status to 1 (completed)
             $update_query = "UPDATE evaluation_periods 
                              SET disseminated = 1 
                              WHERE period_id = '$period_id'";
-
             if (mysqli_query($con, $update_query)) {
-                // Success: Update complete
                 $_SESSION['status'] = 'success';
                 $_SESSION['message'] = 'Survey dissemination successful!';
                 header("Location: " . $_SERVER['HTTP_REFERER']);
                 exit();
             } else {
-                // Error updating dissemination status
                 error_log("Database Error: " . mysqli_error($con));
                 $_SESSION['status'] = 'error';
                 $_SESSION['message'] = 'Failed to update dissemination status.';
@@ -143,7 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
         } else {
-            // If no surveys found
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = 'No surveys available.';
             header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -151,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } else {
-        // If CSRF token doesn't match, set error message
         $_SESSION['status'] = 'error';
         $_SESSION['message'] = 'Invalid CSRF token. Please try again.';
         header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -159,7 +157,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 } else {
-    // If no POST request is made, set session variables for error message and redirect
     $_SESSION['status'] = 'error';
     $_SESSION['message'] = 'Invalid request method.';
     header("Location: " . $_SERVER['HTTP_REFERER']);

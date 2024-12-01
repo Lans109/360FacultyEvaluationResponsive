@@ -206,31 +206,6 @@ if (isset($_GET['reset_filters'])) {
 									</td>
 								</tr>
 
-								<!-- Mobile View Cards (Hidden) -->
-								<?php
-								echo "<div class='table-to-cards hidden'>
-                                    <div class='ttc-course_id'>{$course['course_id']}</div>
-                                    <div class='ttc-course_code'>{$course['course_code']}</div>
-                                    <div class='ttc-course_name'>{$course['course_name']}</div>
-                                    <div class='ttc-course_description'>{$course['course_description']}</div>
-                                    <div class='ttc-course_department'>{$course['department_code']}</div>
-                                    <div class='ttc_btn-edit_course'>
-                                        <button class='edit-btn' data-toggle='modal'
-                                            data-target='#editModal{$course['course_id']}'
-                                            data-id='{$course['course_id']}'
-                                            data-name='{$course['course_name']}'
-                                            data-code='{$course['course_code']}'
-                                            data-description='{$course['course_description']}'
-                                            data-department-id='{$course['department_id']}'>Edit</button>
-                                    </div>
-                                    <div class='ttc_btn-delete_course'>
-                                        <a href='delete_course.php?course_id={$course['course_id']}'
-                                           class='delete-btn'
-                                           onclick='openDeleteConfirmationModal(event, this)'>Delete</a>
-                                    </div>
-                                </div>";
-								?>
-
 								<!-- Edit Course Modal -->
 								<div class="modal" id="editModal<?php echo $course['course_id']; ?>" tabindex="-1" role="dialog"
 									aria-labelledby="editModalLabel" aria-hidden="true">

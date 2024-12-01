@@ -53,16 +53,43 @@ if ($courses_result) {
     echo "Error fetching courses: " . mysqli_error($con);
 }
 
+
 // Build Query to Fetch Course Sections
-$sections_query = "
-    SELECT cs.course_section_id, cs.section, cs.course_id, c.course_name, f.faculty_id, c.course_code,
-           CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, COUNT(sc.student_id) AS student_count
-    FROM course_sections cs
-    LEFT JOIN courses c ON cs.course_id = c.course_id
-    LEFT JOIN faculty_courses fc ON cs.course_section_id = fc.course_section_id
-    LEFT JOIN faculty f ON fc.faculty_id = f.faculty_id
-    LEFT JOIN student_courses sc ON cs.course_section_id = sc.course_section_id
-";
+if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
+    $period_id = mysqli_real_escape_string($con, $_SESSION['period_id']); // Sanitize the input
+
+    $sections_query = "
+        SELECT 
+            cs.course_section_id, 
+            cs.section, 
+            cs.course_id, 
+            c.course_name, 
+            f.faculty_id, 
+            c.course_code,
+            CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, 
+            COUNT(sc.student_id) AS student_count
+        FROM 
+            course_sections cs
+        LEFT JOIN 
+            courses c ON cs.course_id = c.course_id
+        LEFT JOIN 
+            faculty_courses fc ON cs.course_section_id = fc.course_section_id
+        LEFT JOIN 
+            faculty f ON fc.faculty_id = f.faculty_id
+        LEFT JOIN 
+            student_courses sc ON cs.course_section_id = sc.course_section_id
+        WHERE 
+            cs.period_id = $period_id
+    ";
+} else {
+    // Handle missing or invalid period_id
+    $sections_query = null; // Or set a fallback query
+    $_SESSION['status'] = 'error';
+    $_SESSION['message'] = 'Invalid or missing period ID.';
+    header("Location: some_error_page.php");
+    exit();
+}
+
 
 // Add search condition
 if ($search) {

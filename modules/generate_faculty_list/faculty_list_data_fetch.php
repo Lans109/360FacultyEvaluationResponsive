@@ -131,6 +131,11 @@ if(mysqli_num_rows($results_faculty_list) > 0) {
             'profile_image' => $row_faculty['profile_image'],
             'faculty_id' => $row_faculty['faculty_id'],
         ];
+
+        // Calculate Scaling Factor
+        $scaled_avg = $row_faculty['weighted_avg_rating']*$row_faculty['total_courses'];
     }
 }
+
+
 ?>

@@ -9,34 +9,17 @@ include '../authentication.php';
 if (isset($_GET['evaluation_period'])) {
     $period = $_GET['evaluation_period']; // Use the period from URL if set
 } else {
-    // If not set, get the period_id from the evaluation_periods table based on today's date
-    $today = date('Y-m-d'); // Get today's date in YYYY-MM-DD format
-
-    // Query to find the evaluation period that matches today's date
-    $period_query = "SELECT period_id 
-                     FROM evaluation_periods 
-                     WHERE '$today' BETWEEN start_date AND end_date 
-                     LIMIT 1"; // We limit to 1 since only one period should match today's date
-
-    $period_result = mysqli_query($con, $period_query);
-
-    if ($period_result && mysqli_num_rows($period_result) > 0) {
-        // Fetch the period_id from the result
-        $period_data = mysqli_fetch_assoc($period_result);
-        $period = $period_data['period_id']; // Assign the period_id
-    } else {
-        // Default to period 1 (or any fallback value) if no period is found
-        $period = 1;
-    }
+    $period = $_SESSION['period_id'];
 }
 
-$query = "SELECT semester, academic_year FROM evaluation_periods WHERE period_id = $period";
-$result = mysqli_query($con, $query);
 
-// Check if the query was successful and if data was returned
-if ($result && mysqli_num_rows($result) > 0) {
-    // Fetch the data from the result
-    $row = mysqli_fetch_assoc($result);
+$selected_period_query = "SELECT semester, academic_year FROM evaluation_periods WHERE period_id = $period";
+$selected_period_result = mysqli_query($con, $selected_period_query);
+
+// Check if the selected_period_query was successful and if data was returned
+if ($selected_period_result && mysqli_num_rows($selected_period_result) > 0) {
+    // Fetch the data from the selected_period_result
+    $row = mysqli_fetch_assoc($selected_period_result);
     $selected_semester = $row['semester'];
     $selected_academic_year = $row['academic_year'];
 }
