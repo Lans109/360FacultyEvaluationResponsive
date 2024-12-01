@@ -53,16 +53,6 @@ while ($stmt->fetch()) {
     ];
 }
 $stmt->close();
-
-// Add sample courses if none are fetched
-if (empty($courses)) {
-    $courses = [
-        ['course_name' => 'Web Development', 'course_code' => 'CS101', 'course_description' => 'Learn the basics of web development.', 'section' => 'A'],
-        ['course_name' => 'Data Science', 'course_code' => 'CS201', 'course_description' => 'Explore data analysis and machine learning.', 'section' => 'B'],
-        ['course_name' => 'Digital Marketing', 'course_code' => 'CS301', 'course_description' => 'Master SEO, SEM, and social media marketing.', 'section' => 'C'],
-    ];
-}
-
 $conn->close();
 ?>
 

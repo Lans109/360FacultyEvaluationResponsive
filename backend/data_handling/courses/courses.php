@@ -218,7 +218,7 @@ if (isset($_GET['reset_filters'])) {
 												</span>
 											</div>
 											<!-- Edit Course Form -->
-											<form name="editForm" id="editForm<?php echo $course['course_id']; ?>" method="POST"
+											<form id="editForm<?php echo $course['course_id']; ?>" method="POST"
 												action="update_course.php">
 												<input type="hidden" name="csrf_token"
 													value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -228,22 +228,25 @@ if (isset($_GET['reset_filters'])) {
 													<div class="form-group">
 														<label for="edit_course_name">Course Name</label>
 														<input type="text" name="course_name" class="form-control"
-															value="<?php echo $course['course_name']; ?>" required>
+															id="edit_course_name" value="<?php echo $course['course_name']; ?>"
+															required>
 													</div>
 													<div class="form-group">
 														<label for="edit_course_code">Course Code</label>
 														<input type="text" name="course_code" class="form-control"
-															value="<?php echo $course['course_code']; ?>" required>
+															id="edit_course_code" value="<?php echo $course['course_code']; ?>"
+															required>
 													</div>
 													<div class="form-group">
 														<label for="edit_course_description">Description</label>
 														<textarea name="course_description" class="form-control"
+															id="edit_course_description"
 															required><?php echo $course['course_description']; ?></textarea>
 													</div>
 													<div class="form-group">
 														<label for="edit_department_id">Department</label>
 														<select name="department_id" class="form-control"
-															id="edit_department_id">
+															id="edit_department_id" required>
 															<option value="">Select Department</option>
 															<?php
 															// Fetch all departments to populate the dropdown
@@ -261,13 +264,13 @@ if (isset($_GET['reset_filters'])) {
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
-													<button type="submit" class="save-btn" id="openConfirmationModalBtn">Save
-														changes</button>
+													<button type="submit" class="save-btn">Save Changes</button>
 												</div>
 											</form>
 										</div>
 									</div>
 								</div>
+
 							<?php endwhile; ?>
 						<?php else: ?>
 							<tr>

@@ -19,23 +19,6 @@ window.addEventListener("resize", () => {
 // Confirmation on Edits
 document.addEventListener("DOMContentLoaded", function () {
 
-  const jsConfetti = new JSConfetti()
-
-  window.addEventListener('load', () => {
-    jsConfetti.addConfetti({
-      confettiColors: [
-        "#923534",  // Base Maroon
-        "#C04747",  // Vibrant Red-Maroony
-        "#FF6868",  // Bright Coral Red
-        "#F2D3C4",  // Peach Beige
-        "#FFD27F",  // Warm Gold
-        "#FFB3B3"   // Playful Blush Pink
-      ],
-      confettiRadius: 6,
-      confettiNumber: 200,
-    })
-  })
-
   // Select all forms and dynamically assign event listeners
   const forms = document.querySelectorAll('form[id^="editForm"]'); // Select forms with IDs starting with "editForm"
 
@@ -77,7 +60,28 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   });
+
+  const jsConfetti = new JSConfetti()
+
+  window.addEventListener('load', () => {
+    jsConfetti.addConfetti({
+      confettiColors: [
+        "#923534",  // Base Maroon
+        "#C04747",  // Vibrant Red-Maroony
+        "#FF6868",  // Bright Coral Red
+        "#F2D3C4",  // Peach Beige
+        "#FFD27F",  // Warm Gold
+        "#FFB3B3"   // Playful Blush Pink
+      ],
+      confettiRadius: 6,
+      confettiNumber: 200,
+    })
+  })
+
 });
+
+
+
 
 window.addEventListener('load', function () {
   // Hide the loader after the page has fully loaded
@@ -101,53 +105,53 @@ const selfInput = document.getElementById('self_scoring');
 
 // Function to update the input value when the slider is changed
 function updateInputValue(slider, input) {
-    input.value = slider.value;
+  input.value = slider.value;
 }
 
 // Function to update the slider value when the input is changed
 function updateSliderValue(input, slider) {
-    let value = parseInt(input.value, 10);
-    if (isNaN(value)) {
-        value = 0; // Default to 0 if the input is invalid
-    } else if (value < 0) {
-        value = 0; // Ensure the value is not below 0
-    } else if (value > 100) {
-        value = 100; // Ensure the value is not above 100
-    }
-    slider.value = value;
+  let value = parseInt(input.value, 10);
+  if (isNaN(value)) {
+    value = 0; // Default to 0 if the input is invalid
+  } else if (value < 0) {
+    value = 0; // Ensure the value is not below 0
+  } else if (value > 100) {
+    value = 100; // Ensure the value is not above 100
+  }
+  slider.value = value;
 }
 
 // Event listeners for slider changes
 studentSlider.addEventListener('input', function () {
-    updateInputValue(studentSlider, studentInput);
+  updateInputValue(studentSlider, studentInput);
 });
 
 chairSlider.addEventListener('input', function () {
-    updateInputValue(chairSlider, chairInput);
+  updateInputValue(chairSlider, chairInput);
 });
 
 peerSlider.addEventListener('input', function () {
-    updateInputValue(peerSlider, peerInput);
+  updateInputValue(peerSlider, peerInput);
 });
 
 selfSlider.addEventListener('input', function () {
-    updateInputValue(selfSlider, selfInput);
+  updateInputValue(selfSlider, selfInput);
 });
 
 // Event listeners for input changes
 studentInput.addEventListener('input', function () {
-    updateSliderValue(studentInput, studentSlider);
+  updateSliderValue(studentInput, studentSlider);
 });
 
 chairInput.addEventListener('input', function () {
-    updateSliderValue(chairInput, chairSlider);
+  updateSliderValue(chairInput, chairSlider);
 });
 
 peerInput.addEventListener('input', function () {
-    updateSliderValue(peerInput, peerSlider);
+  updateSliderValue(peerInput, peerSlider);
 });
 
 selfInput.addEventListener('input', function () {
-    updateSliderValue(selfInput, selfSlider);
+  updateSliderValue(selfInput, selfSlider);
 });
 
