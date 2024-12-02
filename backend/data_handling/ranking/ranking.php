@@ -156,7 +156,7 @@ include ROOT_PATH . '/modules/generate_faculty_list/faculty_list_data_fetch.php'
 
                             // Faculty profile and details
                             $ranking .= '<td><img class="profile-icon" src="../../../' . htmlspecialchars($faculty['profile_image']) . '" alt="Profile Image"></td>';
-                            $ranking .= '<td><a href="../results/faculty_summary.php?facultyId=' . htmlspecialchars($faculty['faculty_id']) - 1 . '&period=1">' . htmlspecialchars($faculty['faculty_name']) . '</a></td>';
+                            $ranking .= '<td><a href="../results/faculty_summary.php?facultyId=' . htmlspecialchars($faculty['faculty_id']) . '">' . htmlspecialchars($faculty['faculty_name']) . '</a></td>';
                             $ranking .= '<td>' . htmlspecialchars($faculty['faculty_id']) . '</td>';
                             $ranking .= '<td>' . htmlspecialchars($faculty['total_courses']) . '</td>';
                             $ranking .= '<td><b>' . htmlspecialchars($faculty['AVG']) . '</b></td>';

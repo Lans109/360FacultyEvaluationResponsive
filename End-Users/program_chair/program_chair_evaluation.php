@@ -23,7 +23,7 @@ $chair = $result->fetch_assoc();
 $sql = "
     SELECT e.evaluation_id, e.survey_id, pce.is_completed, e.created_at, 
            ep.end_date,
-           f.first_name AS faculty_first_name, f.last_name AS faculty_last_name, 
+           f.first_name AS faculty_first_name, f.last_name AS faculty_last_name, f.profile_image, f.email as faculty_email,
            c.course_code
     FROM evaluations e
     JOIN program_chair_evaluations pce ON e.evaluation_id = pce.evaluation_id
@@ -32,7 +32,8 @@ $sql = "
     JOIN faculty f ON fc.faculty_id = f.faculty_id
     JOIN courses c ON cs.course_id = c.course_id
     JOIN evaluation_periods ep ON e.period_id = ep.period_id
-    WHERE pce.chair_id = (SELECT chair_id FROM program_chairs WHERE email = ?)
+    WHERE pce.chair_id = (SELECT chair_id FROM program_chairs WHERE email = ?) 
+    AND ep.status = 'active';
 ";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $chair_email);
@@ -90,33 +91,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
             <h2>Evaluation Tasks</h2>
             <?php if (!empty($evaluations)): ?>
                 <table>
-                    <tr>
-                        <th>Faculty Name</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th>Deadline</th>
-                        <th>Actions</th>
-                    </tr>
-                    <?php foreach ($evaluations as $evaluation): ?>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?>
-                            </td>
-                            <td><?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
-                            </td>
-                            <td><?php echo htmlspecialchars($evaluation['created_at']); ?></td>
-                            <td><?php echo htmlspecialchars($evaluation['end_date']); ?></td>
-                            <td>
-                                <?php if (!$evaluation['is_completed']): ?>
-                                    <!-- Redirect to evaluation page -->
-                                    <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
-                                        Evaluation</a>
-                                <?php else: ?>
-                                    <button disabled>Completed</button>
-                                <?php endif; ?>
-                            </td>
+                            <th>Profile</th>
+                            <th>Faculty Name</th>
+                            <th>Course Code</th>
+                            <th>Status</th>
+                            <th width="150px">Actions</th>
                         </tr>
-                    <?php endforeach; ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($evaluations as $evaluation): ?>
+                            <tr>
+                                <td><img width="100px" src="../<?php echo $evaluation['profile_image']; ?>" alt="profile_image">
+                                </td>
+                                <td>
+                                    <?php echo htmlspecialchars($evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']); ?><br>
+                                    <?php echo htmlspecialchars($evaluation['faculty_email']); ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($evaluation['course_code']); ?></td>
+                                <td>
+                                    <?php echo $evaluation['is_completed'] ?
+                                        '<span style="color: green;">Completed</span>' :
+                                        '<span style="color: red;">Pending</span>'; ?>
+                                </td>
+                                <td>
+                                    <?php if (!$evaluation['is_completed']): ?>
+                                        <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">
+                                            Evaluate</a>
+                                    <?php else: ?>
+                                        <button disabled>Completed</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
+
 
                 <!-- table to cards for mobile view -->
                 <div class="ttc-container">

@@ -61,9 +61,9 @@ if ($resultFaculty->num_rows > 0) {
                         s.survey_name,
                         s.target_role,
                         (
-                            COUNT(DISTINCT se.evaluation_id) + 
-                            COUNT(DISTINCT fe.evaluation_id) + 
-                            COUNT(DISTINCT pce.evaluation_id)
+                            COUNT(DISTINCT se.student_id) + 
+                            COUNT(DISTINCT fe.faculty_id) + 
+                            COUNT(DISTINCT pce.chair_id)
                         ) AS total_evaluated_survey
                     FROM 
                         surveys s
