@@ -33,7 +33,8 @@ $sql = "
     JOIN faculty f ON fc.faculty_id = f.faculty_id
     JOIN courses c ON cs.course_id = c.course_id
     JOIN evaluation_periods ep ON e.period_id = ep.period_id
-    WHERE se.student_id = (SELECT student_id FROM students WHERE email = ?)
+    WHERE se.student_id = (SELECT student_id FROM students WHERE email = ?) 
+    AND ep.status = 'active';
 ";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $student_email);

@@ -54,9 +54,10 @@ $stmt_faculty_courses->execute();
 $stmt_faculty_courses->store_result();
 $stmt_faculty_courses->bind_result($faculty_id, $faculty_first_name, $faculty_last_name, $faculty_email, 
                                     $course_name, $course_code, $course_description, $section);
-
 // Create an array to hold faculty data, where each faculty will have an array of courses
 $faculty_courses = [];
+
+
 
 // Fetch courses for each faculty member
 while ($stmt_faculty_courses->fetch()) {
@@ -144,7 +145,6 @@ $conn->close();
                     <span>(<?php echo htmlspecialchars($department_code); ?>)</span>
                 </h2>
             </div>
-
             <!-- Managed Courses Section -->
             <h3>Faculty Members in Your Department:</h3>
             <?php if (!empty($faculty_courses)): ?>
@@ -155,9 +155,9 @@ $conn->close();
 
                         <h5>Courses Taught:</h5>
                         <?php foreach ($faculty['courses'] as $course): ?>
-                            <p><strong><?php echo htmlspecialchars($course['course_name']); ?>
+                            <p><?php echo htmlspecialchars($course['course_name']); ?>
                                     (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
-                                    <?php echo htmlspecialchars($course['section']); ?></strong></p>
+                                    <?php echo htmlspecialchars($course['section']); ?></strong>
                         <?php endforeach; ?>
                     </div>
                 <?php endforeach; ?>

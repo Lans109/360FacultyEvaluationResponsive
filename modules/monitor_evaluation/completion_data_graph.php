@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        
+
         var evaluation_completion = <?php echo json_encode($evaluation_completed); ?>;
         var evaluation_daily_completion = <?php echo json_encode($daily_completed); ?>;
 
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', { 'packages': ['corechart'] });
 
         google.charts.setOnLoadCallback(drawChartMonitoring);
-        
+
         google.charts.setOnLoadCallback(function () {
             drawChartMonitoring(evaluation_completion, 'Evaluation Completion Tracking', 'Date', 'completion_chart');
-            drawChartMonitoring(evaluation_daily_completion, 'Daily Completion Tracking - <?php echo $date?>', 'Time', 'completion_daily_chart');
+            drawChartMonitoring(evaluation_daily_completion, 'Daily Completion Tracking - <?php echo $date ?>', 'Time', 'completion_daily_chart');
         });
 
         function drawChartMonitoring(dataArray, header, type, chartName) {
@@ -24,75 +25,87 @@
                 [type, 'Completed Evaluation'], ...dataArray
             ]);
 
-            const options = {
-    backgroundColor: 'transparent',
-    title: header,
-    titleTextStyle: {
-        fontSize: 15,   // Adjust font size of the header title
-        color: '#666',  // Change the color of the title header
-        bold: true,     // Make the title bold
-        italic: false,  // Disable italics
-    },
-    colors: [
-        '#923534', // Maroon (primary color)
-        '#b2493b', // Reddish-brown (complementary to maroon)
-        '#ff8c42', // Soft amber (to add warmth and contrast)
-        '#4a3f35', // Dark brown (for depth and grounding)
-        '#ffb6b6', // Soft blush pink (light and subtle)
-        '#2c3e50', // Dark blue-gray (providing contrast)
-        '#e1c8b1', // Beige (soft neutral to balance boldness)
-    ],
-    fontName: 'myFont2', // Custom font name
-    fontSize: 14,
-    hAxis: {
-        title: '', // Remove title from x-axis
-        titleTextStyle: { fontSize: 15, color: '#666', bold: true },
-        textStyle: { fontSize: 15, color: '#ddd' },
-        gridlines: {
-            color: '#e0e0e0',
-            count: 5 // Limits horizontal gridlines to 5
-        },
-        textPosition: 'out', // Position axis labels outside the chart
-    },
-    vAxis: {
-        title: '', // Remove title from y-axis
-        titleTextStyle: { fontSize: 16, color: '#666', bold: true },
-        textStyle: { fontSize: 12, color: '#ddd' },
-        gridlines: {
-            color: '#ddd', // Gridline color
-            count: 5 // Limits vertical gridlines to 5
-        },
-        format: '0', // Format y-axis labels as integers
-    },
-    chartArea: {
-        left: 50, // Adjust padding and margins
-        top: 50,
-        right: 20,
-        bottom: 50,
-        width: '90%', // Adjust chart area width
-        height: '80%' // Adjust chart area height
-    },
-    curveType: 'function', // Enable smooth curves
-    tooltip: { isHtml: true }, // HTML tooltips
-    animation: {
-        duration: 1000, // Smooth animation duration
-        easing: 'inAndOut' // Easing effect
-    },
-    focusTarget: 'category', // Highlight category on hover
-    enableInteractivity: true, // Allow interaction
-    annotations: {
-        textStyle: { fontSize: 12, color: '#444', bold: true }, // Annotation text style
-        alwaysOutside: true, // Place annotations outside
-    },
-    legend: { 
-        position: 'none' // Hides the legend completely
-    }
-};
+            // Determine the number of data points
+            const dataSize = dataArray.length;
 
+            // Adjust options based on data size
+            let hAxisOptions = {
+                title: '', // Remove title from x-axis
+                titleTextStyle: { fontSize: 15, color: '#666', bold: true },
+                textStyle: { fontSize: 15, color: '#ddd' },
+                gridlines: {
+                    color: '#e0e0e0',
+                    count: Math.min(10, dataSize) // Limit gridlines to 10 or fewer
+                },
+                textPosition: 'out' // Position axis labels outside the chart
+            };
+
+            // Add slanted text only if data size exceeds a threshold
+            if (dataSize > 10) {
+                hAxisOptions.slantedText = true;
+                hAxisOptions.slantedTextAngle = Math.min(60, 15 + dataSize / 5); // Adjust angle based on size
+            }
+
+            const options = {
+                backgroundColor: 'transparent',
+                title: header,
+                titleTextStyle: {
+                    fontSize: 15,   // Adjust font size of the header title
+                    color: '#666',  // Change the color of the title header
+                    bold: true,     // Make the title bold
+                    italic: false,  // Disable italics
+                },
+                colors: [
+                    '#923534', // Maroon (primary color)
+                    '#b2493b', // Reddish-brown (complementary to maroon)
+                    '#ff8c42', // Soft amber (to add warmth and contrast)
+                    '#4a3f35', // Dark brown (for depth and grounding)
+                    '#ffb6b6', // Soft blush pink (light and subtle)
+                    '#2c3e50', // Dark blue-gray (providing contrast)
+                    '#e1c8b1', // Beige (soft neutral to balance boldness)
+                ],
+                fontName: 'myFont2', // Custom font name
+                fontSize: 14,
+                hAxis: hAxisOptions,
+                vAxis: {
+                    title: '', // Remove title from y-axis
+                    titleTextStyle: { fontSize: 16, color: '#666', bold: true },
+                    textStyle: { fontSize: 12, color: '#ddd' },
+                    gridlines: {
+                        color: '#ddd', // Gridline color
+                        count: 5 // Limits vertical gridlines to 5
+                    },
+                    format: '0', // Format y-axis labels as integers
+                },
+                chartArea: {
+                    left: 50, // Adjust padding and margins
+                    top: 50,
+                    right: 20,
+                    bottom: 50,
+                    width: '90%', // Adjust chart area width
+                    height: '80%' // Adjust chart area height
+                },
+                curveType: 'function', // Enable smooth curves
+                tooltip: { isHtml: true }, // HTML tooltips
+                animation: {
+                    duration: 1000, // Smooth animation duration
+                    easing: 'inAndOut' // Easing effect
+                },
+                focusTarget: 'category', // Highlight category on hover
+                enableInteractivity: true, // Allow interaction
+                annotations: {
+                    textStyle: { fontSize: 12, color: '#444', bold: true }, // Annotation text style
+                    alwaysOutside: true, // Place annotations outside
+                },
+                legend: {
+                    position: 'none' // Hides the legend completely
+                }
+            };
 
             const chart = new google.visualization.LineChart(document.getElementById(chartName));
             chart.draw(data, options);
         }
+
 
         google.charts.setOnLoadCallback(drawChart);
 
@@ -132,7 +145,7 @@
                     height: '100%' // Use full height of the container
                 },
                 pieSliceText: 'none',  // Hide percentage numbers
-                pieSliceTextStyle: { fontSize: 12, color: '#666'},  // Optional, adjust the font size and color for any text
+                pieSliceTextStyle: { fontSize: 12, color: '#666' },  // Optional, adjust the font size and color for any text
                 animation: {
                     duration: 1000,
                     easing: 'inAndOut'
@@ -148,9 +161,11 @@
 
     </script>
 </head>
+
 <body>
     <div id="myChart" style="width: 100%; height: 250px;"></div>
-    <div id="completion_chart" style="height: 350px;"></div> 
+    <div id="completion_chart" style="height: 350px;"></div>
     <div id="completion_daily_chart" style="height: 350px;"></div>
 </body>
+
 </html>

@@ -33,14 +33,28 @@ $result = $stmt->get_result();
 $questions = $result->fetch_all(MYSQLI_ASSOC);
 
 $sqlFaculty = "
-SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) as faculty_name, f.email, f.profile_image, c.course_name, c.course_code, cs.section
-FROM faculty f
-JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
-JOIN course_sections cs ON fc.course_section_id = cs.course_section_id
-JOIN courses c ON cs.course_id = c.course_id
-JOIN evaluations e ON cs.course_section_id = e.course_section_id
-JOIN evaluation_periods ep ON cs.period_id = ep.period_id
-WHERE e.evaluation_id = ? AND ep.status = active";
+SELECT 
+    f.faculty_id, 
+    CONCAT(f.first_name, ' ', f.last_name) AS faculty_name, 
+    f.email, 
+    f.profile_image, 
+    c.course_name, 
+    c.course_code, 
+    cs.section
+FROM 
+    faculty f
+JOIN 
+    faculty_courses fc ON f.faculty_id = fc.faculty_id
+JOIN 
+    course_sections cs ON fc.course_section_id = cs.course_section_id
+JOIN 
+    courses c ON cs.course_id = c.course_id
+JOIN 
+    evaluations e ON cs.course_section_id = e.course_section_id
+JOIN 
+    evaluation_periods ep ON cs.period_id = ep.period_id
+WHERE 
+    e.evaluation_id = ?;";
 
 $stmt = $conn->prepare($sqlFaculty);
 $stmt->bind_param("i", $evaluation_id);
@@ -52,8 +66,11 @@ $faculty_profile = $resultFaculty->fetch_assoc();
 // Handle response submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) {
     $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
-    $date = date("Y-m-d");
-    $time = date("H:i:s");
+
+    // Temporary timestamp for presentation purposes
+    $randomTimestamp = rand(strtotime("2024-11-19"), strtotime("2024-12-20"));
+    $date = date("Y-m-d", $randomTimestamp);
+    $time = date("H:i:s", $randomTimestamp);
 
     // Insert each response into the database
     foreach ($_POST['responses'] as $question_id => $rating) {
@@ -71,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
         $stmt->bind_param("sssis", $comment, $date, $time, $evaluation_id, $user_email);
     } elseif ($user_type == 'faculty') {
         // For faculty: Update the faculty's evaluation status
-        $stmt = $conn->prepare("UPDATE faculty_evaluations SET is_completed = 1 WHERE evaluation_id = ? AND faculty_id = (SELECT faculty_id FROM faculty WHERE email = ?)");
-        $stmt->bind_param("is", $evaluation_id, $user_email);
+        $stmt = $conn->prepare("UPDATE faculty_evaluations SET is_completed = 1 WHERE evaluation_id = ?");
+        $stmt->bind_param("i", $evaluation_id);
     } elseif ($user_type == 'program_chair') {
         // For program chair: Update the program chair's evaluation status
         $stmt = $conn->prepare("UPDATE program_chair_evaluations SET is_completed = 1 WHERE evaluation_id = ? AND chair_id = (SELECT chair_id FROM program_chairs WHERE email = ?)");
