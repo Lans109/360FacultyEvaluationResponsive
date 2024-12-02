@@ -20,14 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $first_name = mysqli_real_escape_string($con, $_POST['first_name']);
         $last_name = mysqli_real_escape_string($con, $_POST['last_name']);
-        $program_id = mysqli_real_escape_string($con, $_POST['program_id']); // Program ID sanitization
+        $program_id = mysqli_real_escape_string($con, $_POST['program_id']);
+        $phone_number = mysqli_real_escape_string($con, $_POST['phone_number']);
+
 
         // SQL query to update the student's information
         $update_query = "UPDATE students SET 
             email = '$email', 
             first_name = '$first_name', 
             last_name = '$last_name', 
-            program_id = '$program_id' 
+            program_id = '$program_id',
+            phone_number = '$phone_number' 
             WHERE student_id = '$student_id'";
 
         // Attempt to execute the update query

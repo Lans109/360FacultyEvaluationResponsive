@@ -32,6 +32,22 @@ $stmt->execute();
 $result = $stmt->get_result();
 $questions = $result->fetch_all(MYSQLI_ASSOC);
 
+$sqlFaculty = "
+SELECT f.faculty_id, CONCAT(f.first_name, ' ', f.last_name) as faculty_name, f.email, f.profile_image, c.course_name, c.course_code, cs.section
+FROM faculty f
+JOIN faculty_courses fc ON f.faculty_id = fc.faculty_id
+JOIN course_sections cs ON fc.course_section_id = cs.course_section_id
+JOIN courses c ON cs.course_id = c.course_id
+JOIN evaluations e ON cs.course_section_id = e.course_section_id
+JOIN evaluation_periods ep ON cs.period_id = ep.period_id
+WHERE e.evaluation_id = ? AND ep.status = active";
+
+$stmt = $conn->prepare($sqlFaculty);
+$stmt->bind_param("i", $evaluation_id);
+$stmt->execute();
+$resultFaculty = $stmt->get_result();
+$faculty_profile = $resultFaculty->fetch_assoc();
+
 
 // Handle response submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) {
@@ -108,6 +124,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
     </div>
     <div class="container">
         <div class="card">
+            <div>
+                <img width="150px" src="<?= $faculty_profile['profile_image']; ?>" alt="">
+                <h2><?= $faculty_profile['faculty_name']; ?></h2>
+                <p><?= $faculty_profile['course_code']; ?> - <?= $faculty_profile['course_name']; ?> - <?= $faculty_profile['section']; ?></p><br>
+            </div>
+            <div>
+                
+            </div>
             <div class="progress-bar">
                 <div id="progressBar" class="progress"></div>
             </div>
@@ -157,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
             const question = questions[currentQuestionIndex];
             questionText.innerHTML = `
                 <h3>Question ${currentQuestionIndex + 1} of ${questions.length}</h3>
-                <p>${question.question_text}</p>
+                <p style="padding: 15px;">${question.question_text}</p>
             `;
 
             optionsContainer.innerHTML = [1, 2, 3, 4, 5].map(rating => `

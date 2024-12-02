@@ -138,7 +138,7 @@ $num_rows = mysqli_num_rows($facultyResult);
                                         <td><?php echo htmlspecialchars($row['department_name']); ?></td>
                                         <td>
                                             <!--test-->
-                                            <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']-1; ?>" class="view-btn">
+                                            <a href="faculty_summary.php?facultyId=<?php echo $row['faculty_id']; ?>" class="view-btn">
                                                 View Results
                                             </a>
                                         </td>   

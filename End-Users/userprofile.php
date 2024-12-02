@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_image']) && $
     $new_file_name = uniqid('', true) . '.' . $file_ext;
 
     // Upload directory
-    $upload_dir = 'uploads/';
+    $upload_dir = '../uploads/';
     if (!file_exists($upload_dir)) {
         mkdir($upload_dir, 0777, true); // Create the uploads folder if it doesn't exist
     }
@@ -307,7 +307,6 @@ $conn->close();
 
     <div class="container">
         <div class="card">
-            <h1>About Me</h1>
             <div class="profile">
                 <!-- Display profile image and make it clickable -->
                 <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Profile Picture"
@@ -319,50 +318,28 @@ $conn->close();
 
 
             </div>
-            <div class="card" style="text-align:left; margin">
+            <div>
                 <!-- Display user role -->
                 <?php
                 if ($user_type == 'students') {
-                    echo "<p><strong>Role: </strong>Student</p>";
+                    echo "<p>Student</p>";
                 } elseif ($user_type == 'faculty') {
-                    echo "<p><strong>Role: </strong>Faculty</p>";
+                    echo "<p>Faculty</p>";
                 } elseif ($user_type == 'program_chair') {
-                    echo "<p><strong>Role: </strong>Program Chair</p>";
+                    echo "<p>Program Chair</p>";
                 }
                 ?>
                 <!-- Display Email as "Username" -->
-                <p><strong>Email (Username):</strong> <?php echo htmlspecialchars($email); ?></p>
+                <p><?php echo htmlspecialchars($email); ?></p>
 
                 <!-- Display department only for faculty and program chairs -->
                 <?php if ($user_type == 'faculty' || $user_type == 'program_chair'): ?>
-                    <p><strong>Department:</strong> <?php echo htmlspecialchars($department); ?></p>
+                    <p><?php echo htmlspecialchars($department); ?></p>
                 <?php endif; ?>
                 <?php if ($user_type == 'students'): ?>
-                    <p><strong>Enrolled Courses: </strong> <?php echo $num_courses; ?></p>
+                    <p>Enrolled Courses: <?php echo $num_courses; ?></p>
                 <?php endif; ?>
             </div>
-
-            <div class="card" style="text-align:left; margin">
-                <h3>School Information</h3>
-                <hr>
-                <p>
-                    <span style="font-weight:bold;">School Name: </span>
-                    <span>(LPU-C) Lyceum of the Philippines University Cavite.</span>
-                </p>
-                <p>
-                    <span style="font-weight:bold;">Time Zone</span>
-                    <span>Asia/Honkong</span>
-                </p>
-                <p>
-                    <span style="font-weight:bold;">Country:</span>
-                    <span>Philippines</span>
-                </p>
-                <p>
-                    <span style="font-weight:bold;">City/Town:</span>
-                    <span>Cavite City</span>
-                </p>
-            </div>
-        </div>
     </div>
 
     <!-- Modal for Profile Image Change -->

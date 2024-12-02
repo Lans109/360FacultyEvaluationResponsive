@@ -3,6 +3,7 @@
 //Summarizing Faculty Results
 
 if (!isset($facultyData[$facultyId])) {
+    echo $facultyData[$facultyId];
     die("Faculty data not found.");
 }
 
@@ -283,7 +284,7 @@ $sql_comment = "SELECT
         JOIN
             faculty f ON f.faculty_id = fc.faculty_id
         WHERE 
-            f.faculty_id = ($facultyId+1)
+            f.faculty_id = ($facultyId)
             AND comments IS NOT NULL 
             AND TRIM(comments) != ''
             AND e.period_id = $period

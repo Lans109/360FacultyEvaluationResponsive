@@ -37,19 +37,19 @@ $search = $_SESSION['search'] ?? '';
 $role_filter = $_SESSION['role_filter'] ?? '';
 
 $query_accounts = "
-    SELECT chair_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Program Chair' AS role 
+    SELECT chair_id AS account_id, updated_at, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Program Chair' AS role 
     FROM program_chairs 
     WHERE 1=1
     UNION
-    SELECT student_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Student' AS role 
+    SELECT student_id AS account_id, updated_at, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Student' AS role 
     FROM students 
     WHERE 1=1
     UNION
-    SELECT faculty_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Faculty' AS role 
+    SELECT faculty_id AS account_id, updated_at, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Faculty' AS role 
     FROM faculty 
     WHERE 1=1
     UNION
-    SELECT admin_id AS account_id, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Admin' AS role 
+    SELECT admin_id AS account_id, updated_at, CONCAT(first_name, ' ', last_name) AS name, username, email, 'Admin' AS role 
     FROM admins 
     WHERE 1=1";
 
@@ -161,6 +161,7 @@ if (isset($_GET['reset_filters'])) {
                             <th width="200px">Username</th>
                             <th width="300px">Email</th>
                             <th width="200px">Role</th>
+                            <th width="155px">Last Modified</th>
                             <th width="50px">Action</th>
                         </tr>
                     </thead>
@@ -172,6 +173,7 @@ if (isset($_GET['reset_filters'])) {
                                 <td><?php echo $account['username']; ?></td>
                                 <td><?php echo $account['email']; ?></td>
                                 <td><?php echo $account['role']; ?></td>
+                                <td><?php echo $account['updated_at']; ?></td>
                                 <td>
                                     <div class="action-btns">
                                         <button class="edit-btn" data-toggle="modal"

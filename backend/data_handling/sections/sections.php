@@ -63,6 +63,7 @@ if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
             cs.course_section_id, 
             cs.section, 
             cs.course_id, 
+            cs.updated_at,
             c.course_name, 
             f.faculty_id, 
             c.course_code,
@@ -78,8 +79,6 @@ if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
             faculty f ON fc.faculty_id = f.faculty_id
         LEFT JOIN 
             student_courses sc ON cs.course_section_id = sc.course_section_id
-        WHERE 
-            cs.period_id = $period_id
     ";
 } else {
     // Handle missing or invalid period_id
@@ -106,7 +105,7 @@ if ($course_filter) {
     $sections_query .= $search ? " AND cs.course_id = '$course_filter'" : " WHERE cs.course_id = '$course_filter'";
 }
 
-$sections_query .= " GROUP BY cs.course_section_id, cs.section, c.course_name, f.faculty_id ORDER BY faculty_name;";
+$sections_query .= "AND cs.period_id = $period_id GROUP BY cs.course_section_id, cs.section, c.course_name, f.faculty_id ORDER BY faculty_name;";
 
 // Execute the query to get course sections
 $sections_result = mysqli_query($con, $sections_query);
@@ -205,7 +204,8 @@ if (isset($_GET['reset_filters'])) {
                             <th width="200px">Course Code</th>
                             <th>Course Name</th>
                             <th width="300px">Faculty Name</th> <!-- Added column for faculty -->
-                            <th width="160px">No. of Students</th>
+                            <th width="170px">No. of Students</th>
+                            <th width="155px">Last Modified</th>
                             <th width="100px">Actions</th>
                         </tr>
                     </thead>
@@ -226,6 +226,7 @@ if (isset($_GET['reset_filters'])) {
                                         ?>
                                     </td>
                                     <td><?php echo htmlspecialchars($section['student_count']); ?></td>
+                                    <td><?php echo htmlspecialchars($section['updated_at']); ?></td>
                                     <td>
                                         <div class="action-btns">
                                             <button class="edit-btn" data-toggle="modal"
@@ -316,7 +317,7 @@ if (isset($_GET['reset_filters'])) {
                             <?php endwhile; ?>
                         <?php } else { ?>
                             <tr>
-                                <td colspan="5">No Sections found</td>
+                                <td colspan="7">No Sections found</td>
                             </tr>
                         <?php } ?>
                     </tbody>

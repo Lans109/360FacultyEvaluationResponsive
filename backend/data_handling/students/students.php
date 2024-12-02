@@ -50,6 +50,7 @@ if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
             s.first_name, 
             s.last_name,
             s.profile_image,
+            s.updated_at,
             COUNT(cs.course_section_id) AS total_courses
         FROM 
             students s
@@ -87,7 +88,7 @@ if (!empty($program_filter)) {
 
 $students_query .= "
 GROUP BY
-    s.student_id, s.email, s.first_name, s.last_name, p.program_id, p.program_code, s.phone_number, s.profile_image
+    s.student_id, s.email, s.first_name, s.last_name, p.program_id, p.program_code, s.phone_number, s.profile_image, s.updated_at
 ";
 
 // Execute the students query
@@ -200,12 +201,13 @@ if (isset($_GET['reset_filters'])) {
                     <thead>
                         <tr>
                             <th width="100px">Photo</th>
-                            <th width="250px">Full Name</th>
-                            <th width="250px">Email</th>
+                            <th width="150px">Full Name</th>
+                            <th width="200px">Email</th>
                             <th width="200px">Phone Number</th>
-                            <th width="200px">Program</th>
+                            <th width="150px">Program</th>
                             <th width="150px">Student ID</th>
                             <th width="155px">No. of Courses</th>
+                            <th width="155px">Last Modified</th>
                             <th width="100px">Profile</th>
                             <th width="100px">Actions</th>
                         </tr>
@@ -221,6 +223,7 @@ if (isset($_GET['reset_filters'])) {
                                     <td><?php echo $student['program_code']; ?></td>
                                     <td><?php echo $student['student_id']; ?></td>
                                     <td><?php echo $student['total_courses']; ?></td>
+                                    <td><?php echo $student['updated_at']; ?></td>
                                     <td>
                                         <!-- View Profile Button -->
                                         <a href="view_student_profile.php?student_id=<?php echo $student['student_id']; ?>"
@@ -289,11 +292,6 @@ if (isset($_GET['reset_filters'])) {
                                                         <label for="edit_first_name">Phone Number</label>
                                                         <input type="text" name="phone_number" class="form-control"
                                                             value="<?php echo $student['phone_number']; ?>" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="edit_first_name">Email</label>
-                                                        <input type="email" name="email" class="form-control"
-                                                            value="<?php echo $student['email']; ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="program_id">Program</label>

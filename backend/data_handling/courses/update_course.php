@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             course_name = '$course_name', 
             course_code = '$course_code', 
             course_description = '$course_description', 
-            department_id = '$department_id' 
+            department_id = '$department_id',
+            updated_at = NOW()
             WHERE course_id = '$course_id'";
 
         // Attempt to execute the update query

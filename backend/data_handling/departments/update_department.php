@@ -26,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $query = "UPDATE departments SET 
             department_name = '$department_name', 
             department_code = '$department_code', 
-            department_description = '$department_description' 
+            department_description = '$department_description',
+            updated_at = NOW()
             WHERE department_id = '$department_id'";
 
         // Attempt to execute the query
