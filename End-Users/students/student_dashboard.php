@@ -80,21 +80,15 @@ $conn->close();
 
         <!-- Profile Section -->
         <div class="card">
-            <div class="profile">
-                <!-- Display profile image (it will use default if no custom image exists in the database) -->
-                <img src="../<?php echo htmlspecialchars($profile_image); ?>" 
-                alt="Profile Picture" onerror="this.onerror=null; this.src='../uploads/default_image.jpg';" class="profile-pic">
-                <h2><?php echo htmlspecialchars($name); ?></h2>
-            </div>
 
         <section class="courses">
             <h3>Your Courses</h3>
             <div class="courses-grid">
                 <?php foreach ($courses as $course): ?>
                     <div class="course-card">
-                        <h4><?php echo htmlspecialchars($course['course_name']); ?> (<?php echo htmlspecialchars($course['course_code']); ?>)</h4>
+                        <h3><?php echo htmlspecialchars($course['course_code']); ?></h3>
+                        <p><?php echo htmlspecialchars($course['course_name']); ?></p>
                         <p>Section: <?php echo htmlspecialchars($course['section']); ?></p>
-                        <p><?php echo htmlspecialchars($course['course_description']); ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>

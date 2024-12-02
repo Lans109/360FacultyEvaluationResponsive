@@ -41,7 +41,7 @@ $facultyQuery = "SELECT
                     f.profile_image
                  FROM faculty f 
                  LEFT JOIN departments d ON f.department_id = d.department_id 
-                 WHERE f.faculty_id = '" . (mysqli_real_escape_string($con, $facultyId) + 1) . "'";
+                 WHERE f.faculty_id = '" . (mysqli_real_escape_string($con, $facultyId)) . "'";
 
 $facultyResult = mysqli_query($con, $facultyQuery);
 $facultyDetails = mysqli_fetch_assoc($facultyResult);

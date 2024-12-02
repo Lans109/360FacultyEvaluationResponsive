@@ -39,7 +39,7 @@ body {
 
 /* Header Section */
 .header {
-    background-color: var(--primary-color);
+    background-color: #631111;
     color: var(--white);
     padding: 20px 0;
     text-align: center;
@@ -73,7 +73,6 @@ nav a:hover {
     margin: 2rem auto;
     padding: 1.5rem;
     background: var(--background-color);
-    border-radius: 12px;
     box-shadow: var(--shadow-lg);
 }
 
@@ -87,7 +86,6 @@ nav a:hover {
 .profile-card {
     text-align: center;
     background: var(--white);
-    border-radius: 12px;
     padding: 2rem;
     box-shadow: var(--shadow-md);
     transition: transform var(--transition-speed);
@@ -141,7 +139,6 @@ nav a:hover {
 .modal-content {
     background: var(--white);
     padding: 2rem;
-    border-radius: 10px;
     width: 90%;
     max-width: 500px;
     box-shadow: var(--shadow-lg);

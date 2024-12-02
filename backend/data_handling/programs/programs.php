@@ -42,6 +42,7 @@ $programs_query = "
         p.program_name, 
         p.program_code, 
         p.program_description, 
+        p.updated_at,
         d.department_name, 
         p.department_id, 
         d.department_code, 
@@ -168,10 +169,11 @@ if (isset($_GET['reset_filters'])) {
                     <thead>
                         <tr>
                             <th width="160px">Program Code</th>
-                            <th width="250px">Program Name</th>
-                            <th width="500px">Description</th>
+                            <th width="200px">Program Name</th>
+                            <th width="400px">Description</th>
                             <th width="150px">Department</th>
                             <th width="150px">No. of courses</th>
+                            <th width="155px">Last Modified</th>
                             <th width="100px">Courses</th>
                             <th width="100px">Actions</th>
                         </tr>
@@ -185,6 +187,7 @@ if (isset($_GET['reset_filters'])) {
                                     <td><?php echo $program['program_description']; ?></td>
                                     <td><?php echo $program['department_code'] ?: 'Not Assigned'; ?></td>
                                     <td><?php echo $program['total_courses']; ?></td>
+                                    <td><?php echo $program['updated_at']; ?></td>
                                     <td>
                                         <!-- Add Course Button -->
                                         <a href="view_program_courses.php?program_id=<?php echo $program['program_id']; ?>"

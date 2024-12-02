@@ -49,6 +49,7 @@ if (isset($_SESSION['period_id']) && is_numeric($_SESSION['period_id'])) {
             f.last_name, 
             f.department_id, 
             f.profile_image,
+            f.updated_at,
             d.department_code, 
             CONCAT(f.first_name, ' ', f.last_name) AS full_name,
             COUNT(cs.course_section_id) AS total_courses
@@ -201,12 +202,13 @@ if (isset($_GET['reset_filters'])) {
                     <thead>
                         <tr>
                             <th width="100px">Photo</th>
-                            <th width="250px">Full Name</th>
-                            <th width="250px">Email</th>
-                            <th width="200px">Phone Number</th>
-                            <th width="200px">Department</th>
+                            <th width="150px">Full Name</th>
+                            <th width="200px">Email</th>
+                            <th width="150px">Phone Number</th>
+                            <th width="150px">Department</th>
                             <th width="150px">Faculty ID</th>
                             <th width="155px">No. of Courses</th>
+                            <th width="155px">Last Modified</th>
                             <th width="100px">Profile</th>
                             <th width="100px">Actions</th>
                         </tr>
@@ -222,6 +224,7 @@ if (isset($_GET['reset_filters'])) {
                                     <td><?php echo $faculty['department_code']; ?></td>
                                     <td><?php echo $faculty['faculty_id']; ?></td>
                                     <td><?php echo $faculty['total_courses']; ?></td>
+                                    <td><?php echo $faculty['updated_at']; ?></td>
                                     <td>
                                         <!-- View Profile Button -->
                                         <form action="view_faculty_profile.php" method="GET">
@@ -275,6 +278,11 @@ if (isset($_GET['reset_filters'])) {
                                                     <input type="hidden" name="faculty_id"
                                                         value="<?php echo $faculty['faculty_id']; ?>">
                                                     <div class="form-group">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" name="email" class="form-control"
+                                                            value="<?php echo $faculty['email']; ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <label for="first_name">First Name</label>
                                                         <input type="text" name="first_name" class="form-control"
                                                             value="<?php echo $faculty['first_name']; ?>" required>
@@ -288,11 +296,6 @@ if (isset($_GET['reset_filters'])) {
                                                         <label for="phone_number">Phone Number</label>
                                                         <input type="text" name="phone_number" class="form-control"
                                                             value="<?php echo $faculty['phone_number']; ?>" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="email">Email</label>
-                                                        <input type="email" name="email" class="form-control"
-                                                            value="<?php echo $faculty['email']; ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="department_id">Select Department</label>

@@ -135,10 +135,11 @@ if (isset($_GET['reset_filters'])) {
                 <table>
                     <thead>
                         <tr>
-                            <th width="180px">Department Code</th>
+                            <th width="150px">Department Code</th>
                             <th width="300px">Department Name</th>
-                            <th>Description</th>
+                            <th width="400px">Description</th>
                             <th width="200px">Program Chair</th>
+                            <th width="155px">Last Modified</th>
                             <th width="100px">Actions</th>
                         </tr>
                     </thead>
@@ -154,6 +155,7 @@ if (isset($_GET['reset_filters'])) {
                                         echo $department['first_name'] ? $department['first_name'] . ' ' . $department['last_name'] : 'Not Assigned';
                                         ?>
                                     </td>
+                                    <td><?php echo $department['updated_at']; ?></td>
                                     <td>
                                         <div class="action-btns">
                                             <button class="edit-btn" data-toggle="modal" data-target="#editModal"

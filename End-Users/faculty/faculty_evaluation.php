@@ -31,7 +31,10 @@ $sql = "
         ep.end_date, 
         c.course_code, 
         f.first_name AS faculty_first_name, 
-        f.last_name AS faculty_last_name
+        f.last_name AS faculty_last_name,
+        f.profile_image,
+        f.email,
+        c.course_name
     FROM evaluations e
     JOIN faculty_evaluations fe ON e.evaluation_id = fe.evaluation_id
     JOIN course_sections cs ON e.course_section_id = cs.course_section_id
@@ -165,7 +168,7 @@ if ($self_evaluation['is_completed'] == 1) {
 } else {
     echo '<span style="color: red;">Pending</span>';
     // Provide the button to start the evaluation only if not completed
-    echo '<br><button onclick="window.location.href=\'../evaluationpage.php?evaluation_id=' . $self_evaluation['evaluation_id'] . '&is_self_evaluation=1\'" style="display: inline-block; margin-top: 10px;">Start Self-Evaluation</button>';
+    echo '<br><button class="btn" onclick="window.location.href=\'../evaluationpage.php?evaluation_id=' . $self_evaluation['evaluation_id'] . '&is_self_evaluation=1\'" style="display: inline-block; margin-top: 10px;">Start Self-Evaluation</button>';
 }
 ?>
             </p>
@@ -181,30 +184,30 @@ if ($self_evaluation['is_completed'] == 1) {
             <table>
                 <tr>
                     <th>Faculty Name</th>
+                    <th>Email</th>
                     <th>Course Code</th>
                     <th>Status</th>
-                    <th>Created At</th>
-                    <th>Deadline</th>
                     <th>Actions</th>
                 </tr>
                 <?php foreach ($co_faculty_evaluations as $evaluation): ?>
-                <tr>
-                    <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?></td>
-                    <td><?php echo $evaluation['course_code']; ?></td>
-                    <td><?php echo $evaluation['is_completed'] ? 'Completed' : 'Pending'; ?></td>
-                    <td><?php echo $evaluation['created_at']; ?></td>
-                    <td><?php echo $evaluation['end_date']; ?></td>
-                    <td>
-                        <?php if (!$evaluation['is_completed'] && $co_faculty_completed_count === 0): ?>
-                        <!-- Redirect to evaluation page -->
-                        <a
-                            href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>&is_self_evaluation=0">Start
-                            Evaluation</a>
-                        <?php else: ?>
-                        <button disabled>Already Evaluated One Faculty</button>
-                        <?php endif; ?>
-                    </td>
-                </tr>
+                    <tr>
+                                <td><img width="100px" src="../<?php echo $evaluation['profile_image'] ?>" alt="profile_image">
+                                </td>
+                                <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?><br>
+                                    <?php echo $evaluation['email']; ?>
+                                </td>
+                                <td><?php echo $evaluation['course_code']; ?></td>
+                                <td>
+                                    <?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
+                                </td>
+                                <td>
+                                    <?php if (!$evaluation['is_completed']): ?>
+                                        <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Evaluate</a>
+                                    <?php else: ?>
+                                        <button disabled>Completed</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
                 <?php endforeach; ?>
             </table>
 
@@ -220,19 +223,11 @@ if ($self_evaluation['is_completed'] == 1) {
 
                     <!-- Card Body -->
                     <div class="ttc-body">
-                        <p><strong>Course Code:</strong> <?php echo htmlspecialchars($evaluation['course_code']); ?></p>
-                        <p><strong>Created At:</strong>
-                            <?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?>
-                        </p>
-                        <p><strong>Deadline:</strong>
-                            <?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?>
-                        </p>
-                        <p><strong>Status:</strong>
-                            <?php echo $evaluation['is_completed']
-                                        ? '<span style="color: green;">Completed</span>'
-                                        : '<span style="color: red;">Pending</span>'; ?>
-                        </p>
-                    </div>
+                                <img width="200px" src="../<?php echo $evaluation['profile_image'] ?>" alt="profile_image">
+                                <p><?php echo htmlspecialchars($evaluation['course_code']); ?></p>
+                                <?php echo htmlspecialchars($evaluation['email']); ?><br>
+                                <?php echo htmlspecialchars($evaluation['course_name']); ?>
+                            </div>
 
                     <!-- Card Footer -->
                     <div class="ttc-footer">

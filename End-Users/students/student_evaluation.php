@@ -24,8 +24,8 @@ $student = $result->fetch_assoc();
 $sql = "
     SELECT e.evaluation_id, e.course_section_id, e.survey_id, se.is_completed, e.created_at, 
            ep.end_date,
-           f.first_name AS faculty_first_name, f.last_name AS faculty_last_name, 
-           c.course_code
+           f.first_name AS faculty_first_name, f.last_name AS faculty_last_name, f.profile_image, f.email,
+           c.course_code, c.course_name
     FROM evaluations e
     JOIN students_evaluations se ON e.evaluation_id = se.evaluation_id
     JOIN course_sections cs ON e.course_section_id = cs.course_section_id
@@ -94,29 +94,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                 <table>
                     <thead>
                         <tr>
+                            <th>Profile</th>
                             <th>Faculty Name</th>
                             <th>Course Code</th>
                             <th>Status</th>
-                            <th>Created At</th>
-                            <th>Deadline</th>
-                            <th>Actions</th>
+                            <th width="150px">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($evaluations as $evaluation): ?>
                             <tr>
-                                <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?>
+                                <td><img width="100px" src="../<?php echo $evaluation['profile_image'] ?>" alt="profile_image">
+                                </td>
+                                <td><?php echo $evaluation['faculty_first_name'] . ' ' . $evaluation['faculty_last_name']; ?><br>
+                                    <?php echo $evaluation['email']; ?>
                                 </td>
                                 <td><?php echo $evaluation['course_code']; ?></td>
                                 <td>
                                     <?php echo $evaluation['is_completed'] ? '<span style="color: green;">Completed</span>' : '<span style="color: red;">Pending</span>'; ?>
                                 </td>
-                                <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?></td>
-                                <td><?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?></td>
                                 <td>
                                     <?php if (!$evaluation['is_completed']): ?>
-                                        <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Start
-                                            Evaluation</a>
+                                        <a href="../evaluationpage.php?evaluation_id=<?php echo $evaluation['evaluation_id']; ?>">Evaluate</a>
                                     <?php else: ?>
                                         <button disabled>Completed</button>
                                     <?php endif; ?>
@@ -136,12 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_responses'])) 
                                 </h3>
                             </div>
                             <div class="ttc-body">
-                                <p><strong>Course Code:</strong> <?php echo htmlspecialchars($evaluation['course_code']); ?></p>
-
-                                <p><strong>Created At:</strong>
-                                    <?php echo date("F j, Y, g:i a", strtotime($evaluation['created_at'])); ?></p>
-                                <p><strong>Deadline:</strong>
-                                    <?php echo date("F j, Y, g:i a", strtotime($evaluation['end_date'])); ?></p>
+                                <img width="200px" src="../<?php echo $evaluation['profile_image'] ?>" alt="profile_image">
+                                <p><?php echo htmlspecialchars($evaluation['course_code']); ?></p>
+                                <?php echo htmlspecialchars($evaluation['email']); ?><br>
+                                <?php echo htmlspecialchars($evaluation['course_name']); ?>
                             </div>
                             <div class="ttc-footer">
                                 <p><strong>Status:</strong>

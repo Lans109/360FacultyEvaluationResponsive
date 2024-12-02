@@ -137,12 +137,6 @@ $conn->close();
 
         <!-- Profile Section -->
         <div class="card">
-            <div class="profile">
-                <!-- Display profile image (it will use default if no custom image exists in the database) -->
-                <img src="../<?php echo htmlspecialchars($profile_image); ?>" 
-                alt="Profile Picture" onerror="this.onerror=null; this.src='../uploads/default_image.jpg';" class="profile-pic">
-                <h2><?php echo htmlspecialchars($name); ?></h2> <!-- Display the student's full name here -->
-            </div>
 
             <div>
                 <h2 class="department-info">
@@ -164,7 +158,6 @@ $conn->close();
                             <p><strong><?php echo htmlspecialchars($course['course_name']); ?>
                                     (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
                                     <?php echo htmlspecialchars($course['section']); ?></strong></p>
-                            <p>Description: <?php echo htmlspecialchars($course['course_description']); ?></p>
                         <?php endforeach; ?>
                     </div>
                 <?php endforeach; ?>

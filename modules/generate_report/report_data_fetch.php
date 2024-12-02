@@ -180,7 +180,7 @@ if ($resultFaculty->num_rows > 0) {
             }
         }
 
-        $facultyData[] = [
+        $facultyData[$row['faculty_id']] = [
             'faculty_id' => $row['faculty_id'],
             'full_name' => $fullName,
             'department' => $row['department_name'],

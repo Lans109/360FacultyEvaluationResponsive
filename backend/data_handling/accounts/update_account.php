@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Build the update query
-    $update_query = "UPDATE $table SET username = '$username', email = '$email'";
+    $update_query = "UPDATE $table SET username = '$username', email = '$email', updated_at = NOW()";
 
     // If password is provided, hash it and include in the update query
     if (!empty($password)) {

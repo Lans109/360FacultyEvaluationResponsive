@@ -26,7 +26,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validate that all required fields are provided
         if ($faculty_id && $first_name && $last_name && $faculty_department) {
             // SQL query to update faculty information
-            $update_query = "UPDATE faculty SET first_name = '$first_name', last_name = '$last_name', email = '$email', phone_number = '$phone_number', department_id = '$faculty_department' WHERE faculty_id = '$faculty_id'";
+            $update_query = "UPDATE 
+                                faculty 
+                            SET 
+                                first_name = '$first_name', 
+                                last_name = '$last_name', 
+                                email = '$email', 
+                                phone_number = '$phone_number', 
+                                department_id = '$faculty_department',
+                                updated_at = NOW()
+                            WHERE 
+                                faculty_id = '$faculty_id'";
 
             // Attempt to execute the query
             if (mysqli_query($con, $update_query)) {

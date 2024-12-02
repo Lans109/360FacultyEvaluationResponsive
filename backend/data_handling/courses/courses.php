@@ -42,6 +42,7 @@ $courses_query = "
         c.course_id, 
         c.course_name, 
         c.course_code, 
+		c.updated_at,
         c.course_description, 
         d.department_code, 
         d.department_id
@@ -164,6 +165,7 @@ if (isset($_GET['reset_filters'])) {
 							<th width="300px">Course Name</th>
 							<th>Description</th>
 							<th width="150px">Department</th>
+							<th width="155px">Last Modified</th>
 							<th width="100px">Actions</th>
 						</tr>
 					</thead>
@@ -175,6 +177,7 @@ if (isset($_GET['reset_filters'])) {
 									<td><?php echo $course['course_name']; ?></td>
 									<td><?php echo $course['course_description']; ?></td>
 									<td><?php echo $course['department_code'] ?: 'Not Assigned'; ?></td>
+									<td><?php echo $course['updated_at'] ?></td>
 									<td>
 										<!-- Action Buttons for Edit and Delete -->
 										<div class="action-btns">

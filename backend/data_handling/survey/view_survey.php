@@ -101,16 +101,16 @@ $num_criteria = count($questions_by_criteria);
                         <p>5: Outstanding</p>
                     </div>
                     <div>
-                        <p>4: Very Good</p>
+                        <p>4: Exceeds Standard</p>
                     </div>
                     <div>
-                        <p>3: Satisfactory</p>
+                        <p>3: Meets Standard</p>
                     </div>
                     <div>
-                        <p>2: Needs Improvement</p>
+                        <p>2: Partially Meets Standard</p>
                     </div>
                     <div>
-                        <p>1: Unsatisfactory</p>
+                        <p>1: Does not Meet Standard</p>
                     </div>
                 </div>
                 <div>

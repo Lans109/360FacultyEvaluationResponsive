@@ -96,26 +96,14 @@ $conn->close();
 
         <!-- Profile Section -->
         <div class="card">
-            <div class="profile">
-                <!-- Display Profile Picture -->
-                <img src="../<?php echo isset($profile_image) && !empty($profile_image) ? $profile_image : 'default_profile_pic.jpg'; ?>" 
-                alt="Profile Picture" onerror="this.onerror=null; this.src='../uploads/default_image.jpg';" class="profile-pic">
-
-                <h2><?php echo htmlspecialchars($name); ?></h2>
-            </div>
-
             <!-- Courses Section -->
             <h3>Course Sections You Handle</h3>
             <?php if (!empty($courses)): ?>
                 <?php foreach ($courses as $course): ?>
                     <div class="course-card">
-                        <h4><?php echo htmlspecialchars($course['course_name']); ?>
-                            (<?php echo htmlspecialchars($course['course_code']); ?>) - Section:
-                            <?php echo htmlspecialchars($course['section']); ?>
-                        </h4>
-                        <div class="course-info">
-                            <span>Description: <?php echo "<br>" . htmlspecialchars($course['course_description']); ?></span>
-                        </div>
+                        <h3><?php echo htmlspecialchars($course['course_code']); ?></h3>
+                        <p><?php echo htmlspecialchars($course['course_name']); ?></p>
+                        <p>Section: <?php echo htmlspecialchars($course['section']); ?></p>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
