@@ -85,7 +85,6 @@
                     width: '90%', // Adjust chart area width
                     height: '80%' // Adjust chart area height
                 },
-                curveType: 'function', // Enable smooth curves
                 tooltip: { isHtml: true }, // HTML tooltips
                 animation: {
                     duration: 1000, // Smooth animation duration
