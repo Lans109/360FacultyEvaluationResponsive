@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ";
 
     // Assuming student_id is known; you might want to adjust this according to your application logic
-    $student_id = 3; // Replace this with the actual student_id, e.g., from session or form input
+    $student_id = 10001; // Replace this with the actual student_id, e.g., from session or form input
 
     // Loop through the ratings and insert them into the responses table
     foreach ($_POST['ratings'] as $question_id => $rating) {
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert the evaluation entry for the student in the evaluation_students table with the comment
     $sqlEvalStudent = "
-        INSERT INTO students_evaluations (evaluation_id, student_id, date_evaluated, time_evaluated, comments)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO students_evaluations (evaluation_id, student_id, date_evaluated, time_evaluated, comments, is_completed)
+        VALUES (?, ?, ?, ?, ?, 1)
     ";
     $stmtEvalStudent = $con->prepare($sqlEvalStudent);
     $stmtEvalStudent->bind_param("iisss", $evaluation_id, $student_id, $date, $time, $survey_comment);

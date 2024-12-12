@@ -155,7 +155,7 @@ include ROOT_PATH . '/modules/generate_report/report_data_graph.php';
                             }
                             ?>
                             <button type="submit" class="add-btn">
-                                <img src="../../../frontend/assets/icons/pdf.svg">&nbsp;Geberate PDF&nbsp;
+                                <img src="../../../frontend/assets/icons/pdf.svg">&nbsp;Generate PDF&nbsp;
                             </button>
                         </div>
 

@@ -105,7 +105,7 @@ if ($resultFaculty->num_rows > 0) {
                         WHERE 
                             qc.survey_id = ? -- Change from q.survey_id to qc.survey_id
                         ORDER BY
-                            q.criteria_id;
+                            qc.description;
                         ";
 
                         $stmtQuestions = $con->prepare($sqlQuestions);
